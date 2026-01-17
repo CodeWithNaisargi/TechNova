@@ -2,13 +2,17 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import MainLayout from '@/layouts/MainLayout';
 import DashboardLayout from '@/layouts/DashboardLayout';
+import OnboardingLayout from '@/layouts/OnboardingLayout';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import VerifyEmail from '@/pages/VerifyEmail';
 import Home from '@/pages/Home';
 import BrowseCourses from '@/pages/BrowseCourses';
 import CourseDetails from '@/pages/CourseDetails';
 import LearningPlayer from '@/pages/LearningPlayer';
 import StudentDashboard from '@/pages/student/Dashboard';
+import StudentInterestSelection from '@/pages/student/StudentInterestSelection';
+import EducationLevelSelection from '@/pages/student/EducationLevelSelection';
 import CourseAssignments from '@/pages/student/CourseAssignments';
 import AssignmentDetails from '@/pages/student/AssignmentDetails';
 import CertificatePage from '@/pages/student/CertificatePage';
@@ -39,6 +43,27 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode,
     return <>{children}</>;
 };
 
+// Dashboard Guard - Ensures onboarding is complete before dashboard access
+const DashboardGuard = ({ children }: { children: React.ReactNode }) => {
+    const { user, isLoading } = useAuth();
+
+    if (isLoading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
+
+    if (!user) return <Navigate to="/login" replace />;
+
+    // Students must complete onboarding before accessing dashboard
+    if (user.role === 'STUDENT') {
+        if (!user.educationLevel) {
+            return <Navigate to="/onboarding/education" replace />;
+        }
+        if (!user.interestedCareerPath) {
+            return <Navigate to="/onboarding/career" replace />;
+        }
+    }
+
+    return <>{children}</>;
+};
+
 function App() {
     return (
         <AuthProvider>
@@ -48,18 +73,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/courses/:id" element={<CourseDetails />} />
-                </Route>
 
-                {/* Protected Dashboard Routes */}
-                <Route
-                    element={
-                        <ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}>
-                            <DashboardLayout />
-                        </ProtectedRoute>
-                    }
-                >
-                    <Route path="/courses" element={<BrowseCourses />} />
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/learning/:courseId" element={<ProtectedRoute allowedRoles={['STUDENT']}><LearningPlayer /></ProtectedRoute>} />
@@ -85,6 +99,10 @@ function App() {
                     {/* Settings (All roles) */}
                     <Route path="/settings" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><Settings /></ProtectedRoute>} />
                 </Route>
+
+                {/* Legacy redirects for old onboarding URLs */}
+                <Route path="/student/select-education" element={<Navigate to="/onboarding/education" replace />} />
+                <Route path="/student/select-interest" element={<Navigate to="/onboarding/career" replace />} />
             </Routes>
             <Toaster />
         </AuthProvider>

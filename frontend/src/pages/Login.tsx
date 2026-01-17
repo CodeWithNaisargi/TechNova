@@ -15,10 +15,14 @@ const Login = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
+    const [showResendVerification, setShowResendVerification] = useState(false);
+    const [isResending, setIsResending] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setShowResendVerification(false);
+
         try {
             await login({ email, password });
 
@@ -34,16 +38,50 @@ const Login = () => {
             } else if (userData.role === 'INSTRUCTOR') {
                 navigate('/instructor/dashboard');
             } else {
-                navigate('/dashboard');
+                // Student onboarding flow: Education → Career Interest → Dashboard
+                if (!userData.educationLevel) {
+                    navigate('/onboarding/education');
+                } else if (!userData.interestedCareerPath) {
+                    navigate('/onboarding/career');
+                } else {
+                    navigate('/dashboard');
+                }
             }
+        } catch (error: any) {
+            const errorCode = error.response?.data?.code;
+            const errorMessage = error.response?.data?.message || "Login failed";
+
+            if (errorCode === 'EMAIL_NOT_VERIFIED') {
+                setShowResendVerification(true);
+            }
+
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: errorMessage
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleResendVerification = async () => {
+        setIsResending(true);
+        try {
+            await api.post('/auth/resend-verification', { email });
+            toast({
+                title: "Email Sent",
+                description: "A new verification link has been sent to your email."
+            });
+            setShowResendVerification(false);
         } catch (error: any) {
             toast({
                 variant: "destructive",
                 title: "Error",
-                description: error.response?.data?.message || "Login failed"
+                description: error.response?.data?.message || "Failed to resend verification email"
             });
         } finally {
-            setIsLoading(false);
+            setIsResending(false);
         }
     };
 
@@ -65,6 +103,24 @@ const Login = () => {
                                 <Label htmlFor="password">Password</Label>
                                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                             </div>
+
+                            {showResendVerification && (
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
+                                    <p className="text-sm text-yellow-800 mb-2">
+                                        Your email is not verified yet.
+                                    </p>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleResendVerification}
+                                        disabled={isResending}
+                                        className="w-full"
+                                    >
+                                        {isResending ? 'Sending...' : 'Resend Verification Email'}
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-2">
