@@ -69,11 +69,18 @@ function App() {
         <AuthProvider>
             <Routes>
                 {/* Public Routes */}
+                {/* Public Routes */}
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/courses/:id" element={<CourseDetails />} />
+                </Route>
 
+                {/* Protected Dashboard Routes */}
+                <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><DashboardLayout /></ProtectedRoute>}>
+                    <Route path="/courses" element={<BrowseCourses />} />
+                    
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/learning/:courseId" element={<ProtectedRoute allowedRoles={['STUDENT']}><LearningPlayer /></ProtectedRoute>} />

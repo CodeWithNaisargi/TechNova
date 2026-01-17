@@ -134,7 +134,7 @@ export default function Dashboard() {
             <div className="max-w-7xl mx-auto">
 
                 {/* HERO SECTION */}
-                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-10 pt-6">
                     <div className="bg-gradient-to-r from-[#2563EB] to-[#1d4ed8] rounded-xl p-8 text-white shadow-lg">
                         <h1 className="text-3xl font-semibold mb-2">Welcome back, {user?.name || "Student"} 👋</h1>
                         <p className="text-blue-100 text-base">Let's continue your learning journey</p>

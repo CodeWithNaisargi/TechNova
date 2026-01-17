@@ -64,7 +64,7 @@ const BrowseCourses = () => {
     return (
         <div className="container mx-auto px-4 py-8">
             {/* Search + Filter */}
-            <div className="mb-8">
+            <div className="mb-8 pt-6">
                 <h1 className="text-3xl font-bold mb-4">Browse Courses</h1>
 
                 <div className="flex gap-4 flex-wrap">

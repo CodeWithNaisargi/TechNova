@@ -83,7 +83,7 @@ const CourseList = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-6">
                 <div>
                     <h1 className="text-3xl font-bold">My Courses</h1>
                     <p className="text-muted-foreground">Manage your courses and content</p>

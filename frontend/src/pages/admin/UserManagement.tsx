@@ -218,7 +218,7 @@ export default function UserManagement() {
     return (
         <div className="p-6 space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-6">
                 <div>
                     <h1 className="text-3xl font-bold">User Management</h1>
                     <p className="text-muted-foreground mt-1">Manage all platform users</p>

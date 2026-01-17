@@ -111,7 +111,7 @@ const AdminDashboard = () => {
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-10"
+                    className="mb-10 pt-6"
                 >
                     <h1 className="text-3xl font-semibold text-gray-900 mb-2">Admin Dashboard</h1>
                     <p className="text-gray-600 text-base">Monitor and manage your EdTech platform</p>

@@ -141,7 +141,7 @@ export default function Settings() {
             animate={{ opacity: 1, y: 0 }}
             className="container max-w-4xl mx-auto p-6"
         >
-            <div className="mb-8">
+            <div className="mb-8 pt-6">
                 <h1 className="text-3xl font-bold">Settings</h1>
                 <p className="text-muted-foreground">Manage your account settings and preferences</p>
             </div>
