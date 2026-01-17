@@ -82,14 +82,19 @@ const CourseList = () => {
     if (isLoading) return <div>Loading...</div>;
 
     return (
+<<<<<<< HEAD
         <div className="space-y-6">
             <div className="flex items-center justify-between pt-6">
+=======
+        <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 sm:pt-6">
+>>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
                 <div>
-                    <h1 className="text-3xl font-bold">My Courses</h1>
-                    <p className="text-muted-foreground">Manage your courses and content</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Courses</h1>
+                    <p className="text-sm sm:text-base text-muted-foreground">Manage your courses and content</p>
                 </div>
-                <Link to="/instructor/courses/new">
-                    <Button>
+                <Link to="/instructor/courses/new" className="w-full sm:w-auto">
+                    <Button className="w-full sm:w-auto">
                         <Plus className="mr-2 h-4 w-4" />
                         Create Course
                     </Button>
@@ -97,19 +102,20 @@ const CourseList = () => {
             </div>
 
             {courses && courses.length > 0 ? (
-                <div className="border border-gray-200 rounded-lg overflow-x-auto bg-white">
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="bg-gray-50">
-                                <TableHead className="min-w-[300px] w-auto">Course</TableHead>
-                                <TableHead className="text-center min-w-[120px]">Category</TableHead>
-                                <TableHead className="text-center min-w-[100px]">Price</TableHead>
-                                <TableHead className="text-center min-w-[100px]">Students</TableHead>
-                                <TableHead className="text-center min-w-[100px]">Lessons</TableHead>
-                                <TableHead className="text-center min-w-[120px]">Status</TableHead>
-                                <TableHead className="text-center min-w-[140px]">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
+                <div className="border border-border rounded-lg overflow-x-auto bg-card -mx-4 sm:mx-0">
+                    <div className="min-w-[800px]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-secondary">
+                                    <TableHead className="min-w-[200px] sm:min-w-[300px]">Course</TableHead>
+                                    <TableHead className="text-center min-w-[100px] sm:min-w-[120px]">Category</TableHead>
+                                    <TableHead className="text-center min-w-[80px] sm:min-w-[100px]">Price</TableHead>
+                                    <TableHead className="text-center min-w-[80px] sm:min-w-[100px]">Students</TableHead>
+                                    <TableHead className="text-center min-w-[80px] sm:min-w-[100px]">Lessons</TableHead>
+                                    <TableHead className="text-center min-w-[100px] sm:min-w-[120px]">Status</TableHead>
+                                    <TableHead className="text-center min-w-[120px] sm:min-w-[140px]">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
                         <TableBody>
                             {courses.map((course) => (
                                 <TableRow key={course.id}>
@@ -123,8 +129,8 @@ const CourseList = () => {
                                                 />
                                             )}
                                             <div className="min-w-0 flex-1">
-                                                <div className="font-medium text-gray-900 break-words">{course.title}</div>
-                                                <div className="text-sm text-gray-600 line-clamp-2 mt-1 break-words">
+                                                <div className="font-medium text-foreground break-words">{course.title}</div>
+                                                <div className="text-sm text-muted-foreground line-clamp-2 mt-1 break-words">
                                                     {course.description}
                                                 </div>
                                             </div>
@@ -182,6 +188,7 @@ const CourseList = () => {
                             ))}
                         </TableBody>
                     </Table>
+                    </div>
                 </div>
             ) : (
                 <Card>

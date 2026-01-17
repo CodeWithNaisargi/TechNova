@@ -5,75 +5,75 @@ const prisma = new PrismaClient();
 async function main() {
     console.log('🌱 Seeding Career Paths...');
 
-    // Create Skills
+    // Create Skills (matching by name to avoid duplicates)
     const skills = await Promise.all([
         // Tech Skills
         prisma.skill.upsert({
-            where: { id: 'skill-html' },
+            where: { name: 'HTML5' },
             update: {},
-            create: { id: 'skill-html', name: 'HTML5', description: 'Hypertext Markup Language for web pages' }
+            create: { name: 'HTML5', description: 'Hypertext Markup Language for web pages' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-css' },
+            where: { name: 'CSS3' },
             update: {},
-            create: { id: 'skill-css', name: 'CSS3', description: 'Cascading Style Sheets for styling' }
+            create: { name: 'CSS3', description: 'Cascading Style Sheets for styling' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-js' },
+            where: { name: 'JavaScript' },
             update: {},
-            create: { id: 'skill-js', name: 'JavaScript', description: 'Programming language for web development' }
+            create: { name: 'JavaScript', description: 'Programming language for web development' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-react' },
+            where: { name: 'React' },
             update: {},
-            create: { id: 'skill-react', name: 'React', description: 'JavaScript library for building UIs' }
+            create: { name: 'React', description: 'JavaScript library for building UIs' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-ts' },
+            where: { name: 'TypeScript' },
             update: {},
-            create: { id: 'skill-ts', name: 'TypeScript', description: 'Typed superset of JavaScript' }
+            create: { name: 'TypeScript', description: 'Typed superset of JavaScript' }
         }),
         // Healthcare Skills
         prisma.skill.upsert({
-            where: { id: 'skill-python' },
+            where: { name: 'Python' },
             update: {},
-            create: { id: 'skill-python', name: 'Python', description: 'Programming language for data analysis' }
+            create: { name: 'Python', description: 'Programming language for data analysis' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-sql' },
+            where: { name: 'SQL' },
             update: {},
-            create: { id: 'skill-sql', name: 'SQL', description: 'Database query language' }
+            create: { name: 'SQL', description: 'Database query language' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-tableau' },
+            where: { name: 'Tableau' },
             update: {},
-            create: { id: 'skill-tableau', name: 'Tableau', description: 'Data visualization tool' }
+            create: { name: 'Tableau', description: 'Data visualization tool' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-stats' },
+            where: { name: 'Statistics' },
             update: {},
-            create: { id: 'skill-stats', name: 'Statistics', description: 'Statistical analysis methods' }
+            create: { name: 'Statistics', description: 'Statistical analysis methods' }
         }),
         // Urban Planning Skills
         prisma.skill.upsert({
-            where: { id: 'skill-gis' },
+            where: { name: 'GIS' },
             update: {},
-            create: { id: 'skill-gis', name: 'GIS', description: 'Geographic Information Systems' }
+            create: { name: 'GIS', description: 'Geographic Information Systems' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-urban' },
+            where: { name: 'Urban Design' },
             update: {},
-            create: { id: 'skill-urban', name: 'Urban Design', description: 'City planning and design principles' }
+            create: { name: 'Urban Design', description: 'City planning and design principles' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-iot' },
+            where: { name: 'IoT' },
             update: {},
-            create: { id: 'skill-iot', name: 'IoT', description: 'Internet of Things technologies' }
+            create: { name: 'IoT', description: 'Internet of Things technologies' }
         }),
         prisma.skill.upsert({
-            where: { id: 'skill-sustainability' },
+            where: { name: 'Sustainability' },
             update: {},
-            create: { id: 'skill-sustainability', name: 'Sustainability', description: 'Sustainable development practices' }
+            create: { name: 'Sustainability', description: 'Sustainable development practices' }
         }),
     ]);
 
@@ -115,45 +115,37 @@ async function main() {
 
     console.log('✅ Career Paths created');
 
-    // Map Skills to Careers
-    const careerSkillMappings = [
-        // Frontend Developer Skills
-        { careerId: 'career-frontend', skillId: 'skill-html' },
-        { careerId: 'career-frontend', skillId: 'skill-css' },
-        { careerId: 'career-frontend', skillId: 'skill-js' },
-        { careerId: 'career-frontend', skillId: 'skill-react' },
-        { careerId: 'career-frontend', skillId: 'skill-ts' },
-        // Healthcare Data Analyst Skills
-        { careerId: 'career-healthcare', skillId: 'skill-python' },
-        { careerId: 'career-healthcare', skillId: 'skill-sql' },
-        { careerId: 'career-healthcare', skillId: 'skill-tableau' },
-        { careerId: 'career-healthcare', skillId: 'skill-stats' },
-        // Smart City Planner Skills
-        { careerId: 'career-urban', skillId: 'skill-gis' },
-        { careerId: 'career-urban', skillId: 'skill-urban' },
-        { careerId: 'career-urban', skillId: 'skill-iot' },
-        { careerId: 'career-urban', skillId: 'skill-sustainability' },
-        { careerId: 'career-urban', skillId: 'skill-python' },
-    ];
+    // Map Skills to Careers (using skill names to find IDs)
+    const skillNameMappings: Record<string, string[]> = {
+        'career-frontend': ['HTML5', 'CSS3', 'JavaScript', 'React', 'TypeScript'],
+        'career-healthcare': ['Python', 'SQL', 'Tableau', 'Statistics'],
+        'career-urban': ['GIS', 'Urban Design', 'IoT', 'Sustainability', 'Python'],
+    };
 
-    for (const mapping of careerSkillMappings) {
-        await prisma.careerSkill.upsert({
-            where: {
-                careerId_skillId: {
-                    careerId: mapping.careerId,
-                    skillId: mapping.skillId,
+    for (const [careerId, skillNames] of Object.entries(skillNameMappings)) {
+        for (const skillName of skillNames) {
+            const skill = await prisma.skill.findUnique({ where: { name: skillName } });
+            if (skill) {
+                try {
+                    await prisma.careerSkill.upsert({
+                        where: {
+                            careerId_skillId: { careerId, skillId: skill.id }
+                        },
+                        update: {},
+                        create: { careerId, skillId: skill.id },
+                    });
+                } catch (e) {
+                    // Skip if skill not found
                 }
-            },
-            update: {},
-            create: mapping,
-        });
+            }
+        }
     }
 
     console.log('✅ Career-Skill mappings created');
     console.log('🎉 Career Paths seed completed!');
     console.log('\n📊 Summary:');
     console.log('- 3 Career Paths: Frontend Developer, Healthcare Data Analyst, Smart City Planner');
-    console.log('- 13 Skills mapped across careers');
+    console.log('- Skills mapped across careers');
 }
 
 main()

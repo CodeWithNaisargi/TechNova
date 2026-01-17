@@ -2,33 +2,47 @@ import { io, Socket } from 'socket.io-client';
 
 let socket: Socket | null = null;
 
-export const initializeSocket = (token: string) => {
+export const initializeSocket = (token?: string) => {
     if (socket) {
         return socket;
     }
 
     const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
 
-    socket = io(SOCKET_URL, {
-        auth: {
-            token
-        },
+    // Configure socket connection
+    // Cookies (including accessToken) are sent automatically with withCredentials
+    const socketConfig: any = {
         autoConnect: true,
         reconnection: true,
         reconnectionDelay: 1000,
-        reconnectionAttempts: 5
-    });
+        reconnectionAttempts: 5,
+        withCredentials: true, // Send cookies automatically
+    };
+
+    // Only add auth token if provided (for cases where token is passed explicitly)
+    if (token) {
+        socketConfig.auth = { token };
+    }
+
+    socket = io(SOCKET_URL, socketConfig);
 
     socket.on('connect', () => {
-        console.log('✅ Socket.io connected');
+        if (import.meta.env.DEV) {
+            console.log('✅ Socket.io connected');
+        }
     });
 
     socket.on('disconnect', () => {
-        console.log('❌ Socket.io disconnected');
+        if (import.meta.env.DEV) {
+            console.log('❌ Socket.io disconnected');
+        }
     });
 
     socket.on('connect_error', (error) => {
-        console.error('Socket.io connection error:', error);
+        // Only log connection errors in development
+        if (import.meta.env.DEV) {
+            console.error('Socket.io connection error:', error);
+        }
     });
 
     return socket;

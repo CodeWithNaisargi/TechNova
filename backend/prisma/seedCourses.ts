@@ -744,6 +744,190 @@ async function main() {
     console.log(`   ✅ ${reviewCount} Reviews created`);
 
     // ========================================================================
+    // CREATE SKILLS FOR RECOMMENDATIONS
+    // ========================================================================
+    console.log('\n🧠 Creating Skills for Recommendation Engine...');
+
+    // Agriculture Skills
+    const skillIoT = await prisma.skill.upsert({
+        where: { name: 'IoT' },
+        update: {},
+        create: { name: 'IoT', description: 'Internet of Things for agriculture and urban systems' }
+    });
+    const skillDrones = await prisma.skill.upsert({
+        where: { name: 'Drone Technology' },
+        update: {},
+        create: { name: 'Drone Technology', description: 'Aerial mapping and precision spraying' }
+    });
+    const skillGIS = await prisma.skill.upsert({
+        where: { name: 'GIS' },
+        update: {},
+        create: { name: 'GIS', description: 'Geographic Information Systems' }
+    });
+    const skillSoilScience = await prisma.skill.upsert({
+        where: { name: 'Soil Science' },
+        update: {},
+        create: { name: 'Soil Science', description: 'Soil health diagnostics and management' }
+    });
+    const skillFarmManagement = await prisma.skill.upsert({
+        where: { name: 'Farm Management' },
+        update: {},
+        create: { name: 'Farm Management', description: 'Agricultural business and resource planning' }
+    });
+    const skillRemoteSensing = await prisma.skill.upsert({
+        where: { name: 'Remote Sensing' },
+        update: {},
+        create: { name: 'Remote Sensing', description: 'Satellite imagery analysis' }
+    });
+
+    // Healthcare Skills
+    const skillHealthIT = await prisma.skill.upsert({
+        where: { name: 'Health IT' },
+        update: {},
+        create: { name: 'Health IT', description: 'Healthcare information technology systems' }
+    });
+    const skillEMR = await prisma.skill.upsert({
+        where: { name: 'EMR/EHR' },
+        update: {},
+        create: { name: 'EMR/EHR', description: 'Electronic Medical/Health Records' }
+    });
+    const skillTelemedicine = await prisma.skill.upsert({
+        where: { name: 'Telemedicine' },
+        update: {},
+        create: { name: 'Telemedicine', description: 'Remote healthcare delivery' }
+    });
+    const skillMedicalAI = await prisma.skill.upsert({
+        where: { name: 'Medical AI' },
+        update: {},
+        create: { name: 'Medical AI', description: 'AI for medical image analysis and diagnostics' }
+    });
+    const skillDataAnalytics = await prisma.skill.upsert({
+        where: { name: 'Data Analytics' },
+        update: {},
+        create: { name: 'Data Analytics', description: 'Healthcare and clinical data analysis' }
+    });
+    const skillCybersecurity = await prisma.skill.upsert({
+        where: { name: 'Cybersecurity' },
+        update: {},
+        create: { name: 'Cybersecurity', description: 'Healthcare security and compliance' }
+    });
+
+    // Urban Technology Skills
+    const skillTrafficSystems = await prisma.skill.upsert({
+        where: { name: 'Traffic Systems' },
+        update: {},
+        create: { name: 'Traffic Systems', description: 'Intelligent traffic management' }
+    });
+    const skillUrbanPlanning = await prisma.skill.upsert({
+        where: { name: 'Urban Planning' },
+        update: {},
+        create: { name: 'Urban Planning', description: 'Smart city planning and design' }
+    });
+    const skillWaterManagement = await prisma.skill.upsert({
+        where: { name: 'Water Management' },
+        update: {},
+        create: { name: 'Water Management', description: 'Urban water distribution and quality' }
+    });
+    const skillWasteManagement = await prisma.skill.upsert({
+        where: { name: 'Waste Management' },
+        update: {},
+        create: { name: 'Waste Management', description: 'Smart waste collection and recycling' }
+    });
+    const skillSmartGrid = await prisma.skill.upsert({
+        where: { name: 'Smart Grid' },
+        update: {},
+        create: { name: 'Smart Grid', description: 'Urban energy management systems' }
+    });
+    const skillPublicTransport = await prisma.skill.upsert({
+        where: { name: 'Public Transport' },
+        update: {},
+        create: { name: 'Public Transport', description: 'Urban mobility and transit analytics' }
+    });
+
+    // Common Tech Skills
+    const skillPython = await prisma.skill.upsert({
+        where: { name: 'Python' },
+        update: {},
+        create: { name: 'Python', description: 'Python programming for data and automation' }
+    });
+    const skillSQL = await prisma.skill.upsert({
+        where: { name: 'SQL' },
+        update: {},
+        create: { name: 'SQL', description: 'Database querying and management' }
+    });
+
+    console.log('   ✅ 20 Skills created');
+
+    // ========================================================================
+    // MAP SKILLS TO COURSES (CourseSkill)
+    // ========================================================================
+    console.log('\n🔗 Mapping Skills to Courses...');
+
+    // Define skill mappings by course title keywords
+    const courseSkillMappings: Record<string, any[]> = {
+        // Agriculture courses
+        'Precision Agriculture with IoT': [skillIoT, skillSoilScience],
+        'Agricultural Drones': [skillDrones, skillGIS, skillRemoteSensing],
+        'Smart Greenhouse': [skillIoT, skillFarmManagement],
+        'Soil Health': [skillSoilScience, skillGIS],
+        'Farm Management': [skillFarmManagement, skillSQL],
+        'Weather-Based': [skillDataAnalytics, skillFarmManagement],
+        'Livestock Monitoring': [skillIoT, skillFarmManagement],
+        'Supply Chain': [skillFarmManagement, skillDataAnalytics],
+        'Remote Sensing': [skillRemoteSensing, skillGIS],
+        'Organic Farming': [skillFarmManagement, skillSoilScience],
+
+        // Healthcare courses
+        'Hospital Information': [skillHealthIT, skillEMR, skillSQL],
+        'Telemedicine': [skillTelemedicine, skillHealthIT],
+        'Medical IoT': [skillIoT, skillHealthIT],
+        'Healthcare Data Analytics': [skillDataAnalytics, skillSQL, skillPython],
+        'AI-Powered Medical': [skillMedicalAI, skillPython, skillDataAnalytics],
+        'Electronic Health Records': [skillEMR, skillHealthIT],
+        'Public Health Surveillance': [skillDataAnalytics, skillHealthIT],
+        'Pharmacy Management': [skillHealthIT, skillSQL],
+        'Healthcare Cybersecurity': [skillCybersecurity, skillHealthIT],
+        'Clinical Decision': [skillMedicalAI, skillDataAnalytics],
+
+        // Urban courses
+        'Smart Traffic': [skillTrafficSystems, skillIoT],
+        'Urban IoT': [skillIoT, skillUrbanPlanning],
+        'Water Management': [skillWaterManagement, skillIoT],
+        'Waste Management': [skillWasteManagement, skillIoT],
+        'Urban Mobility': [skillPublicTransport, skillDataAnalytics],
+        'Smart City Platform': [skillUrbanPlanning, skillIoT],
+        'Air Quality': [skillDataAnalytics, skillIoT],
+        'Smart Parking': [skillIoT, skillUrbanPlanning],
+        'Energy Management': [skillSmartGrid, skillIoT],
+        'Citizen Engagement': [skillUrbanPlanning, skillDataAnalytics],
+    };
+
+    let skillMappingCount = 0;
+    for (const course of createdCourses) {
+        // Find matching skills based on course title
+        for (const [keyword, skills] of Object.entries(courseSkillMappings)) {
+            if (course.title.includes(keyword)) {
+                for (const skill of skills) {
+                    try {
+                        await prisma.courseSkill.create({
+                            data: {
+                                courseId: course.id,
+                                skillId: skill.id,
+                            }
+                        });
+                        skillMappingCount++;
+                    } catch (e) {
+                        // Skip if already exists
+                    }
+                }
+                break; // Only match first keyword
+            }
+        }
+    }
+
+    console.log(`   ✅ ${skillMappingCount} CourseSkill mappings created`);
+
+    // ========================================================================
     // SUMMARY
     // ========================================================================
     console.log('\n' + '='.repeat(60));
@@ -757,6 +941,8 @@ async function main() {
    • Courses: 30 (10 per domain)
    • Assignments: ~270 (8-10 per course)
    • Reviews: ${reviewCount}
+   • Skills: 20 (domain-specific)
+   • CourseSkill Mappings: ${skillMappingCount}
 
 🔑 Login Credentials:
    Admin:       admin@lms.com / admin123
@@ -767,6 +953,10 @@ async function main() {
    • Agriculture Technology (10 courses)
    • Healthcare Technology (10 courses)
    • Urban Technology (10 courses)
+
+🧠 Recommendation Engine:
+   • Content-based filtering with cosine similarity
+   • Feature vectors: education, skills, domain, difficulty
 `);
 }
 

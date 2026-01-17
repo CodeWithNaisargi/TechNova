@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Responsive utilities */
+@layer utilities {
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -216,14 +216,17 @@ export default function UserManagement() {
     }
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between pt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 sm:pt-6">
                 <div>
-                    <h1 className="text-3xl font-bold">User Management</h1>
-                    <p className="text-muted-foreground mt-1">Manage all platform users</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">User Management</h1>
+                    <p className="text-sm sm:text-base text-muted-foreground mt-1">Manage all platform users</p>
                 </div>
-                <Button onClick={() => setCreateModalOpen(true)}>
+                <Button 
+                    onClick={() => setCreateModalOpen(true)}
+                    className="w-full sm:w-auto"
+                >
                     <Plus className="w-4 h-4 mr-2" />
                     Create User
                 </Button>
@@ -231,21 +234,21 @@ export default function UserManagement() {
 
             {/* Filters */}
             <Card>
-                <CardContent className="pt-6">
-                    <div className="flex gap-4">
-                        <div className="flex-1">
+                <CardContent className="pt-4 sm:pt-6">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <div className="flex-1 w-full">
                             <div className="relative">
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                                 <Input
                                     placeholder="Search users..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-10"
+                                    className="pl-10 w-full"
                                 />
                             </div>
                         </div>
                         <Select value={roleFilter} onValueChange={setRoleFilter}>
-                            <SelectTrigger className="w-[200px]">
+                            <SelectTrigger className="w-full sm:w-[200px]">
                                 <SelectValue placeholder="Filter by role" />
                             </SelectTrigger>
                             <SelectContent>
@@ -262,13 +265,15 @@ export default function UserManagement() {
             {/* Users Table */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-foreground">
                         <Users className="w-5 h-5" />
                         Users ({filteredUsers.length})
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Table>
+                    <div className="overflow-x-auto -mx-4 sm:mx-0">
+                        <div className="min-w-[600px] sm:min-w-0">
+                            <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
@@ -325,6 +330,8 @@ export default function UserManagement() {
                             )}
                         </TableBody>
                     </Table>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
 

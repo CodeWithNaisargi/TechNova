@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { User, Bell, Shield, Palette, Trash2, Download, LogOut } from 'lucide-react';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 
 interface UserSettings {
     emailNotifications: boolean;
@@ -25,6 +26,7 @@ export default function Settings() {
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const [deletePassword, setDeletePassword] = useState('');
+    const { theme, setTheme: setThemeContext } = useTheme();
 
     // Fetch user settings
     const { data: settings } = useQuery({
@@ -34,6 +36,13 @@ export default function Settings() {
             return res.data.data as UserSettings;
         }
     });
+
+    // Sync theme from backend settings to context on mount
+    useEffect(() => {
+        if (settings?.theme && settings.theme !== theme) {
+            setThemeContext(settings.theme);
+        }
+    }, [settings?.theme]);
 
     // Profile update mutation
     const profileMutation = useMutation({
@@ -56,9 +65,13 @@ export default function Settings() {
             const res = await api.patch('/users/settings', data);
             return res.data;
         },
-        onSuccess: () => {
+        onSuccess: (_, variables) => {
             toast({ title: 'Settings updated successfully' });
             queryClient.invalidateQueries({ queryKey: ['user-settings'] });
+            // Update theme context immediately if theme was changed
+            if (variables.theme) {
+                setThemeContext(variables.theme);
+            }
         },
         onError: (error: any) => {
             toast({ title: 'Error', description: error.response?.data?.message || 'Failed to update settings', variant: 'destructive' });
@@ -139,20 +152,42 @@ export default function Settings() {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="container max-w-4xl mx-auto p-6"
+            className="w-full max-w-4xl"
         >
+<<<<<<< HEAD
             <div className="mb-8 pt-6">
                 <h1 className="text-3xl font-bold">Settings</h1>
                 <p className="text-muted-foreground">Manage your account settings and preferences</p>
+=======
+            <div className="mb-6 sm:mb-8 pt-4 sm:pt-6">
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Settings</h1>
+                <p className="text-sm sm:text-base text-muted-foreground mt-1">Manage your account settings and preferences</p>
+>>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
             </div>
 
             <Tabs defaultValue="profile" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-5">
-                    <TabsTrigger value="profile"><User className="w-4 h-4 mr-2" />Profile</TabsTrigger>
-                    <TabsTrigger value="notifications"><Bell className="w-4 h-4 mr-2" />Notifications</TabsTrigger>
-                    <TabsTrigger value="privacy"><Shield className="w-4 h-4 mr-2" />Privacy</TabsTrigger>
-                    <TabsTrigger value="theme"><Palette className="w-4 h-4 mr-2" />Theme</TabsTrigger>
-                    <TabsTrigger value="account"><Trash2 className="w-4 h-4 mr-2" />Account</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-0">
+                    <TabsTrigger value="profile" className="text-xs sm:text-sm">
+                        <User className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Profile</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="notifications" className="text-xs sm:text-sm">
+                        <Bell className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Notifications</span>
+                        <span className="sm:hidden">Notify</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="privacy" className="text-xs sm:text-sm">
+                        <Shield className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Privacy</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="theme" className="text-xs sm:text-sm">
+                        <Palette className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Theme</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="account" className="text-xs sm:text-sm">
+                        <Trash2 className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Account</span>
+                    </TabsTrigger>
                 </TabsList>
 
                 {/* Profile Tab */}
@@ -218,8 +253,8 @@ export default function Settings() {
                             <CardDescription>Manage how you receive notifications</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1">
                                     <Label>Email Notifications</Label>
                                     <p className="text-sm text-muted-foreground">Receive email updates</p>
                                 </div>
@@ -227,11 +262,11 @@ export default function Settings() {
                                     type="checkbox"
                                     checked={settings?.emailNotifications ?? true}
                                     onChange={(e) => settingsMutation.mutate({ emailNotifications: e.target.checked })}
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 flex-shrink-0"
                                 />
                             </div>
-                            <div className="flex items-center justify-between">
-                                <div>
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1">
                                     <Label>Assignment Notifications</Label>
                                     <p className="text-sm text-muted-foreground">Get notified about new assignments</p>
                                 </div>
@@ -239,11 +274,11 @@ export default function Settings() {
                                     type="checkbox"
                                     checked={settings?.assignmentNotifications ?? true}
                                     onChange={(e) => settingsMutation.mutate({ assignmentNotifications: e.target.checked })}
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 flex-shrink-0"
                                 />
                             </div>
-                            <div className="flex items-center justify-between">
-                                <div>
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1">
                                     <Label>Course Update Notifications</Label>
                                     <p className="text-sm text-muted-foreground">Stay updated on course changes</p>
                                 </div>
@@ -251,7 +286,7 @@ export default function Settings() {
                                     type="checkbox"
                                     checked={settings?.courseUpdateNotifications ?? true}
                                     onChange={(e) => settingsMutation.mutate({ courseUpdateNotifications: e.target.checked })}
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 flex-shrink-0"
                                 />
                             </div>
                         </CardContent>
@@ -266,8 +301,8 @@ export default function Settings() {
                             <CardDescription>Control your privacy preferences</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1">
                                     <Label>Profile Visibility</Label>
                                     <p className="text-sm text-muted-foreground">Make your profile visible to instructors</p>
                                 </div>
@@ -275,11 +310,11 @@ export default function Settings() {
                                     type="checkbox"
                                     checked={settings?.profileVisibility ?? true}
                                     onChange={(e) => settingsMutation.mutate({ profileVisibility: e.target.checked })}
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 flex-shrink-0"
                                 />
                             </div>
-                            <div className="flex items-center justify-between">
-                                <div>
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex-1">
                                     <Label>Data Sharing</Label>
                                     <p className="text-sm text-muted-foreground">Share anonymous usage data</p>
                                 </div>
@@ -287,7 +322,7 @@ export default function Settings() {
                                     type="checkbox"
                                     checked={settings?.dataSharing ?? false}
                                     onChange={(e) => settingsMutation.mutate({ dataSharing: e.target.checked })}
-                                    className="w-4 h-4"
+                                    className="w-4 h-4 flex-shrink-0"
                                 />
                             </div>
                         </CardContent>
@@ -303,15 +338,21 @@ export default function Settings() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-3 gap-4">
-                                {['LIGHT', 'DARK', 'SYSTEM'].map((theme) => (
+                                {['LIGHT', 'DARK', 'SYSTEM'].map((themeOption) => (
                                     <button
-                                        key={theme}
-                                        onClick={() => settingsMutation.mutate({ theme: theme as any })}
-                                        className={`p-4 border-2 rounded-lg transition ${settings?.theme === theme ? 'border-primary bg-primary/10' : 'border-gray-200'
-                                            }`}
+                                        key={themeOption}
+                                        onClick={() => {
+                                            settingsMutation.mutate({ theme: themeOption as any });
+                                            setThemeContext(themeOption as any);
+                                        }}
+                                        className={`p-4 border-2 rounded-lg transition-all hover:scale-105 ${
+                                            theme === themeOption 
+                                                ? 'border-primary bg-primary/10 shadow-md' 
+                                                : 'border-gray-200 hover:border-gray-300'
+                                        }`}
                                     >
                                         <Palette className="w-8 h-8 mx-auto mb-2" />
-                                        <p className="font-medium">{theme.charAt(0) + theme.slice(1).toLowerCase()}</p>
+                                        <p className="font-medium">{themeOption.charAt(0) + themeOption.slice(1).toLowerCase()}</p>
                                     </button>
                                 ))}
                             </div>
