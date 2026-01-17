@@ -121,21 +121,23 @@ const BrowseCourses = () => {
                         return (
                             <Card
                                 key={course.id}
-                                className="overflow-hidden hover:shadow-lg transition-shadow"
+                                className="overflow-hidden hover:shadow-lg transition-shadow border border-gray-200 bg-white"
                             >
                                 {thumbnail && (
-                                    <img
-                                        src={thumbnail}
-                                        alt={course.title}
-                                        className="w-full h-48 object-cover"
-                                    />
+                                    <div className="w-full aspect-video overflow-hidden bg-gray-100">
+                                        <img
+                                            src={thumbnail}
+                                            alt={course.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
                                 )}
 
                                 <CardHeader>
-                                    <CardTitle className="line-clamp-2">
+                                    <CardTitle className="line-clamp-2 text-lg font-semibold text-gray-900 mb-2">
                                         {course.title}
                                     </CardTitle>
-                                    <CardDescription className="line-clamp-2">
+                                    <CardDescription className="line-clamp-2 text-sm text-gray-600">
                                         {course.description}
                                     </CardDescription>
                                 </CardHeader>

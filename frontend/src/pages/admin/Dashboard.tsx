@@ -223,33 +223,33 @@ const AdminDashboard = () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     <Link to="/admin/courses/new">
-                                        <button className="w-full p-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                            <BookOpen className="w-5 h-5 mx-auto mb-2" />
+                                        <button className="w-full p-5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <BookOpen className="w-5 h-5" />
                                             <span className="font-semibold">Create New Course</span>
                                         </button>
                                     </Link>
 
                                     <Link to="/admin/assignments/new">
-                                        <button className="w-full p-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                            <FileText className="w-5 h-5 mx-auto mb-2" />
+                                        <button className="w-full p-5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <FileText className="w-5 h-5" />
                                             <span className="font-semibold">Add Assignment</span>
                                         </button>
                                     </Link>
 
                                     <Link to="/admin/users">
-                                        <button className="w-full p-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                            <Users className="w-5 h-5 mx-auto mb-2" />
+                                        <button className="w-full p-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <Users className="w-5 h-5" />
                                             <span className="font-semibold">Manage Users</span>
                                         </button>
                                     </Link>
 
                                     {stats.pendingSubmissions > 0 && (
                                         <Link to="/admin/submissions?status=PENDING">
-                                            <button className="w-full p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                                <AlertCircle className="w-5 h-5 mx-auto mb-2" />
-                                                <span className="font-semibold">
+                                            <button className="w-full p-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                                <AlertCircle className="w-5 h-5" />
+                                                <span className="font-semibold text-center">
                                                     Review {stats.pendingSubmissions} Pending Submissions
                                                 </span>
                                             </button>
@@ -283,10 +283,10 @@ const AdminDashboard = () => {
                                     ).map(([category, count]: any) => (
                                         <div
                                             key={category}
-                                            className="p-5 bg-gray-50 rounded-lg text-center border border-gray-100 hover:bg-gray-100 transition-colors"
+                                            className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg text-center border border-gray-200 hover:border-[#2563EB] hover:bg-gradient-to-br hover:from-[#EAF2FF] hover:to-blue-50 transition-all duration-200 shadow-sm hover:shadow-md"
                                         >
-                                            <p className="text-2xl font-semibold text-gray-900 mb-1">{count}</p>
-                                            <p className="text-sm text-gray-600">{category}</p>
+                                            <p className="text-3xl font-semibold text-gray-900 mb-2">{count}</p>
+                                            <p className="text-sm font-medium text-gray-700">{category}</p>
                                         </div>
                                     ))}
                                 </div>

@@ -97,56 +97,60 @@ const CourseList = () => {
             </div>
 
             {courses && courses.length > 0 ? (
-                <div className="border rounded-lg">
+                <div className="border border-gray-200 rounded-lg overflow-x-auto bg-white">
                     <Table>
                         <TableHeader>
-                            <TableRow>
-                                <TableHead>Course</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Price</TableHead>
-                                <TableHead>Students</TableHead>
-                                <TableHead>Lessons</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                            <TableRow className="bg-gray-50">
+                                <TableHead className="min-w-[300px] w-auto">Course</TableHead>
+                                <TableHead className="text-center min-w-[120px]">Category</TableHead>
+                                <TableHead className="text-center min-w-[100px]">Price</TableHead>
+                                <TableHead className="text-center min-w-[100px]">Students</TableHead>
+                                <TableHead className="text-center min-w-[100px]">Lessons</TableHead>
+                                <TableHead className="text-center min-w-[120px]">Status</TableHead>
+                                <TableHead className="text-center min-w-[140px]">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {courses.map((course) => (
                                 <TableRow key={course.id}>
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
+                                    <TableCell className="py-4">
+                                        <div className="flex items-start gap-3 min-w-0">
                                             {course.thumbnail && (
                                                 <img
                                                     src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${course.thumbnail.startsWith('/') ? course.thumbnail : '/' + course.thumbnail}`}
                                                     alt={course.title}
-                                                    className="w-16 h-12 object-cover rounded"
+                                                    className="w-20 h-14 object-cover rounded-lg flex-shrink-0"
                                                 />
                                             )}
-                                            <div>
-                                                <div className="font-medium">{course.title}</div>
-                                                <div className="text-sm text-muted-foreground line-clamp-1">
+                                            <div className="min-w-0 flex-1">
+                                                <div className="font-medium text-gray-900 break-words">{course.title}</div>
+                                                <div className="text-sm text-gray-600 line-clamp-2 mt-1 break-words">
                                                     {course.description}
                                                 </div>
                                             </div>
                                         </div>
                                     </TableCell>
-                                    <TableCell>
-                                        <Badge variant="secondary">{course.category}</Badge>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Badge variant="secondary">{course.category}</Badge>
+                                        </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">
                                         {course.price === 0 ? 'Free' : `$${course.price}`}
                                     </TableCell>
-                                    <TableCell>{course.enrollments?.length || 0}</TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">{course.enrollments?.length || 0}</TableCell>
+                                    <TableCell className="text-center">
                                         {course.sections?.reduce((sum, s) => sum + (s.lessons?.length || 0), 0) || 0}
                                     </TableCell>
-                                    <TableCell>
-                                        <Badge variant={course.isPublished ? 'default' : 'secondary'}>
-                                            {course.isPublished ? 'Published' : 'Draft'}
-                                        </Badge>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Badge variant={course.isPublished ? 'default' : 'secondary'}>
+                                                {course.isPublished ? 'Published' : 'Draft'}
+                                            </Badge>
+                                        </div>
                                     </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex items-center justify-end gap-2">
+                                    <TableCell className="text-center">
+                                        <div className="flex items-center justify-center gap-2">
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
