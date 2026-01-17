@@ -82,14 +82,14 @@ const CourseList = () => {
     if (isLoading) return <div>Loading...</div>;
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 sm:pt-6">
                 <div>
-                    <h1 className="text-3xl font-bold">My Courses</h1>
-                    <p className="text-muted-foreground">Manage your courses and content</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Courses</h1>
+                    <p className="text-sm sm:text-base text-muted-foreground">Manage your courses and content</p>
                 </div>
-                <Link to="/instructor/courses/new">
-                    <Button>
+                <Link to="/instructor/courses/new" className="w-full sm:w-auto">
+                    <Button className="w-full sm:w-auto">
                         <Plus className="mr-2 h-4 w-4" />
                         Create Course
                     </Button>
@@ -97,56 +97,61 @@ const CourseList = () => {
             </div>
 
             {courses && courses.length > 0 ? (
-                <div className="border rounded-lg">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Course</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Price</TableHead>
-                                <TableHead>Students</TableHead>
-                                <TableHead>Lessons</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
+                <div className="border border-border rounded-lg overflow-x-auto bg-card -mx-4 sm:mx-0">
+                    <div className="min-w-[800px]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-secondary">
+                                    <TableHead className="min-w-[200px] sm:min-w-[300px]">Course</TableHead>
+                                    <TableHead className="text-center min-w-[100px] sm:min-w-[120px]">Category</TableHead>
+                                    <TableHead className="text-center min-w-[80px] sm:min-w-[100px]">Price</TableHead>
+                                    <TableHead className="text-center min-w-[80px] sm:min-w-[100px]">Students</TableHead>
+                                    <TableHead className="text-center min-w-[80px] sm:min-w-[100px]">Lessons</TableHead>
+                                    <TableHead className="text-center min-w-[100px] sm:min-w-[120px]">Status</TableHead>
+                                    <TableHead className="text-center min-w-[120px] sm:min-w-[140px]">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
                         <TableBody>
                             {courses.map((course) => (
                                 <TableRow key={course.id}>
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
+                                    <TableCell className="py-4">
+                                        <div className="flex items-start gap-3 min-w-0">
                                             {course.thumbnail && (
                                                 <img
                                                     src={`${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${course.thumbnail.startsWith('/') ? course.thumbnail : '/' + course.thumbnail}`}
                                                     alt={course.title}
-                                                    className="w-16 h-12 object-cover rounded"
+                                                    className="w-20 h-14 object-cover rounded-lg flex-shrink-0"
                                                 />
                                             )}
-                                            <div>
-                                                <div className="font-medium">{course.title}</div>
-                                                <div className="text-sm text-muted-foreground line-clamp-1">
+                                            <div className="min-w-0 flex-1">
+                                                <div className="font-medium text-foreground break-words">{course.title}</div>
+                                                <div className="text-sm text-muted-foreground line-clamp-2 mt-1 break-words">
                                                     {course.description}
                                                 </div>
                                             </div>
                                         </div>
                                     </TableCell>
-                                    <TableCell>
-                                        <Badge variant="secondary">{course.category}</Badge>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Badge variant="secondary">{course.category}</Badge>
+                                        </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">
                                         {course.price === 0 ? 'Free' : `$${course.price}`}
                                     </TableCell>
-                                    <TableCell>{course.enrollments?.length || 0}</TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">{course.enrollments?.length || 0}</TableCell>
+                                    <TableCell className="text-center">
                                         {course.sections?.reduce((sum, s) => sum + (s.lessons?.length || 0), 0) || 0}
                                     </TableCell>
-                                    <TableCell>
-                                        <Badge variant={course.isPublished ? 'default' : 'secondary'}>
-                                            {course.isPublished ? 'Published' : 'Draft'}
-                                        </Badge>
+                                    <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                            <Badge variant={course.isPublished ? 'default' : 'secondary'}>
+                                                {course.isPublished ? 'Published' : 'Draft'}
+                                            </Badge>
+                                        </div>
                                     </TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex items-center justify-end gap-2">
+                                    <TableCell className="text-center">
+                                        <div className="flex items-center justify-center gap-2">
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
@@ -178,6 +183,7 @@ const CourseList = () => {
                             ))}
                         </TableBody>
                     </Table>
+                    </div>
                 </div>
             ) : (
                 <Card>

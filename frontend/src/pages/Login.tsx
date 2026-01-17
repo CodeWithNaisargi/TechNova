@@ -86,11 +86,11 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
-            <Card className="w-[350px]">
+        <div className="fixed inset-0 flex items-center justify-center bg-background overflow-hidden p-4">
+            <Card className="w-full max-w-[350px]">
                 <CardHeader>
-                    <CardTitle>Login</CardTitle>
-                    <CardDescription>Enter your credentials to access your account.</CardDescription>
+                    <CardTitle className="text-center text-2xl font-semibold">Login</CardTitle>
+                    <CardDescription className="text-center">Enter your credentials to access your account.</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>
                     <CardContent>

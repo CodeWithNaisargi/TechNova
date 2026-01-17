@@ -48,9 +48,9 @@ const CourseCard = ({ course, progress, showProgress = false }: CourseCardProps)
             transition={{ duration: 0.4 }}
         >
             <Link to={`/courses/${course.id}`}>
-                <Card className="h-full overflow-hidden border-2 hover:border-primary hover:shadow-xl transition-all duration-300">
+                <Card className="h-full overflow-hidden border-2 hover:border-primary hover:shadow-xl transition-all duration-300 w-full">
                     {/* Thumbnail */}
-                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
+                    <div className="relative w-full aspect-video overflow-hidden bg-secondary">
                         <motion.img
                             src={thumbnailUrl}
                             alt={course.title}
@@ -60,13 +60,13 @@ const CourseCard = ({ course, progress, showProgress = false }: CourseCardProps)
                         />
                         {/* Difficulty Badge */}
                         <div className="absolute top-3 right-3">
-                            <Badge className={`${difficultyColors[course.difficulty as keyof typeof difficultyColors] || difficultyColors.BEGINNER} font-semibold`}>
+                            <Badge className={`${difficultyColors[course.difficulty as keyof typeof difficultyColors] || difficultyColors.BEGINNER} font-semibold dark:opacity-90`}>
                                 {course.difficulty}
                             </Badge>
                         </div>
                         {/* Price Tag */}
                         <div className="absolute bottom-3 left-3">
-                            <div className="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
+                            <div className="bg-card/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg border border-border">
                                 <span className="text-lg font-bold text-primary">
                                     {course.price === 0 ? 'Free' : `$${course.price}`}
                                 </span>
@@ -84,7 +84,7 @@ const CourseCard = ({ course, progress, showProgress = false }: CourseCardProps)
                         </div>
 
                         {/* Title */}
-                        <h3 className="font-bold text-lg line-clamp-2 leading-tight hover:text-primary transition-colors">
+                        <h3 className="font-semibold text-lg line-clamp-2 leading-tight hover:text-primary transition-colors text-foreground">
                             {course.title}
                         </h3>
                     </CardHeader>
