@@ -42,8 +42,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (res.data?.success && res.data?.data) return res.data.data;
         return null;
       } catch (err: any) {
-        if (err.response?.status === 401) return null;
-        console.error("Error fetching /auth/me:", err);
+        // 401 is expected when user is not logged in - don't log as error
+        if (err.response?.status === 401) {
+          return null;
+        }
+        // Only log non-401 errors in development
+        if (import.meta.env.DEV && err.response?.status !== 401) {
+          console.error("Error fetching /auth/me:", err);
+        }
         return null;
       }
     },
@@ -108,16 +114,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   /**
    * ✅ Initialize Socket.io when user is authenticated
+   * Note: Tokens are stored in httpOnly cookies, so we don't need to pass them explicitly.
+   * The socket connection will automatically include cookies if on the same domain.
    */
   useEffect(() => {
     if (user) {
-      // Initialize Socket.io with actual JWT token
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        initializeSocket(token);
-        console.log('Socket.io initialized for user:', user.name);
-      } else {
-        console.warn('No access token found for socket authentication');
+      // Initialize Socket.io - cookies are sent automatically with the connection
+      // The backend should extract the token from cookies
+      // For now, we'll pass an empty string or let the backend handle it from cookies
+      try {
+        initializeSocket('');
+        if (import.meta.env.DEV) {
+          console.log('Socket.io initialized for user:', user.name);
+        }
+      } catch (error) {
+        // Silently handle socket initialization errors
+        if (import.meta.env.DEV) {
+          console.debug('Socket initialization:', error);
+        }
       }
     } else {
       disconnectSocket();

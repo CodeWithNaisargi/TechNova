@@ -35,7 +35,9 @@ api.interceptors.response.use(
     if (!originalRequest) return Promise.reject(error);
 
     // ❗ We do NOT retry /auth/me — user may just not be logged in
-    if (originalRequest.url?.includes("/auth/me")) {
+    // Suppress 401 errors for /auth/me from console (expected behavior)
+    if (originalRequest.url?.includes("/auth/me") && error.response?.status === 401) {
+      // Silently reject - this is expected when user is not logged in
       return Promise.reject(error);
     }
 
