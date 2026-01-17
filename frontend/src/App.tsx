@@ -73,9 +73,21 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/verify-email" element={<VerifyEmail />} />
+                </Route>
 
+                {/* Onboarding Routes - Separate from Dashboard */}
+                <Route path="/onboarding" element={<OnboardingLayout />}>
+                    <Route path="education" element={<EducationLevelSelection />} />
+                    <Route path="career" element={<StudentInterestSelection />} />
+                </Route>
+
+                {/* Protected Dashboard Routes - Requires completed onboarding for students */}
+                <Route element={<DashboardGuard><DashboardLayout /></DashboardGuard>}>
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
+                    <Route path="/courses" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><BrowseCourses /></ProtectedRoute>} />
+                    <Route path="/courses/:id" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><CourseDetails /></ProtectedRoute>} />
                     <Route path="/learning/:courseId" element={<ProtectedRoute allowedRoles={['STUDENT']}><LearningPlayer /></ProtectedRoute>} />
                     <Route path="/courses/:courseId/assignments" element={<ProtectedRoute allowedRoles={['STUDENT']}><CourseAssignments /></ProtectedRoute>} />
                     <Route path="/assignments/:assignmentId" element={<ProtectedRoute allowedRoles={['STUDENT']}><AssignmentDetails /></ProtectedRoute>} />
