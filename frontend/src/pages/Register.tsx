@@ -51,11 +51,11 @@ const Register = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
-            <Card className="w-[400px]">
+        <div className="fixed inset-0 flex items-center justify-center bg-background overflow-hidden p-4">
+            <Card className="w-full max-w-[400px] max-h-[90vh] overflow-y-auto">
                 <CardHeader>
-                    <CardTitle>Create an Account</CardTitle>
-                    <CardDescription>Get started with our LMS platform.</CardDescription>
+                    <CardTitle className="text-center text-2xl font-semibold">Create an Account</CardTitle>
+                    <CardDescription className="text-center">Get started with our LMS platform.</CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>
                     <CardContent>

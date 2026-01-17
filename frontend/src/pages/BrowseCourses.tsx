@@ -62,21 +62,21 @@ const BrowseCourses = () => {
     const categories = Array.from(new Set(data?.map((c) => c.category) || []));
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
             {/* Search + Filter */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-4">Browse Courses</h1>
+            <div className="mb-6 sm:mb-8 pt-4 sm:pt-6">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">Browse Courses</h1>
 
-                <div className="flex gap-4 flex-wrap">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     {/* Search */}
-                    <div className="flex-1 min-w-[200px]">
+                    <div className="flex-1 w-full sm:min-w-[200px]">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                             <Input
                                 placeholder="Search courses..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="pl-10"
+                                className="pl-10 w-full"
                             />
                         </div>
                     </div>
@@ -86,7 +86,7 @@ const BrowseCourses = () => {
                         value={category}
                         onValueChange={(val) => setCategory(val === 'all' ? '' : val)}
                     >
-                        <SelectTrigger className="w-[200px]">
+                        <SelectTrigger className="w-full sm:w-[200px]">
                             <SelectValue placeholder="All Categories" />
                         </SelectTrigger>
 
@@ -107,7 +107,7 @@ const BrowseCourses = () => {
             {isLoading ? (
                 <div className="text-center py-12">Loading courses...</div>
             ) : data && data.length > 0 ? (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {data.map((course) => {
                         // FINAL FIX — correct universal URL builder
                         const thumbnail = course.thumbnail
@@ -121,10 +121,10 @@ const BrowseCourses = () => {
                         return (
                             <Card
                                 key={course.id}
-                                className="overflow-hidden hover:shadow-lg transition-shadow border border-gray-200 bg-white"
+                                className="overflow-hidden hover:shadow-lg transition-shadow border border-border"
                             >
                                 {thumbnail && (
-                                    <div className="w-full aspect-video overflow-hidden bg-gray-100">
+                                    <div className="w-full aspect-video overflow-hidden bg-secondary">
                                         <img
                                             src={thumbnail}
                                             alt={course.title}
@@ -134,10 +134,10 @@ const BrowseCourses = () => {
                                 )}
 
                                 <CardHeader>
-                                    <CardTitle className="line-clamp-2 text-lg font-semibold text-gray-900 mb-2">
+                                    <CardTitle className="line-clamp-2 text-lg font-semibold text-foreground mb-2">
                                         {course.title}
                                     </CardTitle>
-                                    <CardDescription className="line-clamp-2 text-sm text-gray-600">
+                                    <CardDescription className="line-clamp-2 text-sm text-muted-foreground">
                                         {course.description}
                                     </CardDescription>
                                 </CardHeader>
@@ -180,8 +180,8 @@ const BrowseCourses = () => {
                     })}
                 </div>
             ) : (
-                <div className="text-center py-12 text-muted-foreground">
-                    No courses found. Try adjusting your search or filters.
+                <div className="text-center py-12">
+                    <p className="text-muted-foreground">No courses found. Try adjusting your search or filters.</p>
                 </div>
             )}
         </div>
