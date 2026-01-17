@@ -5,7 +5,6 @@ import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
-import { SidebarProvider } from './context/SidebarContext'
 
 const queryClient = new QueryClient()
 
@@ -19,9 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 }}
             >
                 <ThemeProvider>
-                    <SidebarProvider>
-                        <App />
-                    </SidebarProvider>
+                    <App />
                 </ThemeProvider>
             </BrowserRouter>
         </QueryClientProvider>
