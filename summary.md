@@ -1,427 +1,300 @@
-# LMS Platform - Project Documentation
+# SkillOrbit LMS - Complete Feature Summary
 
-## 1. Project Overview
-
-### What This Project Is
-
-A full-stack Learning Management System (LMS) built for educational institutions and independent instructors. The platform enables course creation, student enrollment, assignment management, progress tracking, and automated certificate generation.
-
-### Why It Exists
-
-Traditional learning management lacks centralized platforms where:
-- Students can access courses, complete assignments, and earn verifiable certificates
-- Instructors can manage content and evaluate submissions efficiently
-- Administrators can oversee users and platform operations
-
-### Users
-
-| Role | Description |
-|------|-------------|
-| **Student** | Enrolls in courses, submits assignments, earns certificates |
-| **Instructor** | Creates courses, designs assignments, grades submissions |
-| **Admin** | Manages users, monitors platform, has full control |
+> **Project**: SkillOrbit - AI-Powered Learning Management System  
+> **Tech Stack**: React + TypeScript (Frontend) | Node.js + Express + Prisma (Backend) | PostgreSQL  
+> **Generated**: January 2026
 
 ---
 
-## 2. System Architecture
+## 🎯 Project Overview
 
-```
-┌─────────────┐     HTTP/REST      ┌─────────────┐
-│   Frontend  │ ◄─────────────────► │   Backend   │
-│  (React)    │     + Cookies       │  (Express)  │
-└─────────────┘                     └──────┬──────┘
-                                           │
-                    ┌──────────────────────┼──────────────────────┐
-                    │                      │                      │
-                    ▼                      ▼                      ▼
-             ┌───────────┐          ┌───────────┐          ┌───────────┐
-             │ PostgreSQL│          │   SMTP    │          │  Uploads  │
-             │  (Prisma) │          │ (MailHog) │          │  (Multer) │
-             └───────────┘          └───────────┘          └───────────┘
-```
+SkillOrbit is a production-grade Learning Management System designed for **domain-specific education** across three key sectors:
+- 🌾 **Agriculture Technology**
+- 🏥 **Healthcare Technology**
+- 🏙️ **Urban Technology**
 
-### Data Flow
-
-1. User interacts with React frontend
-2. Frontend sends HTTP requests via Axios to Express API
-3. Backend validates request through auth/role middleware
-4. Controller processes business logic using Prisma ORM
-5. Database operations complete
-6. Response returns to frontend
-7. React Query cache updates and UI re-renders
+The platform provides personalized learning experiences using AI-powered recommendations, career path guidance, and education-level customization.
 
 ---
 
-## 3. Tech Stack
+## 🔐 Authentication & Authorization
 
-### Frontend
+### Features Implemented
+| Feature | Description |
+|---------|-------------|
+| **User Registration** | Email/password signup with role selection (Student/Instructor/Admin) |
+| **Email Verification** | JWT-based token verification with 24-hour expiry |
+| **Login/Logout** | Secure cookie-based JWT authentication with refresh tokens |
+| **Role-Based Access** | Protected routes for STUDENT, INSTRUCTOR, ADMIN roles |
+| **Password Hashing** | bcrypt encryption for all passwords |
 
-| Technology | Purpose |
-|------------|---------|
-| React 18 | Component-based UI with hooks |
-| TypeScript | Static typing for reliability |
-| Vite | Fast build tool with HMR |
-| TailwindCSS | Utility-first styling |
-| ShadCN UI | Accessible component primitives |
-| React Query | Server state with caching |
-| React Router v6 | Client-side routing |
-| Framer Motion | UI animations |
-| jsPDF + html2canvas | PDF certificate generation |
-| Axios | HTTP client |
-
-### Backend
-
-| Technology | Purpose |
-|------------|---------|
-| Node.js + Express | REST API server |
-| TypeScript | Type-safe backend code |
-| Prisma ORM | Database access with migrations |
-| PostgreSQL | Relational data storage |
-| JWT | Stateless authentication |
-| bcryptjs | Password hashing |
-| Nodemailer | SMTP email sending |
-| Multer | File upload handling |
-| Zod | Request validation |
-| Socket.io | Real-time notifications |
+### Technical Details
+- JWT Access Token: 15 minutes expiry
+- JWT Refresh Token: 7 days expiry
+- Email verification via MailHog (development) / SMTP (production)
 
 ---
 
-## 4. Authentication Flow
-
-### Registration Flow
-
-```
-User submits form → POST /api/auth/register → Validate input (Zod)
-                                                    ↓
-                                            Hash password (bcrypt)
-                                                    ↓
-                                            Create user (Prisma)
-                                                    ↓
-                                            Send welcome email (async)
-                                                    ↓
-                                            Generate JWT tokens
-                                                    ↓
-                                            Set HTTP-only cookies
-                                                    ↓
-                                            Return user data
-```
-
-### Login Flow
-
-```
-User submits credentials → POST /api/auth/login → Find user by email
-                                                        ↓
-                                                Compare password hash
-                                                        ↓
-                                                Generate JWT tokens
-                                                        ↓
-                                                Set HTTP-only cookies
-                                                        ↓
-                                                Return user data
-```
-
-### JWT Token Strategy
-
-| Token | Expiry | Purpose |
-|-------|--------|---------|
-| Access Token | 15 min | API authorization |
-| Refresh Token | 7 days | Obtain new access token |
-
-### Protected Route Flow
-
-```
-Request → protect middleware → Verify JWT → Check user exists
-                                                   ↓
-                               authorize middleware → Check role
-                                                           ↓
-                                                      Controller
-```
-
----
-
-## 5. Email System
+## 🎓 Onboarding Flow (NEW)
 
 ### Architecture
+Separated onboarding from dashboard to provide a clean first-time user experience.
 
 ```
-Registration → authController → sendVerificationEmail() → Nodemailer → SMTP Server
-                                      ↓
-                              Non-blocking (async)
-                              Errors logged only
+Register → Email Verification → Login → Onboarding → Dashboard
+                                           ↓
+                                   /onboarding/education
+                                           ↓
+                                   /onboarding/career
+                                           ↓
+                                      /dashboard
 ```
 
-### Email Verification Flow
+### Components
+| Component | Purpose |
+|-----------|---------|
+| `OnboardingLayout.tsx` | Clean UI without sidebar, progress indicator |
+| `EducationLevelSelection.tsx` | Select education level (Secondary to Postgraduate) |
+| `StudentInterestSelection.tsx` | Select career path interest |
+| `DashboardGuard` | Prevents dashboard access until onboarding complete |
 
-```
-Register
-  ↓
-User created with isEmailVerified = false
-  ↓
-Verification email sent (with token link)
-  ↓
-User clicks link → GET /api/auth/verify-email?token=xxx
-  ↓
-Token validated, expiry checked
-  ↓
-isEmailVerified = true, token cleared
-  ↓
-Welcome email sent
-  ↓
-User can now login
-```
-
-**Why It Exists:**
-- Prevents fake/spam registrations
-- Ensures users have access to their email
-- Required for password reset and notifications
-- Industry standard security practice
-
-**Security Features:**
-- Tokens generated using `crypto.randomBytes(32)`
-- 24-hour token expiry
-- Tokens cleared after use
-- Login blocked until verified
-
-### Configuration
-
-Environment variables in `.env`:
-
-```env
-SMTP_HOST=localhost        # SMTP server host
-SMTP_PORT=1025             # SMTP port (1025 for MailHog)
-SMTP_USER=                 # Optional: SMTP username
-SMTP_PASS=                 # Optional: SMTP password
-SMTP_FROM=noreply@lms.com  # Sender address
-```
-
-### Implementation
-
-**File:** `backend/src/utils/email.ts`
-
-- `sendVerificationEmail(to, name, token)` - Verification link email
-- `sendWelcomeEmail(to, name)` - Post-verification welcome email
-- Lazy transporter initialization
-- Professional HTML templates
-
-**Endpoints:**
-- `POST /api/auth/register` - Creates user, sends verification email
-- `GET /api/auth/verify-email?token=xxx` - Verifies email
-- `POST /api/auth/resend-verification` - Resends verification email
-
-### Frontend Pages
-
-- `Register.tsx` - Shows "Check your email" after registration
-- `VerifyEmail.tsx` - Handles verification link (success/error/expired states)
-- `Login.tsx` - Shows "Resend verification" for unverified users
-
-### Testing with MailHog
-
-1. Start MailHog:
-   ```bash
-   docker run -d -p 1025:1025 -p 8025:8025 mailhog/mailhog
-   ```
-
-2. Register a new user
-
-3. View email at: http://localhost:8025
-
-4. Click verification link
-
-5. Login with verified account
-
-### Production Switch
-
-Update `.env` for production SMTP (e.g., SendGrid):
-
-```env
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_USER=apikey
-SMTP_PASS=your-sendgrid-api-key
-SMTP_FROM=noreply@yourdomain.com
-```
+### Education Levels
+- Secondary (10th)
+- Higher Secondary (12th)
+- Diploma
+- Undergraduate
+- Postgraduate
 
 ---
 
-## 6. Role-Based Functionality
+## 🎯 Career Path System
 
-### Student
+### Career Paths Available
+| Career | Domain | Key Skills |
+|--------|--------|------------|
+| Frontend Developer | TECH | HTML5, CSS3, JavaScript, React, TypeScript |
+| Healthcare Data Analyst | HEALTHCARE | Python, SQL, Tableau, Statistics |
+| Smart City Planner | URBAN | GIS, Urban Design, IoT, Sustainability |
 
-| Feature | Route |
-|---------|-------|
-| Browse courses | `/courses` |
-| Enroll in course | `/courses/:id` |
-| View assignments | `/courses/:courseId/assignments` |
-| Submit assignment | `/assignments/:id` |
-| Track progress | `/dashboard` |
-| Download certificate | `/certificates` |
-| Settings | `/settings` |
-
-### Instructor
-
-| Feature | Route |
-|---------|-------|
-| Dashboard with stats | `/instructor/dashboard` |
-| Create/edit courses | `/instructor/courses` |
-| Manage assignments | `/instructor/assignments` |
-| Review submissions | `/instructor/submissions` |
-
-### Admin
-
-| Feature | Route |
-|---------|-------|
-| Platform analytics | `/admin/dashboard` |
-| User management | `/admin/users` |
-| Review all submissions | `/admin/submissions` |
-| Create assignments | `/admin/assignments/new` |
+### Features
+- Career-skill mapping for recommendations
+- Domain-aligned course filtering
+- Progress tracking toward career goals
 
 ---
 
-## 7. Folder Structure
+## 📚 Course Management
 
-```
-TASK-4/
-├── backend/
-│   ├── prisma/
-│   │   ├── schema.prisma      # Database models
-│   │   ├── migrations/        # Migration history
-│   │   └── seedCourses.ts     # Demo data seeder
-│   ├── src/
-│   │   ├── config/            # DB client, Socket.io
-│   │   ├── controllers/       # Request handlers
-│   │   ├── middleware/        # auth, roles, upload
-│   │   ├── routes/            # API route definitions
-│   │   ├── utils/
-│   │   │   ├── jwt.ts         # Token generation
-│   │   │   └── email.ts       # SMTP email utility
-│   │   └── server.ts          # Express app setup
-│   ├── uploads/               # User uploaded files
-│   └── .env                   # Environment config
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   ├── pages/             # Route-level pages
-│   │   ├── layouts/           # Main + Dashboard layouts
-│   │   ├── context/           # AuthContext provider
-│   │   ├── hooks/             # Custom React hooks
-│   │   ├── services/          # API + Socket clients
-│   │   └── App.tsx            # Route definitions
-│   └── .env                   # Frontend env config
-│
-└── summary.md                 # This documentation
-```
+### Domain-Focused Courses (30 Total)
 
----
+#### 🌾 Agriculture Technology (10 Courses)
+1. Precision Agriculture with IoT Sensors
+2. Agricultural Drones: Mapping & Crop Analysis
+3. Smart Greenhouse Management Systems
+4. Soil Health Diagnostics & Digital Mapping
+5. Farm Management Information Systems (FMIS)
+6. Weather-Based Crop Advisory Systems
+7. Livestock Monitoring & Smart Dairy Technology
+8. Agricultural Supply Chain & Traceability
+9. Remote Sensing for Agriculture
+10. Organic Farming Certification & Digital Records
 
-## 8. Environment and Setup
+#### 🏥 Healthcare Technology (10 Courses)
+1. Hospital Information Systems (HIS) Implementation
+2. Telemedicine Platform Development
+3. Medical IoT & Wearable Health Devices
+4. Healthcare Data Analytics & Visualization
+5. AI-Powered Medical Image Analysis
+6. Electronic Health Records (EHR) Management
+7. Public Health Surveillance Systems
+8. Pharmacy Management & Drug Inventory Systems
+9. Healthcare Cybersecurity & Compliance
+10. Clinical Decision Support Systems
 
-### Prerequisites
+#### 🏙️ Urban Technology (10 Courses)
+1. Smart Traffic Management Systems
+2. Urban IoT Infrastructure & Sensor Networks
+3. Sustainable Urban Water Management
+4. Smart Waste Management & Recycling Systems
+5. Urban Mobility & Public Transport Analytics
+6. Smart City Platform Architecture
+7. Urban Air Quality Monitoring & Analysis
+8. Smart Parking & Urban Space Optimization
+9. Urban Energy Management & Smart Grids
+10. Citizen Engagement & Digital Governance
 
-- Node.js v18+
-- PostgreSQL v14+
-- Docker (for MailHog) or MailHog binary
-
-### Backend Setup
-
-```bash
-cd backend
-npm install
-
-# Configure .env (copy from .env.example)
-# Set DATABASE_URL, JWT secrets, SMTP config
-
-npx prisma migrate dev
-npx prisma generate
-npx ts-node prisma/seedCourses.ts  # Optional: seed demo data
-
-npm run dev  # Runs on http://localhost:5001
-```
-
-### Frontend Setup
-
-```bash
-cd frontend
-npm install
-
-# Configure .env
-# VITE_API_URL=http://localhost:5001/api
-
-npm run dev  # Runs on http://localhost:5174
-```
-
-### Required Environment Variables
-
-**Backend (.env):**
-
-```env
-PORT=5001
-DATABASE_URL=postgresql://user:pass@localhost:5432/lms_db
-JWT_SECRET=your-secret-key
-JWT_REFRESH_SECRET=your-refresh-secret
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
-FRONTEND_URL=http://localhost:5174
-NODE_ENV=development
-SMTP_HOST=localhost
-SMTP_PORT=1025
-SMTP_FROM=noreply@lms.com
-```
-
-**Frontend (.env):**
-
-```env
-VITE_API_URL=http://localhost:5001/api
-VITE_BASE_URL=http://localhost:5001
-```
+### Course Features
+- 8-10 assignments per course
+- Real instructor ownership (domain-aligned)
+- Difficulty levels (Beginner/Intermediate/Advanced)
+- Target education level matching
+- Prerequisites and learning outcomes
+- Pricing and duration
 
 ---
 
-## 9. Key Design Decisions
+## 👨‍🏫 Instructor System
 
-### Non-Blocking Email
+### Domain-Specialized Instructors (9 Total)
 
-Email sending is async with error catching. This ensures:
-- Registration always succeeds even if SMTP is down
-- No user-facing errors for email failures
-- Errors are logged for debugging
+| Domain | Instructors |
+|--------|-------------|
+| Agriculture | Dr. Priya Sharma, Rajesh Kumar, Dr. Anita Desai |
+| Healthcare | Dr. Vikram Mehta, Dr. Sneha Patil, Arun Nair |
+| Urban | Dr. Meera Iyer, Sanjay Verma, Dr. Kavita Singh |
 
-### Centralized Utilities
-
-- `utils/jwt.ts` - Token generation and cookie management
-- `utils/email.ts` - All email logic in one place
-- Easy to modify or extend without touching controllers
-
-### HTTP-Only Cookies
-
-JWTs stored in HTTP-only cookies prevent XSS attacks. No localStorage for sensitive tokens.
-
-### Environment-Based Configuration
-
-All secrets and configuration via `.env`:
-- Easy deployment across environments
-- No hardcoded credentials
-- Production switch without code changes
-
-### React Query for State
-
-Server state managed by React Query:
-- Automatic caching
-- Background refetching
-- Optimistic updates
-- Reduced API calls
+### Instructor Features
+- Each instructor teaches only their domain
+- Realistic bios with credentials
+- Login capability for course management
+- Dashboard access to view enrollments
 
 ---
 
-## 10. Future Scope
+## 🤖 AI Recommendations Engine
 
-- [x] Email verification on registration
-- [ ] Password reset via email
-- [ ] Real-time notifications (Socket.io integration)
-- [ ] Video conferencing for live classes
-- [ ] Payment gateway for paid courses
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] Discussion forums per course
-- [ ] Quiz/exam functionality with auto-grading
-- [ ] Dark mode toggle
+### Features
+| Feature | Description |
+|---------|-------------|
+| **Course Recommendations** | ML-based matching using education level + career path + skills |
+| **Next Skill Suggestion** | Identifies gaps and suggests focus areas |
+| **Similarity Scoring** | % match displayed for each recommendation |
+| **Domain Filtering** | Prioritizes courses in user's career domain |
+
+### API Endpoints
+- `GET /api/recommendations` - Get personalized course recommendations
+- `GET /api/recommendations/next-skill` - Get next focus skill
+
+---
+
+## 📊 Student Dashboard
+
+### Sections
+1. **Welcome Banner** - Personalized greeting with career path
+2. **Stats Cards** - Enrolled courses, completed, assignments pending
+3. **Enrolled Courses** - Progress tracking with visual indicators
+4. **AI Recommendations** - Personalized course suggestions
+5. **Next Focus Skill** - Career-aligned skill to learn next
+6. **Find Courses CTA** - Quick navigation to course catalog
+
+### Real-Time Features
+- WebSocket progress updates
+- Certificate generation notifications
+- Live enrollment sync
+
+---
+
+## 📝 Assignment System
+
+### Features
+- ~270 assignments across 30 courses (8-10 per course)
+- Multiple types: Quiz, Assignment, Project, Case Study, Lab Exercise
+- Due date tracking
+- Score tracking (maxScore field)
+- Submission management
+
+---
+
+## ⭐ Reviews & Ratings
+
+### Features
+- Student reviews for courses
+- 1-5 star rating system
+- Comment/feedback text
+- Review moderation
+
+---
+
+## 🔧 Technical Architecture
+
+### Frontend
+```
+src/
+├── components/
+│   ├── ui/              # Shadcn UI components
+│   └── student/         # Student-specific components
+├── context/
+│   └── AuthContext.tsx  # Authentication state
+├── layouts/
+│   ├── MainLayout.tsx   # Public pages
+│   ├── DashboardLayout.tsx  # Protected dashboard
+│   └── OnboardingLayout.tsx # Onboarding flow
+├── pages/
+│   ├── student/         # Student pages
+│   ├── instructor/      # Instructor pages
+│   └── admin/           # Admin pages
+└── services/
+    └── api.ts           # Axios instance
+```
+
+### Backend
+```
+src/
+├── controllers/         # Request handlers
+├── routes/              # API route definitions
+├── middleware/          # Auth, validation, etc.
+├── utils/               # Email, tokens, etc.
+└── server.ts            # Express app entry
+
+prisma/
+├── schema.prisma        # Database models
+├── seedCourses.ts       # Course seed data
+└── seedCareerPaths.ts   # Career path seed data
+```
+
+### Database Models
+- User, Course, Enrollment, Assignment, Submission
+- CareerPath, Skill, CareerSkill
+- Review, Progress, Certificate
+- AssignmentProgress
+
+---
+
+## 🔑 Login Credentials (Seeded Data)
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | admin@lms.com | admin123 |
+| **Student** | student1@lms.com | student123 |
+| **Instructor (Agri)** | dr.priya.sharma@lms.com | instructor123 |
+| **Instructor (Health)** | dr.vikram.mehta@lms.com | instructor123 |
+| **Instructor (Urban)** | dr.meera.iyer@lms.com | instructor123 |
+
+---
+
+## 🚀 Key Improvements Made
+
+1. **Onboarding Architecture** - Separated from dashboard, clean progress UI
+2. **Domain-Centric Design** - All courses aligned to 3 professional domains
+3. **Instructor Ownership** - Each instructor owns only their domain courses
+4. **Email Verification Flow** - Robust token-based verification
+5. **React Query Caching** - Smart cache invalidation for fresh data
+6. **Real-Time Updates** - Socket.io for progress and certificates
+7. **Production-Grade Seed Data** - 30 realistic courses, 9 instructors
+
+---
+
+## 📁 Port Configuration
+
+| Service | Port |
+|---------|------|
+| Frontend (Vite) | 5174 |
+| Backend (Express) | 5001 |
+| MailHog SMTP | 1025 |
+| MailHog Web UI | 8025 |
+| PostgreSQL | 5432 |
+
+---
+
+## ✅ Judge-Ready Features
+
+1. **Professional Onboarding** - Clean, focused first-time experience
+2. **Domain Expertise** - Government/NGO/University-ready content
+3. **AI Recommendations** - Career-aligned course suggestions
+4. **Real Instructor Data** - Believable credentials and ownership
+5. **Complete User Flows** - Register → Verify → Onboard → Learn
+6. **Role Separation** - Clear Admin/Instructor/Student boundaries
+
+---
+
+*This documentation reflects the complete feature set of SkillOrbit LMS as of January 2026.*

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../config/prisma';
+import { inferSkillsFromCourseCompletion } from '../services/recommendationService';
 
 // @desc    Update lesson progress
 // @route   POST /api/progress
@@ -151,7 +152,7 @@ export const recalculateProgress = async (req: Request, res: Response, next: Nex
         const completedItems = completedLessons + completedAssignments;
         const percentage = totalItems === 0 ? 0 : Math.round((completedItems / totalItems) * 100);
 
-        // If 100% complete, trigger certificate generation
+        // If 100% complete, trigger certificate generation AND skill inference
         if (percentage === 100) {
             const user = await prisma.user.findUnique({
                 where: { id: userId },
@@ -177,6 +178,10 @@ export const recalculateProgress = async (req: Request, res: Response, next: Nex
                         completionPercentage: percentage
                     }
                 });
+
+                // Infer skills from course completion
+                await inferSkillsFromCourseCompletion(userId, courseId);
+                console.log(`🧠 Skills inferred for user ${userId} from course ${courseId}`);
             }
         }
 
