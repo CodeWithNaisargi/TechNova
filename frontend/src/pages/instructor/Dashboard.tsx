@@ -268,24 +268,24 @@ const InstructorDashboard = () => {
                         <CardContent>
                             <div className="grid md:grid-cols-3 gap-4">
                                 <Link to="/instructor/courses/new">
-                                    <button className="w-full p-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                        <Plus className="w-5 h-5 mx-auto mb-2" />
+                                    <button className="w-full p-5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                        <Plus className="w-5 h-5" />
                                         <span className="font-semibold">Create Course</span>
                                     </button>
                                 </Link>
 
                                 <Link to="/instructor/assignments">
-                                    <button className="w-full p-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                        <FileText className="w-5 h-5 mx-auto mb-2" />
+                                    <button className="w-full p-5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                        <FileText className="w-5 h-5" />
                                         <span className="font-semibold">Manage Assignments</span>
                                     </button>
                                 </Link>
 
                                 {stats?.pendingSubmissions > 0 && (
                                     <Link to="/instructor/submissions?status=PENDING">
-                                        <button className="w-full p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
-                                            <Clock className="w-5 h-5 mx-auto mb-2" />
-                                            <span className="font-semibold">
+                                        <button className="w-full p-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <Clock className="w-5 h-5" />
+                                            <span className="font-semibold text-center">
                                                 Review {stats.pendingSubmissions} Submissions
                                             </span>
                                         </button>
