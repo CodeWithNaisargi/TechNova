@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useSocket } from "@/hooks/useSocket";
 import api from "@/services/api";
+import RecommendationsSection from "@/components/student/RecommendationsSection";
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -166,7 +167,10 @@ export default function Dashboard() {
                     ))}
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-6 mb-10">
+                {/* AI RECOMMENDATIONS */}
+                <RecommendationsSection />
+
+                <div className="grid lg:grid-cols-3 gap-6 mb-10 mt-10">
 
                     {/* LEARNING PROGRESS */}
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-2">

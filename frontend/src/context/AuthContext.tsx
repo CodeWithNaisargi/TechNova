@@ -9,6 +9,9 @@ interface User {
   email: string
   role: "ADMIN" | "INSTRUCTOR" | "STUDENT"
   avatar?: string
+  interestedCareerPathId?: string | null
+  interestedCareerPath?: { id: string; title: string } | null
+  educationLevel?: string | null
 }
 
 interface AuthContextType {

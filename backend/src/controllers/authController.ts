@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from "express"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
+import crypto from "crypto"
 import prisma from "../config/prisma"
 import { generateTokens, setCookies, clearCookies } from "../utils/jwt"
 import { Role } from "@prisma/client"
+import { sendVerificationEmail, sendWelcomeEmail } from "../utils/email"
 
 // ------------------------ REGISTER ------------------------
 export const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,26 +19,143 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
     const hashed = await bcrypt.hash(password, 10)
 
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex")
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashed,
         role: role || Role.STUDENT,
+        isEmailVerified: false,
+        emailVerificationToken: verificationToken,
+        emailVerificationTokenExpiry: tokenExpiry,
       },
     })
 
-    const { accessToken, refreshToken } = generateTokens(user.id, user.role)
-    setCookies(res, accessToken, refreshToken)
+    // Send verification email (non-blocking)
+    sendVerificationEmail(user.email, user.name, verificationToken).catch((emailError) => {
+      console.error("Failed to send verification email:", emailError.message || emailError)
+    })
 
     return res.status(201).json({
       success: true,
+      message: "Registration successful. Please check your email to verify your account.",
       data: {
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
       },
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ------------------------ VERIFY EMAIL ------------------------
+export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { token } = req.query
+
+    if (!token || typeof token !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid verification token" })
+    }
+
+    const user = await prisma.user.findFirst({
+      where: { emailVerificationToken: token },
+    })
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid verification token",
+      })
+    }
+
+    // Check if already verified (Handle double-clicks/prefetches)
+    if (user.isEmailVerified) {
+      return res.status(200).json({
+        success: true,
+        message: "Email is already verified. You can log in.",
+      })
+    }
+
+    // Check if token is expired
+    if (user.emailVerificationTokenExpiry && user.emailVerificationTokenExpiry < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Verification token has expired. Please request a new one.",
+      })
+    }
+
+    // Mark email as verified but KEEP the token for a while (or indefinitely until re-issued)
+    // This allows the user to refresh the success page without getting an error
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isEmailVerified: true,
+        // Do NOT clear token immediately to prevent "Invalid Token" on refresh
+        // emailVerificationToken: null, 
+        // emailVerificationTokenExpiry: null,
+      },
+    })
+
+    // Send welcome email after verification (non-blocking)
+    sendWelcomeEmail(user.email, user.name).catch((emailError) => {
+      console.error("Failed to send welcome email:", emailError.message || emailError)
+    })
+
+    return res.json({
+      success: true,
+      message: "Email verified successfully. You can now log in.",
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ------------------------ RESEND VERIFICATION EMAIL ------------------------
+export const resendVerification = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" })
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } })
+    if (!user) {
+      // Don't reveal if user exists
+      return res.json({ success: true, message: "If an account exists with this email, a verification link has been sent." })
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({ success: false, message: "Email is already verified" })
+    }
+
+    // Generate new verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex")
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerificationToken: verificationToken,
+        emailVerificationTokenExpiry: tokenExpiry,
+      },
+    })
+
+    // Send verification email (non-blocking)
+    sendVerificationEmail(user.email, user.name, verificationToken).catch((emailError) => {
+      console.error("Failed to send verification email:", emailError.message || emailError)
+    })
+
+    return res.json({
+      success: true,
+      message: "If an account exists with this email, a verification link has been sent.",
     })
   } catch (err) {
     next(err)
@@ -56,6 +175,15 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const isValid = await bcrypt.compare(password, user.password)
     if (!isValid) {
       return res.status(401).json({ success: false, message: "Invalid credentials" })
+    }
+
+    // Check if email is verified
+    if (!user.isEmailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: "Please verify your email before logging in",
+        code: "EMAIL_NOT_VERIFIED",
+      })
     }
 
     const { accessToken, refreshToken } = generateTokens(user.id, user.role)
@@ -140,6 +268,13 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
         role: true,
         avatar: true,
         bio: true,
+        educationLevel: true,
+        interestedCareerPath: {
+          select: {
+            id: true,
+            title: true,
+          }
+        },
       },
     })
 

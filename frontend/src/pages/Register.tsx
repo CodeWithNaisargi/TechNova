@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import api from '@/services/api';
@@ -14,30 +13,22 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('STUDENT');
-    const { register } = useAuth();
-    const navigate = useNavigate();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
+    const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await register({ name, email, password, role });
+            const response = await api.post('/auth/register', { name, email, password, role });
 
-            // Fetch user data to determine role-based redirect (auto-login after registration)
-            const userResponse = await api.get('/auth/me');
-            const userData = userResponse.data.data;
-
-            toast({ title: "Success", description: "Account created successfully!" });
-
-            // Redirect based on role
-            if (userData.role === 'ADMIN') {
-                navigate('/admin/dashboard');
-            } else if (userData.role === 'INSTRUCTOR') {
-                navigate('/instructor/dashboard');
-            } else {
-                navigate('/dashboard');
+            if (response.data.success) {
+                setRegistrationSuccess(true);
+                toast({
+                    title: "Registration Successful",
+                    description: "Please check your email to verify your account."
+                });
             }
         } catch (error: any) {
             toast({
@@ -49,6 +40,39 @@ const Register = () => {
             setIsLoading(false);
         }
     };
+
+    if (registrationSuccess) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
+                <Card className="w-[450px]">
+                    <CardHeader className="text-center">
+                        <div className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <CardTitle>Check Your Email</CardTitle>
+                        <CardDescription>
+                            We've sent a verification link to <strong>{email}</strong>
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-center">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Click the link in the email to verify your account and start learning.
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                            Didn't receive the email? Check your spam folder or try logging in to resend.
+                        </p>
+                    </CardContent>
+                    <CardFooter className="flex justify-center">
+                        <Link to="/login">
+                            <Button variant="outline">Go to Login</Button>
+                        </Link>
+                    </CardFooter>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-slate-50">
