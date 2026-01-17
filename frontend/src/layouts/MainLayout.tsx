@@ -9,7 +9,7 @@ const MainLayout = () => {
         <div className="min-h-screen flex flex-col">
             <header className="border-b bg-background sticky top-0 z-50">
                 <div className="container flex h-16 items-center justify-between px-4">
-                    <Link to="/" className="text-2xl font-bold text-primary">LMS Platform</Link>
+                    <Link to="/" className="text-2xl font-semibold text-gray-900 tracking-tight">SkillOrbit</Link>
                     <nav className="flex items-center gap-4">
                         <Link to="/courses" className="text-sm font-medium hover:underline">Browse Courses</Link>
                         {user ? (
@@ -31,8 +31,8 @@ const MainLayout = () => {
             <main className="flex-1">
                 <Outlet />
             </main>
-            <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} LMS Platform. All rights reserved.
+            <footer className="border-t py-6 text-center text-sm text-gray-600">
+                &copy; {new Date().getFullYear()} SkillOrbit. All rights reserved.
             </footer>
         </div>
     );

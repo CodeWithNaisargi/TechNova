@@ -79,20 +79,20 @@ const InstructorDashboard = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-8">
+        <div className="min-h-screen bg-white">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-8"
+                    className="mb-10"
                 >
-                    <h1 className="text-4xl font-bold text-slate-900 mb-2">Instructor Dashboard</h1>
-                    <p className="text-slate-600">Manage your courses and review submissions</p>
+                    <h1 className="text-3xl font-semibold text-gray-900 mb-2">Instructor Dashboard</h1>
+                    <p className="text-gray-600 text-base">Manage your courses and review submissions</p>
                 </motion.div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                     {statCards.map((stat, index) => (
                         <motion.div
                             key={stat.title}
@@ -101,22 +101,22 @@ const InstructorDashboard = () => {
                             transition={{ delay: index * 0.1 }}
                         >
                             <Link to={stat.link}>
-                                <Card className="hover:shadow-xl transition-all duration-300 border-2 hover:border-primary cursor-pointer">
+                                <Card className="hover:shadow-lg transition-all duration-200 border border-gray-200 cursor-pointer bg-white">
                                     <CardContent className="p-6">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
-                                                <p className="text-sm font-medium text-muted-foreground mb-1">
+                                                <p className="text-sm font-medium text-gray-600 mb-2">
                                                     {stat.title}
                                                 </p>
-                                                <h3 className="text-3xl font-bold text-slate-900 mb-1">
+                                                <h3 className="text-3xl font-semibold text-gray-900 mb-2">
                                                     {stat.value}
                                                 </h3>
-                                                <p className="text-xs text-muted-foreground">
+                                                <p className="text-xs text-gray-500">
                                                     {stat.subtitle}
                                                 </p>
                                             </div>
-                                            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
-                                                <stat.icon className="w-6 h-6 text-white" />
+                                            <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-sm`}>
+                                                <stat.icon className="w-7 h-7 text-white" />
                                             </div>
                                         </div>
                                     </CardContent>
@@ -127,21 +127,21 @@ const InstructorDashboard = () => {
                 </div>
 
                 {/* Main Content Grid */}
-                <div className="grid lg:grid-cols-2 gap-6">
+                <div className="grid lg:grid-cols-2 gap-6 mb-10">
                     {/* My Courses */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between">
-                                <CardTitle className="flex items-center gap-2">
-                                    <BookOpen className="w-5 h-5" />
+                        <Card className="border border-gray-200 bg-white">
+                            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                                <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                                    <BookOpen className="w-5 h-5 text-gray-600" />
                                     My Courses
                                 </CardTitle>
                                 <Link to="/instructor/courses/new">
-                                    <Button size="sm">
+                                    <Button size="sm" className="bg-[#2563EB] hover:bg-[#1d4ed8]">
                                         <Plus className="w-4 h-4 mr-2" />
                                         New Course
                                     </Button>
@@ -153,20 +153,20 @@ const InstructorDashboard = () => {
                                         {courses.slice(0, 5).map((course: any) => (
                                             <div
                                                 key={course.id}
-                                                className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                                                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-100"
                                             >
                                                 <div className="flex-1">
-                                                    <p className="font-medium text-sm">{course.title}</p>
-                                                    <div className="flex items-center gap-3 mt-1">
-                                                        <span className="text-xs text-muted-foreground">
+                                                    <p className="font-medium text-sm text-gray-900">{course.title}</p>
+                                                    <div className="flex items-center gap-3 mt-2">
+                                                        <span className="text-xs text-gray-600">
                                                             {course._count.enrollments} students
                                                         </span>
-                                                        <span className="text-xs text-muted-foreground">
+                                                        <span className="text-xs text-gray-600">
                                                             {course._count.assignments} assignments
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <Badge variant={course.isPublished ? 'default' : 'secondary'}>
+                                                <Badge variant={course.isPublished ? 'default' : 'secondary'} className={course.isPublished ? 'bg-green-100 text-green-800 border-green-200' : 'bg-gray-100 text-gray-800 border-gray-200'}>
                                                     {course.isPublished ? 'Published' : 'Draft'}
                                                 </Badge>
                                             </div>
@@ -174,18 +174,18 @@ const InstructorDashboard = () => {
                                     </div>
                                 ) : (
                                     <div className="text-center py-8">
-                                        <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                                        <p className="text-sm text-muted-foreground mb-4">
+                                        <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                        <p className="text-sm text-gray-600 mb-4">
                                             No courses yet
                                         </p>
                                         <Link to="/instructor/courses/new">
-                                            <Button>Create Your First Course</Button>
+                                            <Button className="bg-[#2563EB] hover:bg-[#1d4ed8]">Create Your First Course</Button>
                                         </Link>
                                     </div>
                                 )}
                                 {courses && courses.length > 5 && (
                                     <Link to="/instructor/courses">
-                                        <button className="w-full mt-4 text-sm text-primary hover:underline">
+                                        <button className="w-full mt-4 text-sm text-[#2563EB] hover:text-[#1d4ed8] hover:underline font-medium">
                                             View All Courses →
                                         </button>
                                     </Link>
@@ -200,14 +200,14 @@ const InstructorDashboard = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
                     >
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between">
-                                <CardTitle className="flex items-center gap-2">
-                                    <FileText className="w-5 h-5" />
+                        <Card className="border border-gray-200 bg-white">
+                            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                                <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                                    <FileText className="w-5 h-5 text-gray-600" />
                                     Recent Submissions
                                 </CardTitle>
                                 <Link to="/instructor/submissions">
-                                    <Button size="sm" variant="outline">
+                                    <Button size="sm" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
                                         <Eye className="w-4 h-4 mr-2" />
                                         View All
                                     </Button>
@@ -219,21 +219,21 @@ const InstructorDashboard = () => {
                                         {submissions.slice(0, 5).map((submission: any) => (
                                             <div
                                                 key={submission.id}
-                                                className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                                                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-100"
                                             >
                                                 <div className="flex-1">
-                                                    <p className="font-medium text-sm">{submission.student?.name}</p>
-                                                    <p className="text-xs text-muted-foreground truncate">
+                                                    <p className="font-medium text-sm text-gray-900">{submission.student?.name}</p>
+                                                    <p className="text-xs text-gray-600 truncate mt-1">
                                                         {submission.assignment?.title}
                                                     </p>
                                                 </div>
                                                 <Badge
                                                     className={
                                                         submission.status === 'PENDING'
-                                                            ? 'bg-yellow-100 text-yellow-800'
+                                                            ? 'bg-yellow-100 text-yellow-800 border-yellow-200'
                                                             : submission.status === 'APPROVED'
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-red-100 text-red-800'
+                                                                ? 'bg-green-100 text-green-800 border-green-200'
+                                                                : 'bg-red-100 text-red-800 border-red-200'
                                                     }
                                                 >
                                                     {submission.status}
@@ -242,7 +242,7 @@ const InstructorDashboard = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-sm text-muted-foreground text-center py-8">
+                                    <p className="text-sm text-gray-500 text-center py-8">
                                         No submissions yet
                                     </p>
                                 )}
@@ -256,26 +256,26 @@ const InstructorDashboard = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="mt-6"
+                    className="mt-10"
                 >
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <TrendingUp className="w-5 h-5" />
+                    <Card className="border border-gray-200 bg-white">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                                <TrendingUp className="w-5 h-5 text-gray-600" />
                                 Quick Actions
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid md:grid-cols-3 gap-4">
                                 <Link to="/instructor/courses/new">
-                                    <button className="w-full p-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-lg transition-all">
+                                    <button className="w-full p-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
                                         <Plus className="w-5 h-5 mx-auto mb-2" />
                                         <span className="font-semibold">Create Course</span>
                                     </button>
                                 </Link>
 
                                 <Link to="/instructor/assignments">
-                                    <button className="w-full p-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all">
+                                    <button className="w-full p-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
                                         <FileText className="w-5 h-5 mx-auto mb-2" />
                                         <span className="font-semibold">Manage Assignments</span>
                                     </button>
@@ -283,7 +283,7 @@ const InstructorDashboard = () => {
 
                                 {stats?.pendingSubmissions > 0 && (
                                     <Link to="/instructor/submissions?status=PENDING">
-                                        <button className="w-full p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-lg transition-all">
+                                        <button className="w-full p-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium">
                                             <Clock className="w-5 h-5 mx-auto mb-2" />
                                             <span className="font-semibold">
                                                 Review {stats.pendingSubmissions} Submissions

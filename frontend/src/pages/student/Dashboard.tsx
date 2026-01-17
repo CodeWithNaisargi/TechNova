@@ -129,19 +129,19 @@ export default function Dashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="min-h-screen bg-white">
+            <div className="max-w-7xl mx-auto">
 
                 {/* HERO SECTION */}
-                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
-                        <h1 className="text-4xl font-bold">Welcome back, {user?.name || "Student"} 👋</h1>
-                        <p className="text-blue-100 mt-2">Let's continue your learning journey</p>
+                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
+                    <div className="bg-gradient-to-r from-[#2563EB] to-[#1d4ed8] rounded-xl p-8 text-white shadow-lg">
+                        <h1 className="text-3xl font-semibold mb-2">Welcome back, {user?.name || "Student"} 👋</h1>
+                        <p className="text-blue-100 text-base">Let's continue your learning journey</p>
                     </div>
                 </motion.div>
 
                 {/* KPI CARDS */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     {kpiCards.map((card, index) => (
                         <motion.div
                             key={index}
@@ -149,15 +149,15 @@ export default function Dashboard() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
                         >
-                            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+                            <Card className="shadow-sm hover:shadow-md transition-shadow border border-gray-200 bg-white">
                                 <CardContent className="p-6">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="text-gray-600 text-sm">{card.title}</p>
-                                            <h3 className="text-4xl font-bold mt-1">{card.value}</h3>
+                                            <p className="text-gray-600 text-sm mb-2">{card.title}</p>
+                                            <h3 className="text-3xl font-semibold text-gray-900">{card.value}</h3>
                                         </div>
-                                        <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center`}>
-                                            <card.icon className="w-8 h-8 text-white" />
+                                        <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-sm`}>
+                                            <card.icon className="w-7 h-7 text-white" />
                                         </div>
                                     </div>
                                 </CardContent>
@@ -166,14 +166,14 @@ export default function Dashboard() {
                     ))}
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-6 mb-10">
 
                     {/* LEARNING PROGRESS */}
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-2">
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle className="flex gap-2 items-center">
-                                    <TrendingUp className="w-5 h-5 text-blue-600" />
+                        <Card className="shadow-sm border border-gray-200 bg-white">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="flex gap-2 items-center text-lg font-semibold text-gray-900">
+                                    <TrendingUp className="w-5 h-5 text-[#2563EB]" />
                                     Learning Progress
                                 </CardTitle>
                             </CardHeader>
@@ -194,34 +194,34 @@ export default function Dashboard() {
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: i * 0.1 }}
-                                                className="space-y-2"
+                                                className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors"
                                             >
-                                                <div className="flex items-center gap-3">
+                                                <div className="flex items-center gap-4">
                                                     {thumbnail && (
                                                         <img
                                                             src={thumbnail}
                                                             alt={enrollment.course?.title}
-                                                            className="w-16 h-12 object-cover rounded"
+                                                            className="w-20 h-14 object-cover rounded-lg"
                                                         />
                                                     )}
                                                     <div className="flex-1">
-                                                        <div className="flex justify-between items-center">
-                                                            <p className="font-semibold text-gray-800">{enrollment.course?.title}</p>
-                                                            <span className="text-sm font-medium text-blue-600">{percentage}%</span>
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <p className="font-semibold text-gray-900 text-sm">{enrollment.course?.title}</p>
+                                                            <span className="text-sm font-semibold text-[#2563EB]">{percentage}%</span>
                                                         </div>
 
                                                         {/* Animated Progress Bar */}
-                                                        <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+                                                        <div className="relative h-2.5 bg-gray-200 rounded-full overflow-hidden mb-2">
                                                             <motion.div
                                                                 initial={{ width: 0 }}
                                                                 animate={{ width: `${percentage}%` }}
                                                                 transition={{ duration: 1, ease: "easeOut", delay: i * 0.1 }}
-                                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"
+                                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#2563EB] to-[#1d4ed8] rounded-full"
                                                             />
                                                         </div>
 
                                                         {progress && (
-                                                            <div className="flex gap-4 text-xs text-gray-600">
+                                                            <div className="flex gap-4 text-xs text-gray-600 mb-3">
                                                                 {progress.totalLessons > 0 && (
                                                                     <span>📚 {progress.completedLessons}/{progress.totalLessons} lessons</span>
                                                                 )}
@@ -230,7 +230,7 @@ export default function Dashboard() {
                                                         )}
 
                                                         <Link to={`/learning/${enrollment.courseId}`}>
-                                                            <Button variant="outline" size="sm" className="mt-2">
+                                                            <Button variant="outline" size="sm" className="mt-2 border-gray-300 text-gray-700 hover:bg-gray-50">
                                                                 Continue Learning <ArrowRight className="w-4 h-4 ml-2" />
                                                             </Button>
                                                         </Link>
@@ -242,9 +242,9 @@ export default function Dashboard() {
                                 ) : (
                                     <div className="text-center py-8">
                                         <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                                        <p className="text-gray-500">No courses enrolled yet.</p>
+                                        <p className="text-gray-600 mb-4">No courses enrolled yet.</p>
                                         <Link to="/courses">
-                                            <Button className="mt-4">Browse Courses</Button>
+                                            <Button className="mt-4 bg-[#2563EB] hover:bg-[#1d4ed8]">Browse Courses</Button>
                                         </Link>
                                     </div>
                                 )}
@@ -254,31 +254,31 @@ export default function Dashboard() {
 
                     {/* RECENT ACTIVITY */}
                     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle className="flex gap-2 items-center">
-                                    <Clock className="w-5 h-5 text-purple-600" />
+                        <Card className="shadow-sm border border-gray-200 bg-white">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="flex gap-2 items-center text-lg font-semibold text-gray-900">
+                                    <Clock className="w-5 h-5 text-[#2563EB]" />
                                     Recent Activity
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {stats.completedAssignments > 0 ? (
                                     <div className="space-y-3">
-                                        <div className="p-3 bg-green-50 rounded-lg flex gap-3 items-center">
-                                            <CheckCircle className="text-green-600 w-5 h-5" />
+                                        <div className="p-4 bg-green-50 rounded-lg flex gap-3 items-center border border-green-100">
+                                            <CheckCircle className="text-green-600 w-5 h-5 flex-shrink-0" />
                                             <div>
-                                                <p className="font-medium text-sm">{stats.completedAssignments} Assignments Completed</p>
-                                                <p className="text-xs text-gray-600">Great progress!</p>
+                                                <p className="font-medium text-sm text-gray-900">{stats.completedAssignments} Assignments Completed</p>
+                                                <p className="text-xs text-gray-600 mt-1">Great progress!</p>
                                             </div>
                                         </div>
 
                                         {stats.certificates > 0 && (
-                                            <div className="p-3 bg-purple-50 rounded-lg flex gap-3 items-center">
-                                                <Award className="text-purple-600 w-5 h-5" />
+                                            <div className="p-4 bg-purple-50 rounded-lg flex gap-3 items-center border border-purple-100">
+                                                <Award className="text-purple-600 w-5 h-5 flex-shrink-0" />
                                                 <div>
-                                                    <p className="font-medium text-sm">{stats.certificates} Certificates Earned</p>
+                                                    <p className="font-medium text-sm text-gray-900">{stats.certificates} Certificates Earned</p>
                                                     <Link to="/certificates">
-                                                        <Button variant="link" size="sm" className="p-0 h-auto text-xs">
+                                                        <Button variant="link" size="sm" className="p-0 h-auto text-xs text-[#2563EB] hover:text-[#1d4ed8]">
                                                             View Certificates
                                                         </Button>
                                                     </Link>
@@ -287,7 +287,7 @@ export default function Dashboard() {
                                         )}
                                     </div>
                                 ) : (
-                                    <p className="text-gray-500 text-sm">No recent activity.</p>
+                                    <p className="text-gray-500 text-sm text-center py-4">No recent activity.</p>
                                 )}
                             </CardContent>
                         </Card>
@@ -302,7 +302,7 @@ export default function Dashboard() {
                         transition={{ delay: 0.3 }}
                         className="mt-10"
                     >
-                        <h2 className="text-2xl font-bold mb-4">Recommended Courses</h2>
+                        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Recommended Courses</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {popularCourses.slice(0, 4).map((course: any, i: number) => {
                                 const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
@@ -317,7 +317,7 @@ export default function Dashboard() {
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: 0.4 + i * 0.1 }}
                                     >
-                                        <Card className="shadow-lg hover:shadow-xl transition-all cursor-pointer overflow-hidden">
+                                        <Card className="shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden border border-gray-200 bg-white">
                                             {thumbnail && (
                                                 <img
                                                     src={thumbnail}
@@ -325,11 +325,11 @@ export default function Dashboard() {
                                                     className="w-full h-40 object-cover"
                                                 />
                                             )}
-                                            <CardContent className="p-4">
-                                                <p className="font-semibold mb-2">{course.title}</p>
-                                                <p className="text-sm text-gray-600 line-clamp-2">{course.description}</p>
+                                            <CardContent className="p-5">
+                                                <p className="font-semibold mb-2 text-gray-900">{course.title}</p>
+                                                <p className="text-sm text-gray-600 line-clamp-2 mb-4">{course.description}</p>
                                                 <Link to={`/courses/${course.id}`}>
-                                                    <Button variant="outline" size="sm" className="mt-3 w-full">
+                                                    <Button variant="outline" size="sm" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50">
                                                         View Course
                                                     </Button>
                                                 </Link>
