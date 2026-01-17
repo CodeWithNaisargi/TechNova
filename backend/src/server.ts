@@ -25,6 +25,9 @@ import submissionRoutes from "./routes/submissionRoutes";
 import certificateRoutes from "./routes/certificateRoutes";
 import assignmentProgressRoutes from "./routes/assignmentProgressRoutes";
 import settingsRoutes from "./routes/settingsRoutes";
+import careerPathRoutes from "./routes/careerPathRoutes";
+import educationRoutes from "./routes/educationRoutes";
+import recommendationRoutes from "./routes/recommendationRoutes";
 
 dotenv.config();
 
@@ -43,7 +46,11 @@ setSocketInstance(io);
 // -----------------------------------
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5174",
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:5174",
+      "http://localhost:5175",
+      "http://localhost:5176",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -105,6 +112,9 @@ app.use("/api/assignments", assignmentRoutes);
 app.use("/api/assignments", assignmentProgressRoutes); // Assignment progress tracking
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/certificates", certificateRoutes);
+app.use("/api/career-paths", careerPathRoutes);
+app.use("/api/education", educationRoutes);
+app.use("/api/recommendations", recommendationRoutes);
 
 // -----------------------------------
 // Root route
