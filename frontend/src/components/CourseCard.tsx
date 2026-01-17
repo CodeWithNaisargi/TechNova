@@ -50,7 +50,7 @@ const CourseCard = ({ course, progress, showProgress = false }: CourseCardProps)
             <Link to={`/courses/${course.id}`}>
                 <Card className="h-full overflow-hidden border-2 hover:border-primary hover:shadow-xl transition-all duration-300">
                     {/* Thumbnail */}
-                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
+                    <div className="relative w-full aspect-video overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200">
                         <motion.img
                             src={thumbnailUrl}
                             alt={course.title}
@@ -84,14 +84,14 @@ const CourseCard = ({ course, progress, showProgress = false }: CourseCardProps)
                         </div>
 
                         {/* Title */}
-                        <h3 className="font-bold text-lg line-clamp-2 leading-tight hover:text-primary transition-colors">
+                        <h3 className="font-semibold text-lg line-clamp-2 leading-tight hover:text-primary transition-colors text-gray-900">
                             {course.title}
                         </h3>
                     </CardHeader>
 
                     <CardContent className="pb-3">
                         {/* Description */}
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-4">
                             {course.description}
                         </p>
 

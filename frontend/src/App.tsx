@@ -73,19 +73,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/verify-email" element={<VerifyEmail />} />
-                    <Route path="/courses" element={<BrowseCourses />} />
-                    <Route path="/courses/:id" element={<CourseDetails />} />
-                </Route>
 
-                {/* Onboarding Routes - Separate from Dashboard */}
-                <Route path="/onboarding" element={<OnboardingLayout />}>
-                    <Route path="education" element={<EducationLevelSelection />} />
-                    <Route path="career" element={<StudentInterestSelection />} />
-                </Route>
-
-                {/* Protected Dashboard Routes - Requires completed onboarding for students */}
-                <Route element={<DashboardGuard><DashboardLayout /></DashboardGuard>}>
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/learning/:courseId" element={<ProtectedRoute allowedRoles={['STUDENT']}><LearningPlayer /></ProtectedRoute>} />
