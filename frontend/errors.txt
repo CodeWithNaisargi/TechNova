@@ -1,0 +1,9 @@
+src/context/AuthContext.tsx(1,44): error TS6133: 'useState' is declared but its value is never read.
+src/context/AuthContext.tsx(1,54): error TS6133: 'useEffect' is declared but its value is never read.
+src/context/AuthContext.tsx(27,36): error TS6133: 'isError' is declared but its value is never read.
+src/layouts/DashboardLayout.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/layouts/MainLayout.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/admin/Dashboard.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/Home.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/instructor/Dashboard.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/student/Dashboard.tsx(1,1): error TS6133: 'React' is declared but its value is never read.

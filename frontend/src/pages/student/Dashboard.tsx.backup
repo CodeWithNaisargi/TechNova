@@ -1,0 +1,277 @@
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+    BookOpen,
+    FileText,
+    Award,
+    CheckCircle,
+    TrendingUp,
+    Clock,
+    ArrowRight
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { useSocket } from "@/hooks/useSocket";
+import api from "@/services/api";
+
+export default function Dashboard() {
+    const { user } = useAuth();
+
+    // Fetch student dashboard stats
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["student-dashboard"],
+        queryFn: async () => {
+            const res = await api.get("/student/dashboard");
+            return res.data;
+        },
+    });
+
+    // Fetch enrolled courses with unified progress
+    const { data: enrolledCourses = [], refetch: refetchProgress } = useQuery({
+        queryKey: ["student-enrollments-with-progress"],
+        queryFn: async () => {
+            const enrollmentsRes = await api.get("/enrollments/my");
+            const enrollments = enrollmentsRes.data?.data || [];
+
+            // Fetch progress for each enrolled course
+            const coursesWithProgress = await Promise.all(
+                enrollments.map(async (enrollment: any) => {
+                    try {
+                        const progressRes = await api.get(`/progress/${enrollment.courseId}`);
+                        return {
+                            ...enrollment,
+                            progress: progressRes.data?.data || null
+                        };
+                    } catch (err) {
+                        return {
+                            ...enrollment,
+                            progress: null
+                        };
+                    }
+                })
+            );
+
+            return coursesWithProgress;
+        },
+    });
+
+    // Fetch recommended courses
+    const { data: popularCourses = [] } = useQuery({
+        queryKey: ["popular-courses"],
+        queryFn: async () => {
+            const res = await api.get("/courses/popular");
+            return res.data?.data || [];
+        },
+    });
+
+    // Listen for real-time progress updates
+    useSocket("progress:updated", (data: any) => {
+        console.log("Progress updated:", data);
+        refetchProgress();
+    });
+
+    // Listen for certificate generation
+    useSocket("certificate:generated", (data: any) => {
+        console.log("Certificate generated:", data);
+        refetchProgress();
+    });
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600 font-medium">Loading your dashboard...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                    <p className="text-red-600 font-semibold">Error loading dashboard</p>
+                </div>
+            </div>
+        );
+    }
+
+    const stats = {
+        enrolledCourses: data?.totalEnrolledCourses || enrolledCourses.length || 0,
+        pendingAssignments: data?.pendingAssignments || 0,
+        certificates: data?.certificates || 0,
+        completedAssignments: data?.completedAssignments || 0,
+    };
+
+    const kpiCards = [
+        {
+            title: "Courses Enrolled",
+            value: stats.enrolledCourses,
+            icon: BookOpen,
+            gradient: "from-blue-500 to-cyan-500",
+        },
+        {
+            title: "Assignments Pending",
+            value: stats.pendingAssignments,
+            icon: FileText,
+            gradient: "from-orange-500 to-red-500",
+        },
+        {
+            title: "Certificates Earned",
+            value: stats.certificates,
+            icon: Award,
+            gradient: "from-purple-500 to-pink-500",
+        },
+    ];
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+                {/* HERO SECTION */}
+                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white shadow-xl">
+                        <h1 className="text-4xl font-bold">Welcome back, {user?.name || "Student"} 👋</h1>
+                        <p className="text-blue-100 mt-2">Let's continue your learning journey</p>
+                    </div>
+                </motion.div>
+
+                {/* KPI CARDS */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    {kpiCards.map((card, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                        >
+                            <Card className="shadow-lg hover:shadow-xl transition-shadow">
+                                <CardContent className="p-6">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-gray-600 text-sm">{card.title}</p>
+                                            <h3 className="text-4xl font-bold mt-1">{card.value}</h3>
+                                        </div>
+                                        <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center`}>
+                                            <card.icon className="w-8 h-8 text-white" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </div>
+
+                <div className="grid lg:grid-cols-3 gap-8">
+
+                    {/* LEARNING PROGRESS - ENHANCED WITH UNIFIED PROGRESS */}
+                    <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-2">
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="flex gap-2 items-center">
+                                    <TrendingUp className="w-5 h-5 text-blue-600" />
+                                    Learning Progress
+                                </CardTitle>
+                            </CardHeader>
+
+                            <CardContent className="space-y-6">
+                                {enrolledCourses.length > 0 ? (
+                                    enrolledCourses.map((enrollment: any, i: number) => {
+                                        const progress = enrollment.progress;
+                                        const percentage = progress?.percentage || 0;
+
+                                        return (
+                                            <motion.div
+                                                key={i}
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: i * 0.1 }}
+                                                className="space-y-2"
+                                            >
+                                                <div className="flex justify-between items-center">
+                                                    <p className="font-semibold text-gray-800">{enrollment.course?.title}</p>
+                                                    <span className="text-sm font-medium text-blue-600">{percentage}%</span>
+                                                </div>
+
+                                                <CardHeader>
+                                                    <CardTitle className="flex gap-2 items-center">
+                                                        <Clock className="w-5 h-5 text-purple-600" />
+                                                        Recent Activity
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    {stats.completedAssignments > 0 ? (
+                                                        <div className="space-y-3">
+                                                            <div className="p-3 bg-green-50 rounded-lg flex gap-3 items-center">
+                                                                <CheckCircle className="text-green-600 w-5 h-5" />
+                                                                <div>
+                                                                    <p className="font-medium text-sm">{stats.completedAssignments} Assignments Completed</p>
+                                                                    <p className="text-xs text-gray-600">Great progress!</p>
+                                                                </div>
+                                                            </div>
+
+                                                            {stats.certificates > 0 && (
+                                                                <div className="p-3 bg-purple-50 rounded-lg flex gap-3 items-center">
+                                                                    <Award className="text-purple-600 w-5 h-5" />
+                                                                    <div>
+                                                                        <p className="font-medium text-sm">{stats.certificates} Certificates Earned</p>
+                                                                        <Link to="/certificates">
+                                                                            <Button variant="link" size="sm" className="p-0 h-auto text-xs">
+                                                                                View Certificates
+                                                                            </Button>
+                                                                        </Link>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-gray-500 text-sm">No recent activity.</p>
+                                                    )}
+                                                </CardContent>
+                                            </Card>
+                    </motion.div>
+                        </div>
+
+                        {/* RECOMMENDED COURSES */}
+                        {popularCourses.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="mt-10"
+                            >
+                                <h2 className="text-2xl font-bold mb-4">Recommended Courses</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {popularCourses.slice(0, 4).map((course: any, i: number) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.4 + i * 0.1 }}
+                                        >
+                                            <Card className="shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                                                <CardContent className="p-4">
+                                                    <p className="font-semibold mb-2">{course.title}</p>
+                                                    <p className="text-sm text-gray-600 line-clamp-2">{course.description}</p>
+                                                    <Link to={`/courses/${course.id}`}>
+                                                        <Button variant="outline" size="sm" className="mt-3 w-full">
+                                                            View Course
+                                                        </Button>
+                                                    </Link>
+                                                </CardContent>
+                                            </Card>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        )}
+
+                </div>
+            </div>
+            );
+}
