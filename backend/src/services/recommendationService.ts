@@ -170,6 +170,7 @@ export async function getRecommendations(
     title: string;
     similarity: number;
     reason: string;
+    thumbnail?: string | null;
 }[]> {
     // Get student info including education level
     const user = await prisma.user.findUnique({
@@ -231,6 +232,7 @@ export async function getRecommendations(
                     instructor: course.instructor.name,
                     domain: course.domain,
                     difficulty: course.difficulty,
+                    thumbnail: course.thumbnail,
                 };
             })
     );

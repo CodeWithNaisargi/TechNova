@@ -45,11 +45,14 @@ const BrowseCourses = () => {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
 
+<<<<<<< Updated upstream
     // Build proper API base from env
     const API_BASE =
         import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
 
     // STRICT: Filter by user's education level to ensure correct courses
+=======
+>>>>>>> Stashed changes
     const { data, isLoading } = useQuery({
         queryKey: ['courses', search, category, user?.educationLevel],
         queryFn: async () => {
@@ -119,6 +122,7 @@ const BrowseCourses = () => {
             ) : data && data.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {data.map((course) => {
+<<<<<<< Updated upstream
                         // FINAL FIX — correct universal URL builder
                         const thumbnail = course.thumbnail
                             ? `${API_BASE}${course.thumbnail.startsWith('/')
@@ -126,6 +130,10 @@ const BrowseCourses = () => {
                                 : '/' + course.thumbnail
                             }`
                             : null;
+=======
+                        // Images are served from frontend public folder
+                        const thumbnail = course.thumbnail || null;
+>>>>>>> Stashed changes
 
                         return (
                             <Card

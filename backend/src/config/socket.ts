@@ -66,3 +66,7 @@ export let io: SocketIOServer;
 export const setSocketInstance = (socketInstance: SocketIOServer) => {
     io = socketInstance;
 };
+
+export const getSocketInstance = () => {
+    return io;
+};

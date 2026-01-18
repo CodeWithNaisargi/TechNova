@@ -14,6 +14,7 @@ interface Recommendation {
     instructor?: string;
     domain?: string;
     difficulty?: string;
+    thumbnail?: string;
 }
 
 interface NextSkill {
@@ -154,9 +155,18 @@ const RecommendationsSection: React.FC = () => {
                             {recommendations.map((rec) => (
                                 <Card
                                     key={rec.courseId}
-                                    className="hover:shadow-md transition-shadow cursor-pointer"
+                                    className="hover:shadow-md transition-shadow cursor-pointer overflow-hidden"
                                     onClick={() => navigate(`/courses/${rec.courseId}`)}
                                 >
+                                    {rec.thumbnail && (
+                                        <div className="w-full h-32 overflow-hidden bg-gray-100">
+                                            <img
+                                                src={rec.thumbnail}
+                                                alt={rec.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    )}
                                     <CardContent className="p-4">
                                         <div className="flex items-start justify-between mb-2">
                                             <div

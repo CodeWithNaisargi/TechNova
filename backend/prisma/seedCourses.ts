@@ -6,11 +6,27 @@ const prisma = new PrismaClient();
 // ============================================================================
 // PRODUCTION-GRADE SEED DATA
 // Domains: Agriculture Technology, Healthcare Technology, Urban Technology
+// Education Levels: SECONDARY, HIGHER_SECONDARY, DIPLOMA, UNDERGRADUATE, POSTGRADUATE
 // ============================================================================
 
 async function main() {
     console.log('🌱 Starting production seed...');
     console.log('📊 Domains: Agriculture, Healthcare, Urban Technology');
+    console.log('🎓 Education Levels: Secondary → Postgraduate');
+
+    // ========================================================================
+    // CLEANUP - Delete existing data to prevent duplicates
+    // ========================================================================
+    console.log('\n🗑️  Cleaning up existing data...');
+    await prisma.submission.deleteMany({});
+    await prisma.assignmentProgress.deleteMany({});
+    await prisma.assignment.deleteMany({});
+    await prisma.review.deleteMany({});
+    await prisma.enrollment.deleteMany({});
+    await prisma.lesson.deleteMany({});
+    await prisma.section.deleteMany({});
+    await prisma.course.deleteMany({});
+    console.log('   ✅ Cleanup complete');
 
     // ========================================================================
     // PASSWORDS (Hashed with bcrypt)
@@ -51,7 +67,7 @@ async function main() {
             password: instructorPassword,
             name: 'Dr. Priya Sharma',
             role: Role.INSTRUCTOR,
-            bio: 'PhD in Agricultural Engineering from IIT Kharagpur. 15+ years experience in precision agriculture and smart farming systems. Former ICAR scientist with expertise in IoT-based crop monitoring.',
+            bio: 'PhD in Agricultural Engineering from IIT Kharagpur. 15+ years experience in precision agriculture and smart farming systems.',
             isEmailVerified: true,
         },
     });
@@ -64,7 +80,7 @@ async function main() {
             password: instructorPassword,
             name: 'Rajesh Kumar',
             role: Role.INSTRUCTOR,
-            bio: 'Agricultural Technology Specialist with expertise in drone-based farming and GIS applications. Consultant for NABARD and several AgriTech startups across India.',
+            bio: 'Agricultural Technology Specialist with expertise in drone-based farming and GIS applications.',
             isEmailVerified: true,
         },
     });
@@ -77,7 +93,7 @@ async function main() {
             password: instructorPassword,
             name: 'Dr. Anita Desai',
             role: Role.INSTRUCTOR,
-            bio: 'Former Director of Agricultural Extension Services, Government of Maharashtra. Expert in soil health management, organic farming certification, and farmer training programs.',
+            bio: 'Former Director of Agricultural Extension Services. Expert in soil health and organic farming.',
             isEmailVerified: true,
         },
     });
@@ -91,7 +107,7 @@ async function main() {
             password: instructorPassword,
             name: 'Dr. Vikram Mehta',
             role: Role.INSTRUCTOR,
-            bio: 'MD, MPH from AIIMS Delhi. Health Informatics specialist with 12+ years in hospital information systems. Led digital transformation at Apollo Hospitals.',
+            bio: 'MD, MPH from AIIMS Delhi. Health Informatics specialist with 12+ years in hospital information systems.',
             isEmailVerified: true,
         },
     });
@@ -104,7 +120,7 @@ async function main() {
             password: instructorPassword,
             name: 'Dr. Sneha Patil',
             role: Role.INSTRUCTOR,
-            bio: 'Biomedical Engineer and Medical Device Expert. Former R&D lead at Philips Healthcare India. Specialist in wearable health monitoring and telemedicine systems.',
+            bio: 'Biomedical Engineer and Medical Device Expert. Specialist in wearable health monitoring.',
             isEmailVerified: true,
         },
     });
@@ -117,7 +133,7 @@ async function main() {
             password: instructorPassword,
             name: 'Arun Nair',
             role: Role.INSTRUCTOR,
-            bio: 'Healthcare Data Scientist with expertise in clinical analytics and AI in diagnostics. Previously at Microsoft Healthcare AI team. Published researcher in medical ML applications.',
+            bio: 'Healthcare Data Scientist with expertise in clinical analytics and AI diagnostics.',
             isEmailVerified: true,
         },
     });
@@ -131,7 +147,7 @@ async function main() {
             password: instructorPassword,
             name: 'Dr. Meera Iyer',
             role: Role.INSTRUCTOR,
-            bio: 'Urban Planning PhD from IIT Bombay. Smart City consultant for 15+ cities under the Smart Cities Mission. Expert in sustainable urban infrastructure and public transport optimization.',
+            bio: 'Urban Planning PhD from IIT Bombay. Smart City consultant for 15+ cities.',
             isEmailVerified: true,
         },
     });
@@ -144,7 +160,7 @@ async function main() {
             password: instructorPassword,
             name: 'Sanjay Verma',
             role: Role.INSTRUCTOR,
-            bio: 'IoT and Smart Infrastructure Architect. Built traffic management systems for Bangalore and Hyderabad. Expert in sensor networks and real-time urban monitoring.',
+            bio: 'IoT and Smart Infrastructure Architect. Built traffic management systems for major cities.',
             isEmailVerified: true,
         },
     });
@@ -157,7 +173,7 @@ async function main() {
             password: instructorPassword,
             name: 'Dr. Kavita Singh',
             role: Role.INSTRUCTOR,
-            bio: 'Environmental Engineer specializing in urban waste management and water treatment. Advisor to Municipal Corporations on sustainable city infrastructure.',
+            bio: 'Environmental Engineer specializing in urban waste management and water treatment.',
             isEmailVerified: true,
         },
     });
@@ -214,446 +230,402 @@ async function main() {
     console.log('   ✅ 3 Students created');
 
     // ========================================================================
-    // AGRICULTURE TECHNOLOGY COURSES (10 courses)
+    // COURSES BY EDUCATION LEVEL (25 total = 5 per level)
+    // Each level has at least 1 course from each domain (Agriculture, Healthcare, Urban)
     // ========================================================================
-    console.log('\n🌾 Creating Agriculture Technology Courses...');
 
-    const agriCourses = [
+    // --- SECONDARY (10th grade) - Intro Awareness Courses ---
+    const secondaryCourses = [
         {
-            title: 'Precision Agriculture with IoT Sensors',
-            description: 'Master the deployment of IoT sensor networks for real-time soil moisture, temperature, and nutrient monitoring. Learn to integrate data with automated irrigation systems for water conservation and yield optimization.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Intermediate',
-            duration: '8 weeks',
-            price: 4999,
-            prerequisites: ['Basic electronics knowledge', 'Understanding of farming practices'],
-            learningOutcomes: ['Deploy IoT sensor networks in agricultural fields', 'Analyze sensor data for crop health decisions', 'Integrate sensors with automated irrigation', 'Reduce water usage by 30-40% through smart monitoring'],
-            instructorId: agriInstructor1.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Agricultural Drones: Mapping & Crop Analysis',
-            description: 'Comprehensive training on drone technology for agricultural applications including field mapping, crop health assessment using NDVI imaging, and precision spraying techniques.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Intermediate',
-            duration: '6 weeks',
-            price: 5999,
-            prerequisites: ['Basic computer skills', 'Interest in drone technology'],
-            learningOutcomes: ['Operate agricultural drones safely', 'Create field maps using drone imagery', 'Analyze crop health using multispectral data', 'Plan precision spraying missions'],
-            instructorId: agriInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-        },
-        {
-            title: 'Smart Greenhouse Management Systems',
-            description: 'Design and implement automated greenhouse control systems including climate management, hydroponics integration, and AI-based growth optimization for year-round production.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Advanced',
-            duration: '10 weeks',
-            price: 6999,
-            prerequisites: ['Basic programming knowledge', 'Understanding of plant biology'],
-            learningOutcomes: ['Design automated greenhouse systems', 'Implement hydroponic growing systems', 'Use AI for growth optimization', 'Manage climate control systems'],
-            instructorId: agriInstructor1.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Soil Health Diagnostics & Digital Mapping',
-            description: 'Learn modern soil testing techniques, digital soil mapping using GIS, and data-driven fertilizer recommendations for sustainable agriculture.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Beginner',
-            duration: '5 weeks',
-            price: 3499,
-            prerequisites: ['High school chemistry', 'Basic computer literacy'],
-            learningOutcomes: ['Conduct digital soil testing', 'Create soil health maps using GIS', 'Interpret soil analysis reports', 'Generate fertilizer recommendations'],
-            instructorId: agriInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-        },
-        {
-            title: 'Farm Management Information Systems (FMIS)',
-            description: 'Implement comprehensive farm management software for resource planning, crop scheduling, financial tracking, and supply chain integration.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Intermediate',
-            duration: '7 weeks',
-            price: 4499,
-            prerequisites: ['Basic accounting knowledge', 'Farming experience preferred'],
-            learningOutcomes: ['Deploy farm management software', 'Track farm finances digitally', 'Plan crop rotations using data', 'Integrate with market platforms'],
-            instructorId: agriInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Weather-Based Crop Advisory Systems',
-            description: 'Build weather monitoring and forecasting systems that provide actionable advisories for farmers on sowing, irrigation, and pest management.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Intermediate',
-            duration: '6 weeks',
-            price: 3999,
-            prerequisites: ['Basic statistics', 'Understanding of agricultural practices'],
-            learningOutcomes: ['Set up weather monitoring stations', 'Analyze weather data for agriculture', 'Generate crop advisories', 'Build alert systems for farmers'],
-            instructorId: agriInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Livestock Monitoring & Smart Dairy Technology',
-            description: 'Implement IoT solutions for livestock health monitoring, automated feeding systems, and dairy farm digitization for improved productivity.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Intermediate',
-            duration: '7 weeks',
-            price: 4999,
-            prerequisites: ['Basic animal husbandry knowledge', 'Interest in technology'],
-            learningOutcomes: ['Deploy livestock tracking systems', 'Implement automated feeding', 'Monitor animal health remotely', 'Digitize dairy operations'],
-            instructorId: agriInstructor1.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.DIPLOMA,
-        },
-        {
-            title: 'Agricultural Supply Chain & Traceability',
-            description: 'Learn blockchain and digital systems for farm-to-fork traceability, quality certification, and direct farmer-market linkage platforms.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Advanced',
-            duration: '8 weeks',
-            price: 5499,
-            prerequisites: ['Understanding of supply chain concepts', 'Basic programming'],
-            learningOutcomes: ['Implement traceability systems', 'Use blockchain for certification', 'Build farmer market platforms', 'Ensure quality compliance'],
-            instructorId: agriInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Remote Sensing for Agriculture',
-            description: 'Utilize satellite imagery and remote sensing data for large-scale crop monitoring, drought assessment, and agricultural policy planning.',
-            category: 'AgriTech',
-            domain: 'AGRICULTURE',
-            difficulty: 'Advanced',
-            duration: '9 weeks',
-            price: 6499,
-            prerequisites: ['GIS fundamentals', 'Basic image processing knowledge'],
-            learningOutcomes: ['Process satellite agricultural data', 'Assess crop health at scale', 'Predict yields using remote sensing', 'Support policy decisions with data'],
-            instructorId: agriInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Organic Farming Certification & Digital Records',
-            description: 'Navigate organic certification processes with digital documentation, compliance tracking, and quality management systems for organic producers.',
+            title: 'Introduction to Smart Farming',
+            description: 'Discover how technology is transforming agriculture! Learn about sensors, drones, and mobile apps that help farmers grow more food with less resources. Perfect for students curious about the future of farming.',
             category: 'AgriTech',
             domain: 'AGRICULTURE',
             difficulty: 'Beginner',
             duration: '4 weeks',
-            price: 2999,
-            prerequisites: ['Basic computer skills', 'Interest in organic farming'],
-            learningOutcomes: ['Understand organic certification requirements', 'Maintain digital farm records', 'Track compliance digitally', 'Prepare for certification audits'],
+            price: 999,
+            prerequisites: ['Basic science knowledge'],
+            learningOutcomes: ['Understand smart farming concepts', 'Identify agricultural technologies', 'Explain benefits of precision agriculture', 'Describe IoT in farming'],
             instructorId: agriInstructor3.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/agri_intro_smart_farming.jpg',
+        },
+        {
+            title: 'Digital Health Basics',
+            description: 'Explore how smartphones and wearables are changing healthcare! From fitness trackers to telemedicine apps, learn how digital tools help people stay healthy and connected to doctors.',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Beginner',
+            duration: '3 weeks',
+            price: 799,
+            prerequisites: ['Basic biology understanding'],
+            learningOutcomes: ['Identify digital health tools', 'Understand telemedicine basics', 'Explain wearable health devices', 'Describe health apps usage'],
+            instructorId: healthInstructor2.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/health_digital_basics.jpg',
+        },
+        {
+            title: 'Smart Cities 101',
+            description: 'What makes a city smart? Explore traffic sensors, smart lighting, and digital services that are making cities safer, cleaner, and more efficient. A fun introduction for future urban planners!',
+            category: 'UrbanTech',
+            domain: 'URBAN',
+            difficulty: 'Beginner',
+            duration: '3 weeks',
+            price: 799,
+            prerequisites: ['General awareness'],
+            learningOutcomes: ['Define smart city concepts', 'Identify urban technologies', 'Explain smart infrastructure benefits', 'Describe citizen digital services'],
+            instructorId: urbanInstructor1.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/urban_smart_cities_101.jpg',
+        },
+        {
+            title: 'Organic Farming Awareness',
+            description: 'Learn the basics of chemical-free farming and why organic produce matters. Understand certification processes and how technology helps verify organic standards.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
+            difficulty: 'Beginner',
+            duration: '3 weeks',
+            price: 699,
+            prerequisites: ['Interest in environment'],
+            learningOutcomes: ['Understand organic farming principles', 'Identify organic certification', 'Explain digital record keeping', 'Describe sustainable practices'],
+            instructorId: agriInstructor3.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/agri_organic_awareness.jpg',
+        },
+        {
+            title: 'First Aid & Emergency Apps',
+            description: 'Learn essential first aid skills and discover mobile apps that can save lives in emergencies. From CPR basics to emergency calling features, be prepared to help!',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Beginner',
+            duration: '2 weeks',
+            price: 599,
+            prerequisites: ['None'],
+            learningOutcomes: ['Perform basic first aid', 'Use emergency health apps', 'Understand emergency protocols', 'Identify when to seek help'],
+            instructorId: healthInstructor1.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/health_first_aid_apps.jpg',
         },
     ];
 
-    // ========================================================================
-    // HEALTHCARE TECHNOLOGY COURSES (10 courses)
-    // ========================================================================
-    console.log('\n🏥 Creating Healthcare Technology Courses...');
-
-    const healthCourses = [
+    // --- HIGHER SECONDARY (12th grade) - Foundation Technical Courses ---
+    const higherSecondaryCourses = [
         {
-            title: 'Hospital Information Systems (HIS) Implementation',
-            description: 'End-to-end training on implementing and managing hospital information systems including patient registration, EMR, billing, and laboratory integration.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Intermediate',
-            duration: '10 weeks',
-            price: 7999,
-            prerequisites: ['Healthcare domain knowledge', 'Basic IT skills'],
-            learningOutcomes: ['Implement HIS modules', 'Configure EMR systems', 'Integrate laboratory systems', 'Manage healthcare data workflows'],
-            instructorId: healthInstructor1.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Telemedicine Platform Development',
-            description: 'Build secure telemedicine solutions including video consultation, prescription management, and remote patient monitoring features compliant with healthcare regulations.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Advanced',
-            duration: '12 weeks',
-            price: 8999,
-            prerequisites: ['Web development basics', 'Understanding of healthcare delivery'],
-            learningOutcomes: ['Build video consultation systems', 'Implement e-prescription features', 'Ensure HIPAA/data compliance', 'Deploy secure telemedicine apps'],
-            instructorId: healthInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Medical IoT & Wearable Health Devices',
-            description: 'Design and integrate wearable health monitoring devices for continuous vital sign tracking, fall detection, and chronic disease management.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Intermediate',
-            duration: '8 weeks',
-            price: 5999,
-            prerequisites: ['Basic electronics', 'Programming fundamentals'],
-            learningOutcomes: ['Interface with health sensors', 'Process biomedical signals', 'Build health monitoring dashboards', 'Ensure medical device safety'],
-            instructorId: healthInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Healthcare Data Analytics & Visualization',
-            description: 'Analyze clinical data sets for patient outcomes, disease trends, and operational efficiency using modern analytics tools and visualization techniques.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Intermediate',
-            duration: '7 weeks',
-            price: 5499,
-            prerequisites: ['Basic statistics', 'Spreadsheet proficiency'],
-            learningOutcomes: ['Analyze clinical datasets', 'Create healthcare dashboards', 'Identify patient outcome patterns', 'Support evidence-based decisions'],
-            instructorId: healthInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'AI-Powered Medical Image Analysis',
-            description: 'Apply deep learning techniques for medical image analysis including X-ray interpretation, CT scan analysis, and pathology slide screening.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Advanced',
-            duration: '10 weeks',
-            price: 9999,
-            prerequisites: ['Python programming', 'Machine learning basics'],
-            learningOutcomes: ['Preprocess medical images', 'Train diagnostic AI models', 'Validate model performance', 'Deploy AI in clinical workflows'],
-            instructorId: healthInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Electronic Health Records (EHR) Management',
-            description: 'Master the administration of EHR systems including data migration, interoperability standards (HL7/FHIR), and clinical documentation best practices.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
+            title: 'Agricultural Drones: Mapping & Crop Analysis',
+            description: 'Learn drone technology for agricultural applications including field mapping, crop health assessment using NDVI imaging, and precision spraying techniques. Hands-on with drone simulation software.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
             difficulty: 'Intermediate',
             duration: '6 weeks',
-            price: 4999,
-            prerequisites: ['IT administration basics', 'Healthcare workflow understanding'],
-            learningOutcomes: ['Administer EHR systems', 'Migrate patient data safely', 'Implement HL7/FHIR standards', 'Train clinical users'],
-            instructorId: healthInstructor1.id,
+            price: 2999,
+            prerequisites: ['Basic computer skills', 'Physics fundamentals'],
+            learningOutcomes: ['Understand drone components', 'Create field maps using imagery', 'Analyze crop health from aerial data', 'Plan agricultural drone missions'],
+            instructorId: agriInstructor2.id,
             hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
+            thumbnail: '/course-images/agri_drones_mapping.jpg',
         },
         {
-            title: 'Public Health Surveillance Systems',
-            description: 'Build disease surveillance and outbreak monitoring systems for public health authorities using real-time data collection and epidemiological analysis.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Advanced',
-            duration: '9 weeks',
-            price: 6499,
-            prerequisites: ['Epidemiology basics', 'Database management'],
-            learningOutcomes: ['Design surveillance systems', 'Collect outbreak data in real-time', 'Perform epidemiological analysis', 'Generate public health alerts'],
-            instructorId: healthInstructor1.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Pharmacy Management & Drug Inventory Systems',
-            description: 'Implement digital pharmacy management including inventory tracking, drug interaction checking, and prescription fulfillment automation.',
+            title: 'Pharmacy Management Fundamentals',
+            description: 'Master the basics of digital pharmacy operations including inventory tracking, prescription processing, and drug interaction databases. Essential for aspiring pharmacists.',
             category: 'HealthTech',
             domain: 'HEALTHCARE',
             difficulty: 'Beginner',
             duration: '5 weeks',
-            price: 3999,
-            prerequisites: ['Basic pharmacy knowledge', 'Computer literacy'],
-            learningOutcomes: ['Set up pharmacy software', 'Track drug inventory digitally', 'Check drug interactions', 'Automate dispensing workflows'],
+            price: 2499,
+            prerequisites: ['Chemistry basics', 'Computer literacy'],
+            learningOutcomes: ['Manage pharmacy inventory digitally', 'Process electronic prescriptions', 'Check drug interactions using software', 'Maintain compliance records'],
             instructorId: healthInstructor2.id,
             hasProject: true,
-            targetEducationLevel: EducationLevel.DIPLOMA,
+            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
+            thumbnail: '/course-images/health_pharmacy_mgmt.jpg',
         },
         {
-            title: 'Healthcare Cybersecurity & Compliance',
-            description: 'Protect healthcare systems from cyber threats while ensuring compliance with HIPAA, GDPR, and local health data protection regulations.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Intermediate',
-            duration: '6 weeks',
-            price: 5499,
-            prerequisites: ['IT security basics', 'Healthcare data understanding'],
-            learningOutcomes: ['Assess healthcare cyber risks', 'Implement security controls', 'Ensure regulatory compliance', 'Respond to security incidents'],
-            instructorId: healthInstructor1.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Clinical Decision Support Systems',
-            description: 'Design and implement clinical decision support tools that assist physicians in diagnosis, treatment recommendations, and care pathway optimization.',
-            category: 'HealthTech',
-            domain: 'HEALTHCARE',
-            difficulty: 'Advanced',
-            duration: '8 weeks',
-            price: 7499,
-            prerequisites: ['Clinical knowledge', 'Data analytics skills'],
-            learningOutcomes: ['Build decision support algorithms', 'Integrate with EMR systems', 'Validate clinical recommendations', 'Measure care quality impact'],
-            instructorId: healthInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-    ];
-
-    // ========================================================================
-    // URBAN TECHNOLOGY COURSES (10 courses)
-    // ========================================================================
-    console.log('\n🏙️ Creating Urban Technology Courses...');
-
-    const urbanCourses = [
-        {
-            title: 'Smart Traffic Management Systems',
-            description: 'Design and implement intelligent traffic monitoring and control systems using sensors, cameras, and AI-based signal optimization for congestion reduction.',
-            category: 'UrbanTech',
-            domain: 'URBAN',
-            difficulty: 'Intermediate',
-            duration: '8 weeks',
-            price: 5999,
-            prerequisites: ['Basic programming', 'Understanding of traffic flow'],
-            learningOutcomes: ['Deploy traffic sensors', 'Analyze traffic patterns', 'Optimize signal timing with AI', 'Reduce urban congestion'],
-            instructorId: urbanInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Urban IoT Infrastructure & Sensor Networks',
-            description: 'Build city-wide IoT networks for environmental monitoring, smart lighting, and infrastructure health tracking with scalable architecture.',
-            category: 'UrbanTech',
-            domain: 'URBAN',
-            difficulty: 'Advanced',
-            duration: '10 weeks',
-            price: 7499,
-            prerequisites: ['Networking fundamentals', 'IoT basics'],
-            learningOutcomes: ['Design city-scale IoT networks', 'Deploy environmental sensors', 'Implement smart lighting systems', 'Monitor infrastructure health'],
-            instructorId: urbanInstructor2.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
-        },
-        {
-            title: 'Sustainable Urban Water Management',
-            description: 'Implement smart water distribution and quality monitoring systems including leak detection, consumption tracking, and wastewater treatment optimization.',
-            category: 'UrbanTech',
-            domain: 'URBAN',
-            difficulty: 'Intermediate',
-            duration: '7 weeks',
-            price: 4999,
-            prerequisites: ['Basic hydrology', 'Data analysis skills'],
-            learningOutcomes: ['Deploy water quality sensors', 'Detect pipeline leaks digitally', 'Optimize water distribution', 'Monitor treatment processes'],
-            instructorId: urbanInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Smart Waste Management & Recycling Systems',
-            description: 'Design intelligent waste collection routing, bin monitoring, and recycling tracking systems for sustainable urban waste management.',
+            title: 'Smart Waste Management & Recycling',
+            description: 'Explore intelligent waste collection systems, sensor-based bin monitoring, and recycling tracking platforms. Learn how cities are using technology to reduce landfill waste.',
             category: 'UrbanTech',
             domain: 'URBAN',
             difficulty: 'Beginner',
-            duration: '5 weeks',
-            price: 3499,
-            prerequisites: ['Basic environmental science', 'Computer literacy'],
-            learningOutcomes: ['Monitor waste bin levels', 'Optimize collection routes', 'Track recycling rates', 'Reduce waste management costs'],
+            duration: '4 weeks',
+            price: 1999,
+            prerequisites: ['Environmental awareness', 'Basic math'],
+            learningOutcomes: ['Understand smart bin technology', 'Analyze waste collection data', 'Track recycling metrics', 'Propose waste reduction strategies'],
             instructorId: urbanInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
+            thumbnail: '/course-images/urban_waste_mgmt.jpg',
         },
         {
-            title: 'Urban Mobility & Public Transport Analytics',
-            description: 'Analyze and optimize public transportation networks using ridership data, real-time tracking, and multimodal integration for improved urban mobility.',
+            title: 'Soil Health & Digital Testing',
+            description: 'Learn modern soil testing techniques and digital tools for analyzing soil composition. Understand how data-driven insights help farmers choose the right fertilizers.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
+            difficulty: 'Beginner',
+            duration: '5 weeks',
+            price: 2299,
+            prerequisites: ['Chemistry basics', 'Biology fundamentals'],
+            learningOutcomes: ['Conduct digital soil tests', 'Interpret soil analysis reports', 'Create soil health maps', 'Recommend fertilizer applications'],
+            instructorId: agriInstructor3.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
+            thumbnail: '/course-images/agri_soil_digital.jpg',
+        },
+        {
+            title: 'Smart Parking Systems',
+            description: 'Discover how sensors and mobile apps are solving urban parking challenges. Learn about real-time availability tracking, dynamic pricing, and space optimization analytics.',
             category: 'UrbanTech',
             domain: 'URBAN',
+            difficulty: 'Beginner',
+            duration: '4 weeks',
+            price: 1799,
+            prerequisites: ['Basic math', 'Mobile app familiarity'],
+            learningOutcomes: ['Understand parking sensor technology', 'Analyze parking occupancy data', 'Design parking finder interfaces', 'Calculate dynamic pricing models'],
+            instructorId: urbanInstructor2.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
+            thumbnail: '/course-images/urban_smart_parking.jpg',
+        },
+    ];
+
+    // --- DIPLOMA - Technician/Applied Courses ---
+    const diplomaCourses = [
+        {
+            title: 'Livestock Monitoring & Smart Dairy Technology',
+            description: 'Implement IoT solutions for livestock health monitoring, automated feeding systems, and dairy farm digitization. Practical training on sensor installation and data interpretation.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
             difficulty: 'Intermediate',
             duration: '7 weeks',
             price: 4999,
-            prerequisites: ['Data analysis basics', 'Interest in transportation'],
-            learningOutcomes: ['Analyze ridership patterns', 'Optimize bus/metro routes', 'Implement real-time tracking', 'Plan multimodal integration'],
-            instructorId: urbanInstructor1.id,
+            prerequisites: ['Animal husbandry basics', 'Electronics fundamentals'],
+            learningOutcomes: ['Deploy livestock tracking systems', 'Configure automated feeding', 'Monitor animal health remotely', 'Manage dairy operations digitally'],
+            instructorId: agriInstructor1.id,
             hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            targetEducationLevel: EducationLevel.DIPLOMA,
+            thumbnail: '/course-images/agri_livestock_iot.jpg',
         },
         {
-            title: 'Smart City Platform Architecture',
-            description: 'Design integrated smart city platforms that unify multiple urban services including safety, mobility, utilities, and citizen engagement.',
-            category: 'UrbanTech',
-            domain: 'URBAN',
-            difficulty: 'Advanced',
-            duration: '12 weeks',
-            price: 9499,
-            prerequisites: ['System architecture knowledge', 'Project management skills'],
-            learningOutcomes: ['Design integrated city platforms', 'Unify urban data sources', 'Build citizen engagement portals', 'Manage smart city projects'],
-            instructorId: urbanInstructor1.id,
+            title: 'Medical Equipment Maintenance',
+            description: 'Learn to maintain and troubleshoot common medical devices including patient monitors, ECG machines, and diagnostic equipment. Essential skills for hospital technicians.',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Intermediate',
+            duration: '8 weeks',
+            price: 5999,
+            prerequisites: ['Electronics basics', 'Basic medical device knowledge'],
+            learningOutcomes: ['Perform preventive maintenance', 'Troubleshoot common device issues', 'Calibrate diagnostic equipment', 'Document maintenance procedures'],
+            instructorId: healthInstructor2.id,
             hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            targetEducationLevel: EducationLevel.DIPLOMA,
+            thumbnail: '/course-images/health_equipment_maint.jpg',
         },
         {
-            title: 'Urban Air Quality Monitoring & Analysis',
-            description: 'Deploy air quality monitoring networks and build analytics systems for pollution tracking, source identification, and health impact assessment.',
+            title: 'Traffic Sensor Installation & Maintenance',
+            description: 'Hands-on training for installing, calibrating, and maintaining traffic monitoring sensors and cameras. Learn field deployment techniques and troubleshooting methods.',
             category: 'UrbanTech',
             domain: 'URBAN',
             difficulty: 'Intermediate',
             duration: '6 weeks',
             price: 4499,
-            prerequisites: ['Environmental science basics', 'Data visualization skills'],
-            learningOutcomes: ['Deploy AQI monitoring stations', 'Analyze pollution data', 'Identify pollution sources', 'Generate public health advisories'],
-            instructorId: urbanInstructor3.id,
-            hasProject: true,
-            targetEducationLevel: EducationLevel.UNDERGRADUATE,
-        },
-        {
-            title: 'Smart Parking & Urban Space Optimization',
-            description: 'Implement intelligent parking solutions using sensors and apps for real-time availability, dynamic pricing, and space utilization analytics.',
-            category: 'UrbanTech',
-            domain: 'URBAN',
-            difficulty: 'Beginner',
-            duration: '4 weeks',
-            price: 2999,
-            prerequisites: ['Basic app usage', 'Interest in urban planning'],
-            learningOutcomes: ['Deploy parking sensors', 'Build parking finder apps', 'Implement dynamic pricing', 'Analyze space utilization'],
+            prerequisites: ['Electronics basics', 'Field work capability'],
+            learningOutcomes: ['Install traffic sensors correctly', 'Calibrate detection systems', 'Troubleshoot connectivity issues', 'Perform routine maintenance'],
             instructorId: urbanInstructor2.id,
             hasProject: true,
-            targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
+            targetEducationLevel: EducationLevel.DIPLOMA,
+            thumbnail: '/course-images/urban_traffic_sensors.jpg',
         },
         {
-            title: 'Urban Energy Management & Smart Grids',
-            description: 'Design smart grid systems for urban electricity distribution including demand forecasting, renewable integration, and consumption optimization.',
+            title: 'Greenhouse Climate Control Systems',
+            description: 'Learn to install and operate automated greenhouse climate systems including temperature, humidity, and light controllers. Practical skills for protected cultivation.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
+            difficulty: 'Intermediate',
+            duration: '6 weeks',
+            price: 4299,
+            prerequisites: ['Plant biology basics', 'Basic electrical knowledge'],
+            learningOutcomes: ['Install climate control sensors', 'Configure automation systems', 'Optimize growing conditions', 'Troubleshoot climate equipment'],
+            instructorId: agriInstructor1.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.DIPLOMA,
+            thumbnail: '/course-images/agri_greenhouse_climate.jpg',
+        },
+        {
+            title: 'Water Quality Monitoring Technician',
+            description: 'Master the installation and operation of water quality sensors for urban distribution networks. Learn to monitor parameters like pH, turbidity, and chlorine levels.',
             category: 'UrbanTech',
             domain: 'URBAN',
-            difficulty: 'Advanced',
-            duration: '9 weeks',
-            price: 6999,
-            prerequisites: ['Electrical engineering basics', 'Data analysis skills'],
-            learningOutcomes: ['Design smart grid architectures', 'Forecast energy demand', 'Integrate renewable sources', 'Optimize energy distribution'],
-            instructorId: urbanInstructor1.id,
+            difficulty: 'Intermediate',
+            duration: '5 weeks',
+            price: 3999,
+            prerequisites: ['Chemistry basics', 'Technical aptitude'],
+            learningOutcomes: ['Install water quality sensors', 'Calibrate monitoring equipment', 'Interpret water quality data', 'Respond to quality alerts'],
+            instructorId: urbanInstructor3.id,
             hasProject: true,
-            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            targetEducationLevel: EducationLevel.DIPLOMA,
+            thumbnail: '/course-images/urban_water_quality.jpg',
+        },
+    ];
+
+    // --- UNDERGRADUATE - Professional Implementation Courses ---
+    const undergraduateCourses = [
+        {
+            title: 'Precision Agriculture with IoT Sensors',
+            description: 'Design and deploy comprehensive IoT sensor networks for real-time soil moisture, temperature, and nutrient monitoring. Learn data integration with automated irrigation systems for water conservation.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
+            difficulty: 'Intermediate',
+            duration: '8 weeks',
+            price: 6999,
+            prerequisites: ['Programming basics', 'Understanding of farming practices'],
+            learningOutcomes: ['Design IoT sensor networks', 'Integrate data with irrigation systems', 'Build agricultural dashboards', 'Optimize water usage by 30-40%'],
+            instructorId: agriInstructor1.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            thumbnail: '/course-images/agri_precision_iot.jpg',
         },
         {
-            title: 'Citizen Engagement & Digital Governance',
-            description: 'Build digital platforms for citizen grievance management, participatory budgeting, and transparent governance with mobile and web interfaces.',
+            title: 'Electronic Health Records (EHR) Management',
+            description: 'Master EHR system administration including data migration, HL7/FHIR interoperability standards, and clinical documentation workflows. Prepare for healthcare IT certification.',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Intermediate',
+            duration: '7 weeks',
+            price: 7499,
+            prerequisites: ['Healthcare workflow understanding', 'Database basics'],
+            learningOutcomes: ['Administer EHR systems', 'Implement data migration safely', 'Configure HL7/FHIR interfaces', 'Train clinical users effectively'],
+            instructorId: healthInstructor1.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            thumbnail: '/course-images/health_ehr_mgmt.jpg',
+        },
+        {
+            title: 'Smart Traffic Management Systems',
+            description: 'Design intelligent traffic monitoring and control systems using sensors, cameras, and AI-based signal optimization algorithms. Real-world case studies from Indian metro cities.',
+            category: 'UrbanTech',
+            domain: 'URBAN',
+            difficulty: 'Intermediate',
+            duration: '8 weeks',
+            price: 6999,
+            prerequisites: ['Programming knowledge', 'Basic data analytics'],
+            learningOutcomes: ['Design traffic sensor networks', 'Implement signal optimization', 'Analyze traffic flow patterns', 'Reduce congestion measurably'],
+            instructorId: urbanInstructor2.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            thumbnail: '/course-images/urban_traffic_mgmt.jpg',
+        },
+        {
+            title: 'Healthcare Data Analytics & Visualization',
+            description: 'Analyze clinical datasets to improve patient outcomes and operational efficiency. Master healthcare dashboards using modern visualization tools and statistical methods.',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Intermediate',
+            duration: '7 weeks',
+            price: 6499,
+            prerequisites: ['Statistics fundamentals', 'Excel proficiency'],
+            learningOutcomes: ['Analyze clinical datasets', 'Create healthcare dashboards', 'Identify outcome patterns', 'Support evidence-based decisions'],
+            instructorId: healthInstructor3.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            thumbnail: '/course-images/health_data_analytics.jpg',
+        },
+        {
+            title: 'Urban Air Quality Monitoring',
+            description: 'Deploy air quality monitoring networks and build analytics systems for pollution tracking, source identification, and public health advisories. IoT meets environmental science.',
             category: 'UrbanTech',
             domain: 'URBAN',
             difficulty: 'Intermediate',
             duration: '6 weeks',
-            price: 3999,
-            prerequisites: ['Web development basics', 'Understanding of governance'],
-            learningOutcomes: ['Build grievance portals', 'Implement participatory budgeting', 'Create transparency dashboards', 'Enable mobile governance'],
-            instructorId: urbanInstructor1.id,
+            price: 5499,
+            prerequisites: ['Environmental science basics', 'Data analysis skills'],
+            learningOutcomes: ['Deploy AQI monitoring stations', 'Analyze pollution trends', 'Identify pollution sources', 'Generate health advisories'],
+            instructorId: urbanInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.UNDERGRADUATE,
+            thumbnail: '/course-images/urban_air_quality.jpg',
+        },
+    ];
+
+    // --- POSTGRADUATE - Advanced Specialization Courses ---
+    const postgraduateCourses = [
+        {
+            title: 'Agricultural Supply Chain & Blockchain Traceability',
+            description: 'Architect blockchain-based farm-to-fork traceability systems for quality certification and direct market linkage. Advanced course for AgriTech entrepreneurs and policy makers.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
+            difficulty: 'Advanced',
+            duration: '10 weeks',
+            price: 12999,
+            prerequisites: ['Supply chain knowledge', 'Programming experience'],
+            learningOutcomes: ['Design traceability architectures', 'Implement blockchain certification', 'Build farmer market platforms', 'Ensure regulatory compliance'],
+            instructorId: agriInstructor3.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            thumbnail: '/course-images/agri_blockchain_supply.jpg',
+        },
+        {
+            title: 'AI-Powered Medical Image Analysis',
+            description: 'Apply deep learning for medical image diagnostics including X-ray interpretation, CT scan analysis, and pathology screening. Research-oriented with publication potential.',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Advanced',
+            duration: '12 weeks',
+            price: 14999,
+            prerequisites: ['Python programming', 'Machine learning expertise'],
+            learningOutcomes: ['Preprocess medical imaging data', 'Train diagnostic AI models', 'Validate clinical accuracy', 'Deploy AI in clinical workflows'],
+            instructorId: healthInstructor3.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            thumbnail: '/course-images/health_ai_imaging.jpg',
+        },
+        {
+            title: 'Smart City Platform Architecture',
+            description: 'Design enterprise-grade integrated smart city platforms unifying mobility, utilities, safety, and citizen engagement. For architects leading digital transformation initiatives.',
+            category: 'UrbanTech',
+            domain: 'URBAN',
+            difficulty: 'Advanced',
+            duration: '12 weeks',
+            price: 14999,
+            prerequisites: ['System architecture experience', 'Project management skills'],
+            learningOutcomes: ['Design integrated city platforms', 'Architect scalable data systems', 'Build citizen engagement portals', 'Manage large-scale deployments'],
+            instructorId: urbanInstructor1.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            thumbnail: '/course-images/urban_smart_platform.jpg',
+        },
+        {
+            title: 'Remote Sensing for Agricultural Policy',
+            description: 'Utilize satellite imagery for large-scale crop monitoring, drought assessment, and agricultural policy planning. For researchers and government agricultural officers.',
+            category: 'AgriTech',
+            domain: 'AGRICULTURE',
+            difficulty: 'Advanced',
+            duration: '10 weeks',
+            price: 11999,
+            prerequisites: ['GIS proficiency', 'Image processing knowledge'],
+            learningOutcomes: ['Process satellite agricultural data', 'Assess crop health at scale', 'Predict yields regionally', 'Inform policy with data'],
+            instructorId: agriInstructor2.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            thumbnail: '/course-images/agri_remote_sensing.jpg',
+        },
+        {
+            title: 'Hospital Information Systems Architecture',
+            description: 'Design and implement enterprise hospital information systems including EMR, billing, laboratory, and radiology integrations. For healthcare IT architects.',
+            category: 'HealthTech',
+            domain: 'HEALTHCARE',
+            difficulty: 'Advanced',
+            duration: '12 weeks',
+            price: 13999,
+            prerequisites: ['Healthcare domain expertise', 'Enterprise IT experience'],
+            learningOutcomes: ['Architect HIS solutions', 'Integrate clinical systems', 'Ensure data security compliance', 'Lead digital transformation'],
+            instructorId: healthInstructor1.id,
+            hasProject: true,
+            targetEducationLevel: EducationLevel.POSTGRADUATE,
+            thumbnail: '/course-images/health_his_architecture.jpg',
         },
     ];
 
@@ -754,7 +726,20 @@ async function main() {
     // ========================================================================
     // CREATE COURSES WITH ASSIGNMENTS
     // ========================================================================
+<<<<<<< Updated upstream
     const allCourseData = [...agriCourses, ...healthCourses, ...urbanCourses, ...explorationCourses];
+=======
+    console.log('\n📚 Creating Courses by Education Level...');
+
+    const allCourseData = [
+        ...secondaryCourses,
+        ...higherSecondaryCourses,
+        ...diplomaCourses,
+        ...undergraduateCourses,
+        ...postgraduateCourses,
+    ];
+
+>>>>>>> Stashed changes
     const createdCourses: any[] = [];
 
     for (const courseData of allCourseData) {
@@ -773,15 +758,20 @@ async function main() {
                 isPublished: true,
                 hasProject: courseData.hasProject,
                 targetEducationLevel: courseData.targetEducationLevel,
+<<<<<<< Updated upstream
                 tags: courseData.domain
                     ? [courseData.domain.toLowerCase(), courseData.category.toLowerCase()]
                     : [courseData.category.toLowerCase()],
+=======
+                thumbnail: courseData.thumbnail,
+                tags: [courseData.domain.toLowerCase(), courseData.category.toLowerCase()],
+>>>>>>> Stashed changes
             },
         });
         createdCourses.push(course);
 
         // Create 8-10 assignments per course
-        const assignmentCount = Math.floor(Math.random() * 3) + 8; // 8-10 assignments
+        const assignmentCount = Math.floor(Math.random() * 3) + 8;
         const assignmentTypes = ['Quiz', 'Assignment', 'Project', 'Case Study', 'Lab Exercise'];
 
         for (let i = 1; i <= assignmentCount; i++) {
@@ -789,8 +779,8 @@ async function main() {
             await prisma.assignment.create({
                 data: {
                     title: `${assignmentType} ${i}: ${courseData.title.split(':')[0]} - Week ${Math.ceil(i / 2)}`,
-                    description: `Complete this ${assignmentType.toLowerCase()} to demonstrate your understanding of the concepts covered. Apply practical skills learned in the module.`,
-                    dueDate: new Date(Date.now() + (7 * i * 24 * 60 * 60 * 1000)), // i weeks from now
+                    description: `Complete this ${assignmentType.toLowerCase()} to demonstrate your understanding of the concepts covered.`,
+                    dueDate: new Date(Date.now() + (7 * i * 24 * 60 * 60 * 1000)),
                     maxScore: assignmentType === 'Project' ? 100 : assignmentType === 'Quiz' ? 25 : 50,
                     courseId: course.id,
                     order: i,
@@ -808,10 +798,10 @@ async function main() {
 
     const reviewTexts = [
         { rating: 5, comment: 'Excellent course! The practical exercises were very helpful for real-world application.' },
-        { rating: 5, comment: 'The instructor explains complex concepts clearly. Highly recommended for professionals.' },
-        { rating: 4, comment: 'Great content and well-structured. Would love more advanced topics in future updates.' },
+        { rating: 5, comment: 'The instructor explains complex concepts clearly. Highly recommended!' },
+        { rating: 4, comment: 'Great content and well-structured. Would love more advanced topics.' },
         { rating: 4, comment: 'Very practical approach. The case studies were particularly valuable.' },
-        { rating: 5, comment: 'This course transformed my understanding of the subject. Worth every rupee!' },
+        { rating: 5, comment: 'This course transformed my understanding of the subject. Worth it!' },
     ];
 
     const students = [student1, student2, student3];
@@ -1034,8 +1024,8 @@ async function main() {
    • Admin Users: 1
    • Domain Instructors: 9 (3 per domain)
    • Students: 3
-   • Courses: 30 (10 per domain)
-   • Assignments: ~270 (8-10 per course)
+   • Courses: 25 (5 per education level)
+   • Assignments: ~225 (8-10 per course)
    • Reviews: ${reviewCount}
    • Skills: 20 (domain-specific)
    • CourseSkill Mappings: ${skillMappingCount}
@@ -1045,6 +1035,7 @@ async function main() {
    Instructors: [email]@lms.com / instructor123
    Students:    student1@lms.com / student123
 
+<<<<<<< Updated upstream
 🌾 Domains:
    • Agriculture Technology (10 courses)
    • Healthcare Technology (10 courses)
@@ -1053,6 +1044,19 @@ async function main() {
 🧠 Recommendation Engine:
    • Content-based filtering with cosine similarity
    • Feature vectors: education, skills, domain, difficulty
+=======
+🎓 Education Levels:
+   • SECONDARY: 5 courses
+   • HIGHER_SECONDARY: 5 courses
+   • DIPLOMA: 5 courses
+   • UNDERGRADUATE: 5 courses
+   • POSTGRADUATE: 5 courses
+
+🌾 Domains (balanced across levels):
+   • Agriculture Technology (9 courses)
+   • Healthcare Technology (8 courses)
+   • Urban Technology (8 courses)
+>>>>>>> Stashed changes
 `);
 }
 
