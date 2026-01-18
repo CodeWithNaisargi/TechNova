@@ -726,9 +726,6 @@ async function main() {
     // ========================================================================
     // CREATE COURSES WITH ASSIGNMENTS
     // ========================================================================
-<<<<<<< Updated upstream
-    const allCourseData = [...agriCourses, ...healthCourses, ...urbanCourses, ...explorationCourses];
-=======
     console.log('\n📚 Creating Courses by Education Level...');
 
     const allCourseData = [
@@ -738,8 +735,6 @@ async function main() {
         ...undergraduateCourses,
         ...postgraduateCourses,
     ];
-
->>>>>>> Stashed changes
     const createdCourses: any[] = [];
 
     for (const courseData of allCourseData) {
@@ -758,14 +753,10 @@ async function main() {
                 isPublished: true,
                 hasProject: courseData.hasProject,
                 targetEducationLevel: courseData.targetEducationLevel,
-<<<<<<< Updated upstream
+                thumbnail: courseData.thumbnail,
                 tags: courseData.domain
                     ? [courseData.domain.toLowerCase(), courseData.category.toLowerCase()]
                     : [courseData.category.toLowerCase()],
-=======
-                thumbnail: courseData.thumbnail,
-                tags: [courseData.domain.toLowerCase(), courseData.category.toLowerCase()],
->>>>>>> Stashed changes
             },
         });
         createdCourses.push(course);
@@ -1035,16 +1026,6 @@ async function main() {
    Instructors: [email]@lms.com / instructor123
    Students:    student1@lms.com / student123
 
-<<<<<<< Updated upstream
-🌾 Domains:
-   • Agriculture Technology (10 courses)
-   • Healthcare Technology (10 courses)
-   • Urban Technology (10 courses)
-
-🧠 Recommendation Engine:
-   • Content-based filtering with cosine similarity
-   • Feature vectors: education, skills, domain, difficulty
-=======
 🎓 Education Levels:
    • SECONDARY: 5 courses
    • HIGHER_SECONDARY: 5 courses
@@ -1053,10 +1034,9 @@ async function main() {
    • POSTGRADUATE: 5 courses
 
 🌾 Domains (balanced across levels):
-   • Agriculture Technology (9 courses)
-   • Healthcare Technology (8 courses)
-   • Urban Technology (8 courses)
->>>>>>> Stashed changes
+   • Agriculture Technology
+   • Healthcare Technology
+   • Urban Technology
 `);
 }
 

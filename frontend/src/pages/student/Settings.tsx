@@ -154,15 +154,9 @@ export default function Settings() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-4xl"
         >
-<<<<<<< HEAD
-            <div className="mb-8 pt-6">
-                <h1 className="text-3xl font-bold">Settings</h1>
-                <p className="text-muted-foreground">Manage your account settings and preferences</p>
-=======
             <div className="mb-6 sm:mb-8 pt-4 sm:pt-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Settings</h1>
                 <p className="text-sm sm:text-base text-muted-foreground mt-1">Manage your account settings and preferences</p>
->>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
             </div>
 
             <Tabs defaultValue="profile" className="space-y-6">
@@ -345,11 +339,10 @@ export default function Settings() {
                                             settingsMutation.mutate({ theme: themeOption as any });
                                             setThemeContext(themeOption as any);
                                         }}
-                                        className={`p-4 border-2 rounded-lg transition-all hover:scale-105 ${
-                                            theme === themeOption 
-                                                ? 'border-primary bg-primary/10 shadow-md' 
+                                        className={`p-4 border-2 rounded-lg transition-all hover:scale-105 ${theme === themeOption
+                                                ? 'border-primary bg-primary/10 shadow-md'
                                                 : 'border-gray-200 hover:border-gray-300'
-                                        }`}
+                                            }`}
                                     >
                                         <Palette className="w-8 h-8 mx-auto mb-2" />
                                         <p className="font-medium">{themeOption.charAt(0) + themeOption.slice(1).toLowerCase()}</p>
