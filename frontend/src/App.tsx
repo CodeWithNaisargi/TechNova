@@ -2,12 +2,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import MainLayout from '@/layouts/MainLayout';
 import DashboardLayout from '@/layouts/DashboardLayout';
-<<<<<<< Updated upstream
 import OnboardingLayout from '@/layouts/OnboardingLayout';
 import { SidebarProvider } from '@/context/SidebarContext';
 import OnboardingGuard from '@/components/guards/OnboardingGuard';
-=======
->>>>>>> Stashed changes
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import VerifyEmail from '@/pages/VerifyEmail';
@@ -48,7 +45,6 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode,
     return <>{children}</>;
 };
 
-<<<<<<< Updated upstream
 // Dashboard Guard - Ensures onboarding is complete before dashboard access
 const DashboardGuard = ({ children }: { children: React.ReactNode }) => {
     const { user, isLoading } = useAuth();
@@ -71,8 +67,6 @@ const DashboardGuard = ({ children }: { children: React.ReactNode }) => {
     return <>{children}</>;
 };
 
-=======
->>>>>>> Stashed changes
 function App() {
     return (
         <AuthProvider>
@@ -83,7 +77,6 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/verify-email" element={<VerifyEmail />} />
-<<<<<<< Updated upstream
                 </Route>
 
                 {/* Onboarding Routes - LOCKED after completion */}
@@ -94,14 +87,6 @@ function App() {
 
                 {/* Protected Dashboard Routes - Requires completed onboarding for students */}
                 <Route element={<DashboardGuard><SidebarProvider><DashboardLayout /></SidebarProvider></DashboardGuard>}>
-=======
-                    <Route path="/courses" element={<BrowseCourses />} />
-                    <Route path="/courses/:courseId" element={<CourseDetails />} />
-                </Route>
-
-                {/* Protected Routes with DashboardLayout (Sidebar) */}
-                <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><DashboardLayout /></ProtectedRoute>}>
->>>>>>> Stashed changes
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/courses" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><BrowseCourses /></ProtectedRoute>} />
@@ -130,10 +115,6 @@ function App() {
                     {/* Settings (All roles) */}
                     <Route path="/settings" element={<Settings />} />
                 </Route>
-
-                {/* Onboarding Routes (No Layout) */}
-                <Route path="/onboarding/education" element={<ProtectedRoute allowedRoles={['STUDENT']}><EducationLevelSelection /></ProtectedRoute>} />
-                <Route path="/onboarding/career" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentInterestSelection /></ProtectedRoute>} />
 
                 {/* Legacy redirects for old onboarding URLs */}
                 <Route path="/student/select-education" element={<Navigate to="/onboarding/education" replace />} />
