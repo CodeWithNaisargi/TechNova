@@ -44,42 +44,42 @@ interface Course {
 }
 
 const CourseDetails = () => {
-    const { id } = useParams<{ id: string }>();
+    const { courseId } = useParams<{ courseId: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
-    // Build backend URL
-    const API_BASE =
-        import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5001";
+    // Build backend URL (for API calls only, not images)
+    // Images are served from frontend public folder
 
     // Fetch course
     const { data: course, isLoading } = useQuery({
-        queryKey: ['course', id],
+        queryKey: ['course', courseId],
         queryFn: async () => {
-            const res = await api.get(`/courses/${id}`);
+            const res = await api.get(`/courses/${courseId}`);
             return res.data.data as Course;
-        }
+        },
+        enabled: !!courseId
     });
 
     // Fetch reviews
     const { data: reviewsData } = useQuery({
-        queryKey: ['reviews', id],
+        queryKey: ['reviews', courseId],
         queryFn: async () => {
-            const res = await api.get(`/reviews/course/${id}`);
+            const res = await api.get(`/reviews/course/${courseId}`);
             return res.data.data;
         },
-        enabled: !!id
+        enabled: !!courseId
     });
 
     // Enroll Mutation
     const enrollMutation = useMutation({
-        mutationFn: async () => api.post('/student/enroll', { courseId: id }),
+        mutationFn: async () => api.post('/student/enroll', { courseId }),
         onSuccess: () => {
             toast({ title: 'Success', description: 'Enrolled successfully!' });
             queryClient.invalidateQueries({ queryKey: ['student-enrollments'] });
-            navigate(`/learning/${id}`);
+            navigate(`/learning/${courseId}`);
         },
         onError: (error: any) => {
             toast({
@@ -111,10 +111,8 @@ const CourseDetails = () => {
     const avgRating = reviewsData?.stats?.averageRating || 0;
     const totalReviews = reviewsData?.stats?.totalReviews || 0;
 
-    // FIXED THUMBNAIL URL HANDLER
-    const thumbnail = course.thumbnail
-        ? `${API_BASE}${course.thumbnail.startsWith("/") ? course.thumbnail : "/" + course.thumbnail}`
-        : null;
+    // FIXED THUMBNAIL URL HANDLER - Images are in frontend public folder
+    const thumbnail = course.thumbnail || null;
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -140,11 +138,10 @@ const CourseDetails = () => {
                                 {[...Array(5)].map((_, i) => (
                                     <Star
                                         key={i}
-                                        className={`h-5 w-5 ${
-                                            i < Math.round(avgRating)
-                                                ? "fill-yellow-400 text-yellow-400"
-                                                : "text-gray-300"
-                                        }`}
+                                        className={`h-5 w-5 ${i < Math.round(avgRating)
+                                            ? "fill-yellow-400 text-yellow-400"
+                                            : "text-gray-300"
+                                            }`}
                                     />
                                 ))}
                             </div>
@@ -224,11 +221,10 @@ const CourseDetails = () => {
                                                             {[...Array(5)].map((_, i) => (
                                                                 <Star
                                                                     key={i}
-                                                                    className={`h-4 w-4 ${
-                                                                        i < rv.rating
-                                                                            ? "fill-yellow-400 text-yellow-400"
-                                                                            : "text-gray-300"
-                                                                    }`}
+                                                                    className={`h-4 w-4 ${i < rv.rating
+                                                                        ? "fill-yellow-400 text-yellow-400"
+                                                                        : "text-gray-300"
+                                                                        }`}
                                                                 />
                                                             ))}
                                                         </div>
@@ -278,8 +274,8 @@ const CourseDetails = () => {
                                     {isEnrolled
                                         ? "Enrolled"
                                         : enrollMutation.isPending
-                                        ? "Enrolling..."
-                                        : "Enroll Now"}
+                                            ? "Enrolling..."
+                                            : "Enroll Now"}
                                 </Button>
                             )}
 

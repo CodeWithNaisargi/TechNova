@@ -199,10 +199,7 @@ export default function Dashboard() {
                                     enrolledCourses.map((enrollment: any, i: number) => {
                                         const progress = enrollment.progress;
                                         const percentage = progress?.percentage || 0;
-                                        const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
-                                        const thumbnail = enrollment.course?.thumbnail
-                                            ? `${API_BASE}${enrollment.course.thumbnail.startsWith('/') ? enrollment.course.thumbnail : '/' + enrollment.course.thumbnail}`
-                                            : null;
+                                        const thumbnail = enrollment.course?.thumbnail || null;
 
                                         return (
                                             <motion.div
@@ -321,10 +318,7 @@ export default function Dashboard() {
                         <h2 className="text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">Recommended Courses</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                             {popularCourses.slice(0, 4).map((course: any, i: number) => {
-                                const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
-                                const thumbnail = course.thumbnail
-                                    ? `${API_BASE}${course.thumbnail.startsWith('/') ? course.thumbnail : '/' + course.thumbnail}`
-                                    : null;
+                                const thumbnail = course.thumbnail || null;
 
                                 return (
                                     <motion.div

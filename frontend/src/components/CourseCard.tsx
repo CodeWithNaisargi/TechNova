@@ -29,10 +29,8 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({ course, progress, showProgress = false }: CourseCardProps) => {
-    const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:5001';
-    const thumbnailUrl = course.thumbnail
-        ? `${baseUrl}${course.thumbnail}`
-        : 'https://via.placeholder.com/400x225?text=Course';
+    // Images are served from frontend public folder, not backend
+    const thumbnailUrl = course.thumbnail || 'https://via.placeholder.com/400x225?text=Course';
 
     const difficultyColors = {
         BEGINNER: 'bg-green-100 text-green-800 border-green-200',
