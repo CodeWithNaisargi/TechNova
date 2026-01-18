@@ -82,8 +82,13 @@ const CourseList = () => {
     if (isLoading) return <div>Loading...</div>;
 
     return (
+<<<<<<< HEAD
+        <div className="space-y-6">
+            <div className="flex items-center justify-between pt-6">
+=======
         <div className="space-y-4 sm:space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 sm:pt-6">
+>>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
                 <div>
                     <h1 className="text-2xl sm:text-3xl font-bold text-foreground">My Courses</h1>
                     <p className="text-sm sm:text-base text-muted-foreground">Manage your courses and content</p>

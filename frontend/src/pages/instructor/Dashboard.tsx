@@ -85,7 +85,11 @@ const InstructorDashboard = () => {
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
+<<<<<<< HEAD
+                    className="mb-10 pt-6"
+=======
                     className="mb-6 sm:mb-8 md:mb-10 pt-4 sm:pt-6"
+>>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
                 >
                     <h1 className="text-2xl sm:text-3xl font-semibold text-foreground mb-2">Instructor Dashboard</h1>
                     <p className="text-sm sm:text-base text-muted-foreground">Manage your courses and review submissions</p>

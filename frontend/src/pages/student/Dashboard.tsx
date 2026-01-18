@@ -139,10 +139,17 @@ export default function Dashboard() {
             <div className="max-w-7xl mx-auto">
 
                 {/* HERO SECTION */}
+<<<<<<< HEAD
+                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-10 pt-6">
+                    <div className="bg-gradient-to-r from-[#2563EB] to-[#1d4ed8] rounded-xl p-8 text-white shadow-lg">
+                        <h1 className="text-3xl font-semibold mb-2">Welcome back, {user?.name || "Student"} 👋</h1>
+                        <p className="text-blue-100 text-base">Let's continue your learning journey</p>
+=======
                 <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-6 sm:mb-8 md:mb-10 pt-4 sm:pt-6">
                     <div className="bg-gradient-to-r from-primary to-primary/80 rounded-xl p-6 sm:p-8 text-primary-foreground shadow-lg">
                         <h1 className="text-2xl sm:text-3xl font-semibold mb-2">Welcome back, {user?.name || "Student"} 👋</h1>
                         <p className="text-primary-foreground/80 text-sm sm:text-base">Let's continue your learning journey</p>
+>>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
                     </div>
                 </motion.div>
 

@@ -154,9 +154,15 @@ export default function Settings() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-4xl"
         >
+<<<<<<< HEAD
+            <div className="mb-8 pt-6">
+                <h1 className="text-3xl font-bold">Settings</h1>
+                <p className="text-muted-foreground">Manage your account settings and preferences</p>
+=======
             <div className="mb-6 sm:mb-8 pt-4 sm:pt-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Settings</h1>
                 <p className="text-sm sm:text-base text-muted-foreground mt-1">Manage your account settings and preferences</p>
+>>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
             </div>
 
             <Tabs defaultValue="profile" className="space-y-6">
