@@ -58,13 +58,18 @@ export default function Dashboard() {
         },
     });
 
-    // Fetch recommended courses
+    // Fetch popular courses - STRICT: Only courses matching user's education level
     const { data: popularCourses = [] } = useQuery({
-        queryKey: ["popular-courses"],
+        queryKey: ["popular-courses", user?.educationLevel],
         queryFn: async () => {
-            const res = await api.get("/courses/popular");
+            const params = new URLSearchParams();
+            if (user?.educationLevel) {
+                params.append('educationLevel', user.educationLevel);
+            }
+            const res = await api.get(`/courses/popular?${params.toString()}`);
             return res.data?.data || [];
         },
+        enabled: !!user,
     });
 
     // Listen for real-time progress updates
@@ -82,10 +87,10 @@ export default function Dashboard() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-                    <div className="text-center">
-                        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-muted-foreground font-medium">Loading your dashboard...</p>
-                    </div>
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-muted-foreground font-medium">Loading your dashboard...</p>
+                </div>
             </div>
         );
     }

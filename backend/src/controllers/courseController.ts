@@ -34,22 +34,40 @@ export const createCourse = async (req: Request, res: Response, next: NextFuncti
 // @desc    Get all courses (Public - with filters)
 // @route   GET /api/courses
 // @access  Public
+// Filters: search, category, difficulty, educationLevel (STRICT), domain
 export const getCourses = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { search, category, difficulty } = req.query;
+        const { search, category, difficulty, educationLevel, domain } = req.query;
         const where: any = { isPublished: true };
 
+        // Text search
         if (search) {
             where.OR = [
                 { title: { contains: search as string, mode: 'insensitive' } },
                 { description: { contains: search as string, mode: 'insensitive' } },
             ];
         }
+
+        // Category filter
         if (category) {
             where.category = category as string;
         }
+
+        // Difficulty filter (optional refinement)
         if (difficulty) {
             where.difficulty = difficulty as string;
+        }
+
+        // STRICT Education Level Filter
+        // Course.targetEducationLevel MUST EQUAL user.educationLevel
+        // This ensures 10th students NEVER see UG/PG courses
+        if (educationLevel) {
+            where.targetEducationLevel = educationLevel as string;
+        }
+
+        // Domain filter (from career focus)
+        if (domain) {
+            where.domain = domain as string;
         }
 
         const courses = await prisma.course.findMany({
@@ -72,8 +90,21 @@ export const getCourses = async (req: Request, res: Response, next: NextFunction
 // @access  Public
 export const getPopularCourses = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const { educationLevel, domain } = req.query;
+        const where: any = { isPublished: true };
+
+        // STRICT Education Level Filter
+        if (educationLevel) {
+            where.targetEducationLevel = educationLevel as string;
+        }
+
+        // Domain filter
+        if (domain) {
+            where.domain = domain as string;
+        }
+
         const courses = await prisma.course.findMany({
-            where: { isPublished: true },
+            where,
             include: {
                 instructor: { select: { name: true, avatar: true } },
                 _count: {

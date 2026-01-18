@@ -658,9 +658,103 @@ async function main() {
     ];
 
     // ========================================================================
+    // EXPLORATION COURSES (SECONDARY / 10th Grade)
+    // Focus: Career awareness, stream selection, aptitude discovery
+    // NO domains, NO job titles, NO technical tools
+    // ========================================================================
+    console.log('\n🔍 Creating Exploration Courses (10th Grade)...');
+
+    const explorationCourses = [
+        {
+            title: 'Discover Your Career Path: A Student\'s Guide',
+            description: 'An interactive exploration of different career fields to help you understand what options await after 10th grade. Discover your interests through fun activities and self-assessment.',
+            category: 'Career Exploration',
+            domain: null, // NO DOMAIN for 10th
+            difficulty: 'Beginner',
+            duration: '3 weeks',
+            price: 0,
+            prerequisites: [],
+            learningOutcomes: ['Identify your natural interests and strengths', 'Understand different career streams', 'Make informed decisions about 11th grade stream', 'Explore modern career options'],
+            instructorId: agriInstructor1.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+        },
+        {
+            title: 'Science vs Commerce vs Arts: Which Stream Fits You?',
+            description: 'A comprehensive guide to understanding the three major streams after 10th. Learn what each stream offers, career prospects, and how to choose based on your personality and goals.',
+            category: 'Career Exploration',
+            domain: null,
+            difficulty: 'Beginner',
+            duration: '2 weeks',
+            price: 0,
+            prerequisites: [],
+            learningOutcomes: ['Compare Science, Commerce, and Arts streams', 'Identify subjects in each stream', 'Understand future opportunities in each path', 'Match your interests to the right stream'],
+            instructorId: healthInstructor1.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+        },
+        {
+            title: 'Diploma or Degree? Understanding Your Options',
+            description: 'Should you pursue a diploma after 10th or continue traditional education? Learn about polytechnic diplomas, ITIs, and how they compare to the degree path.',
+            category: 'Career Exploration',
+            domain: null,
+            difficulty: 'Beginner',
+            duration: '2 weeks',
+            price: 0,
+            prerequisites: [],
+            learningOutcomes: ['Understand diploma vs degree pathways', 'Learn about ITI and polytechnic options', 'Explore vocational training benefits', 'Make informed education decisions'],
+            instructorId: urbanInstructor1.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+        },
+        {
+            title: 'Aptitude Discovery: Find Your Hidden Talents',
+            description: 'Through interactive quizzes and exercises, discover your natural aptitudes - logical, verbal, spatial, creative. Understanding yourself is the first step to choosing the right career.',
+            category: 'Career Exploration',
+            domain: null,
+            difficulty: 'Beginner',
+            duration: '2 weeks',
+            price: 0,
+            prerequisites: [],
+            learningOutcomes: ['Discover your aptitude strengths', 'Understand different types of intelligence', 'Match aptitudes to career fields', 'Build self-awareness for future decisions'],
+            instructorId: agriInstructor2.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+        },
+        {
+            title: 'Emerging Fields: Careers of Tomorrow',
+            description: 'The world of work is changing fast. Learn about new and exciting fields that didn\'t exist 10 years ago - from app development to drone operations to sustainable farming.',
+            category: 'Career Exploration',
+            domain: null,
+            difficulty: 'Beginner',
+            duration: '3 weeks',
+            price: 0,
+            prerequisites: [],
+            learningOutcomes: ['Explore emerging career fields', 'Understand how technology creates new jobs', 'Learn about future-ready skills', 'Get inspired by innovation stories'],
+            instructorId: healthInstructor2.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+        },
+        {
+            title: 'Study Skills for Success: Learn How to Learn',
+            description: 'Master the art of effective studying. Learn memory techniques, time management, note-taking strategies, and exam preparation skills that will help you throughout your education.',
+            category: 'Foundation Skills',
+            domain: null,
+            difficulty: 'Beginner',
+            duration: '2 weeks',
+            price: 0,
+            prerequisites: [],
+            learningOutcomes: ['Develop effective study habits', 'Master time management', 'Learn memory enhancement techniques', 'Prepare confidently for exams'],
+            instructorId: urbanInstructor2.id,
+            hasProject: false,
+            targetEducationLevel: EducationLevel.SECONDARY,
+        },
+    ];
+
+    // ========================================================================
     // CREATE COURSES WITH ASSIGNMENTS
     // ========================================================================
-    const allCourseData = [...agriCourses, ...healthCourses, ...urbanCourses];
+    const allCourseData = [...agriCourses, ...healthCourses, ...urbanCourses, ...explorationCourses];
     const createdCourses: any[] = [];
 
     for (const courseData of allCourseData) {
@@ -679,7 +773,9 @@ async function main() {
                 isPublished: true,
                 hasProject: courseData.hasProject,
                 targetEducationLevel: courseData.targetEducationLevel,
-                tags: [courseData.domain.toLowerCase(), courseData.category.toLowerCase()],
+                tags: courseData.domain
+                    ? [courseData.domain.toLowerCase(), courseData.category.toLowerCase()]
+                    : [courseData.category.toLowerCase()],
             },
         });
         createdCourses.push(course);

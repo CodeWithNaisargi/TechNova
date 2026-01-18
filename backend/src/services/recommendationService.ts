@@ -160,6 +160,7 @@ export async function getCourseVector(courseId: string): Promise<number[]> {
 
 /**
  * Get personalized course recommendations for a student
+ * STRICT: Only recommends courses matching user's exact education level
  */
 export async function getRecommendations(
     userId: string,
@@ -170,12 +171,27 @@ export async function getRecommendations(
     similarity: number;
     reason: string;
 }[]> {
-    // Get student vector
+    // Get student info including education level
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { educationLevel: true, careerFocusId: true, interestedCareerPath: { select: { domain: true } } },
+    });
+
+    // Get student vector for similarity scoring
     const studentVector = await getStudentVector(userId);
 
-    // Get all published courses
+    // Build strict filter
+    const courseFilter: any = { isPublished: true };
+
+    // STRICT EDUCATION LEVEL FILTER
+    // Only show courses where targetEducationLevel === user.educationLevel
+    if (user?.educationLevel) {
+        courseFilter.targetEducationLevel = user.educationLevel;
+    }
+
+    // Get courses matching the strict education level filter
     const courses = await prisma.course.findMany({
-        where: { isPublished: true },
+        where: courseFilter,
         include: {
             courseSkills: { include: { skill: true } },
             instructor: { select: { name: true } },
@@ -189,7 +205,7 @@ export async function getRecommendations(
     });
     const enrolledIds = new Set(enrolledCourses.map(e => e.courseId));
 
-    // Calculate similarity for each course
+    // Calculate similarity for each course (already filtered by education level)
     const recommendations = await Promise.all(
         courses
             .filter(course => !enrolledIds.has(course.id))

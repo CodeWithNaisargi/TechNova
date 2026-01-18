@@ -50,12 +50,13 @@ export const getAllCareerPaths = async (req: Request, res: Response) => {
 
 /**
  * PUT /api/career-paths/student/interest
- * Update logged-in student's interested career path
+ * Update logged-in student's interested career path and/or career focus
+ * Supports both legacy careerPathId and new careerFocusId
  */
 export const updateStudentInterest = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
-        const { careerPathId } = req.body;
+        const { careerPathId, careerFocusId } = req.body;
 
         if (!userId) {
             return res.status(401).json({
@@ -64,34 +65,52 @@ export const updateStudentInterest = async (req: Request, res: Response) => {
             });
         }
 
-        if (!careerPathId) {
+        // At least one of careerPathId or careerFocusId must be provided
+        if (!careerPathId && !careerFocusId) {
             return res.status(400).json({
                 success: false,
-                message: 'Career path ID is required',
+                message: 'Career path ID or career focus ID is required',
             });
         }
 
-        // Verify career path exists
-        const careerPath = await prisma.careerPath.findUnique({
-            where: { id: careerPathId },
-        });
+        // Build update data
+        const updateData: { interestedCareerPathId?: string; careerFocusId?: string } = {};
 
-        if (!careerPath) {
-            return res.status(404).json({
-                success: false,
-                message: 'Career path not found',
+        // If careerPathId provided, verify it exists
+        if (careerPathId) {
+            const careerPath = await prisma.careerPath.findUnique({
+                where: { id: careerPathId },
             });
+
+            if (!careerPath) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Career path not found',
+                });
+            }
+            updateData.interestedCareerPathId = careerPathId;
         }
 
-        // Update user's interested career path
+        // careerFocusId is from config (no DB validation needed)
+        if (careerFocusId) {
+            updateData.careerFocusId = careerFocusId;
+        }
+
+        // Update user's career interest and mark onboarding as complete
         const updatedUser = await prisma.user.update({
             where: { id: userId },
-            data: { interestedCareerPathId: careerPathId },
+            data: {
+                ...updateData,
+                // Mark onboarding complete when careerFocusId is set
+                ...(careerFocusId && { onboardingCompleted: true }),
+            },
             select: {
                 id: true,
                 name: true,
                 email: true,
                 role: true,
+                educationLevel: true,
+                careerFocusId: true,
                 interestedCareerPathId: true,
                 interestedCareerPath: {
                     select: {

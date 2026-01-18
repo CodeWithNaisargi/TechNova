@@ -11,7 +11,9 @@ interface User {
   avatar?: string
   interestedCareerPathId?: string | null
   interestedCareerPath?: { id: string; title: string } | null
+  careerFocusId?: string | null
   educationLevel?: string | null
+  onboardingCompleted?: boolean
 }
 
 interface AuthContextType {
