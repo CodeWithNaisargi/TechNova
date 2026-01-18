@@ -3,6 +3,8 @@ import { AuthProvider, useAuth } from '@/context/AuthContext';
 import MainLayout from '@/layouts/MainLayout';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import OnboardingLayout from '@/layouts/OnboardingLayout';
+import { SidebarProvider } from '@/context/SidebarContext';
+import OnboardingGuard from '@/components/guards/OnboardingGuard';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import VerifyEmail from '@/pages/VerifyEmail';
@@ -56,7 +58,8 @@ const DashboardGuard = ({ children }: { children: React.ReactNode }) => {
         if (!user.educationLevel) {
             return <Navigate to="/onboarding/education" replace />;
         }
-        if (!user.interestedCareerPath) {
+        // Check for careerFocusId (new) OR interestedCareerPath (legacy)
+        if (!user.careerFocusId && !user.interestedCareerPath) {
             return <Navigate to="/onboarding/career" replace />;
         }
     }
@@ -76,14 +79,14 @@ function App() {
                     <Route path="/verify-email" element={<VerifyEmail />} />
                 </Route>
 
-                {/* Onboarding Routes - Separate from Dashboard */}
-                <Route path="/onboarding" element={<OnboardingLayout />}>
+                {/* Onboarding Routes - LOCKED after completion */}
+                <Route path="/onboarding" element={<OnboardingGuard><OnboardingLayout /></OnboardingGuard>}>
                     <Route path="education" element={<EducationLevelSelection />} />
                     <Route path="career" element={<StudentInterestSelection />} />
                 </Route>
 
                 {/* Protected Dashboard Routes - Requires completed onboarding for students */}
-                <Route element={<DashboardGuard><DashboardLayout /></DashboardGuard>}>
+                <Route element={<DashboardGuard><SidebarProvider><DashboardLayout /></SidebarProvider></DashboardGuard>}>
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/courses" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><BrowseCourses /></ProtectedRoute>} />

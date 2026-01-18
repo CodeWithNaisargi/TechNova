@@ -269,6 +269,8 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
         avatar: true,
         bio: true,
         educationLevel: true,
+        careerFocusId: true,
+        onboardingCompleted: true,
         interestedCareerPath: {
           select: {
             id: true,

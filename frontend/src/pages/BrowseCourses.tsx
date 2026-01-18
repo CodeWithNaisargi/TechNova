@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '@/services/api';
+import { useAuth } from '@/context/AuthContext';
 
 import {
     Card,
@@ -40,6 +41,7 @@ interface Course {
 }
 
 const BrowseCourses = () => {
+    const { user } = useAuth();
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
 
@@ -47,12 +49,15 @@ const BrowseCourses = () => {
     const API_BASE =
         import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
 
+    // STRICT: Filter by user's education level to ensure correct courses
     const { data, isLoading } = useQuery({
-        queryKey: ['courses', search, category],
+        queryKey: ['courses', search, category, user?.educationLevel],
         queryFn: async () => {
             const params = new URLSearchParams();
             if (search) params.append('search', search);
             if (category) params.append('category', category);
+            // STRICT EDUCATION LEVEL FILTER
+            if (user?.educationLevel) params.append('educationLevel', user.educationLevel);
 
             const res = await api.get(`/courses?${params.toString()}`);
             return res.data.data as Course[];
@@ -111,11 +116,10 @@ const BrowseCourses = () => {
                     {data.map((course) => {
                         // FINAL FIX — correct universal URL builder
                         const thumbnail = course.thumbnail
-                            ? `${API_BASE}${
-                                  course.thumbnail.startsWith('/')
-                                      ? course.thumbnail
-                                      : '/' + course.thumbnail
-                              }`
+                            ? `${API_BASE}${course.thumbnail.startsWith('/')
+                                ? course.thumbnail
+                                : '/' + course.thumbnail
+                            }`
                             : null;
 
                         return (
