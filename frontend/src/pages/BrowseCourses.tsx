@@ -45,14 +45,6 @@ const BrowseCourses = () => {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
 
-<<<<<<< Updated upstream
-    // Build proper API base from env
-    const API_BASE =
-        import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001';
-
-    // STRICT: Filter by user's education level to ensure correct courses
-=======
->>>>>>> Stashed changes
     const { data, isLoading } = useQuery({
         queryKey: ['courses', search, category, user?.educationLevel],
         queryFn: async () => {
@@ -72,13 +64,8 @@ const BrowseCourses = () => {
     return (
         <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
             {/* Search + Filter */}
-<<<<<<< HEAD
-            <div className="mb-8 pt-6">
-                <h1 className="text-3xl font-bold mb-4">Browse Courses</h1>
-=======
             <div className="mb-6 sm:mb-8 pt-4 sm:pt-6">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground">Browse Courses</h1>
->>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
 
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     {/* Search */}
@@ -122,18 +109,8 @@ const BrowseCourses = () => {
             ) : data && data.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {data.map((course) => {
-<<<<<<< Updated upstream
-                        // FINAL FIX — correct universal URL builder
-                        const thumbnail = course.thumbnail
-                            ? `${API_BASE}${course.thumbnail.startsWith('/')
-                                ? course.thumbnail
-                                : '/' + course.thumbnail
-                            }`
-                            : null;
-=======
                         // Images are served from frontend public folder
                         const thumbnail = course.thumbnail || null;
->>>>>>> Stashed changes
 
                         return (
                             <Card

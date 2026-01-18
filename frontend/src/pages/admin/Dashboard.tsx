@@ -111,11 +111,7 @@ const AdminDashboard = () => {
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-<<<<<<< HEAD
-                    className="mb-10 pt-6"
-=======
                     className="mb-6 sm:mb-8 md:mb-10 pt-4 sm:pt-6"
->>>>>>> 6b0f6c510c3e809ce1b5a3b7d7701b384f986c9d
                 >
                     <h1 className="text-2xl sm:text-3xl font-semibold text-foreground mb-2">Admin Dashboard</h1>
                     <p className="text-sm sm:text-base text-muted-foreground">Monitor and manage your EdTech platform</p>
@@ -226,41 +222,41 @@ const AdminDashboard = () => {
                                     Quick Actions
                                 </CardTitle>
                             </CardHeader>
-                        <CardContent>
-                            <div className="space-y-3 sm:space-y-4">
-                                <Link to="/admin/courses/new">
-                                    <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
-                                        <BookOpen className="w-5 h-5" />
-                                        <span className="font-semibold text-sm sm:text-base">Create New Course</span>
-                                    </button>
-                                </Link>
-
-                                <Link to="/admin/assignments/new">
-                                    <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
-                                        <FileText className="w-5 h-5" />
-                                        <span className="font-semibold text-sm sm:text-base">Add Assignment</span>
-                                    </button>
-                                </Link>
-
-                                <Link to="/admin/users">
-                                    <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
-                                        <Users className="w-5 h-5" />
-                                        <span className="font-semibold text-sm sm:text-base">Manage Users</span>
-                                    </button>
-                                </Link>
-
-                                {stats.pendingSubmissions > 0 && (
-                                    <Link to="/admin/submissions?status=PENDING">
-                                        <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
-                                            <AlertCircle className="w-5 h-5" />
-                                            <span className="font-semibold text-center text-sm sm:text-base">
-                                                Review {stats.pendingSubmissions} Pending Submissions
-                                            </span>
+                            <CardContent>
+                                <div className="space-y-3 sm:space-y-4">
+                                    <Link to="/admin/courses/new">
+                                        <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <BookOpen className="w-5 h-5" />
+                                            <span className="font-semibold text-sm sm:text-base">Create New Course</span>
                                         </button>
                                     </Link>
-                                )}
-                            </div>
-                        </CardContent>
+
+                                    <Link to="/admin/assignments/new">
+                                        <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <FileText className="w-5 h-5" />
+                                            <span className="font-semibold text-sm sm:text-base">Add Assignment</span>
+                                        </button>
+                                    </Link>
+
+                                    <Link to="/admin/users">
+                                        <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                            <Users className="w-5 h-5" />
+                                            <span className="font-semibold text-sm sm:text-base">Manage Users</span>
+                                        </button>
+                                    </Link>
+
+                                    {stats.pendingSubmissions > 0 && (
+                                        <Link to="/admin/submissions?status=PENDING">
+                                            <button className="w-full p-4 sm:p-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-md transition-all font-medium flex flex-col items-center gap-2">
+                                                <AlertCircle className="w-5 h-5" />
+                                                <span className="font-semibold text-center text-sm sm:text-base">
+                                                    Review {stats.pendingSubmissions} Pending Submissions
+                                                </span>
+                                            </button>
+                                        </Link>
+                                    )}
+                                </div>
+                            </CardContent>
                         </Card>
                     </motion.div>
                 </div>
