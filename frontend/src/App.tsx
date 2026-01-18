@@ -2,12 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import MainLayout from '@/layouts/MainLayout';
 import DashboardLayout from '@/layouts/DashboardLayout';
-<<<<<<< Updated upstream
-import OnboardingLayout from '@/layouts/OnboardingLayout';
 import { SidebarProvider } from '@/context/SidebarContext';
-import OnboardingGuard from '@/components/guards/OnboardingGuard';
-=======
->>>>>>> Stashed changes
+
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import VerifyEmail from '@/pages/VerifyEmail';
@@ -48,31 +44,7 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode,
     return <>{children}</>;
 };
 
-<<<<<<< Updated upstream
-// Dashboard Guard - Ensures onboarding is complete before dashboard access
-const DashboardGuard = ({ children }: { children: React.ReactNode }) => {
-    const { user, isLoading } = useAuth();
 
-    if (isLoading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
-
-    if (!user) return <Navigate to="/login" replace />;
-
-    // Students must complete onboarding before accessing dashboard
-    if (user.role === 'STUDENT') {
-        if (!user.educationLevel) {
-            return <Navigate to="/onboarding/education" replace />;
-        }
-        // Check for careerFocusId (new) OR interestedCareerPath (legacy)
-        if (!user.careerFocusId && !user.interestedCareerPath) {
-            return <Navigate to="/onboarding/career" replace />;
-        }
-    }
-
-    return <>{children}</>;
-};
-
-=======
->>>>>>> Stashed changes
 function App() {
     return (
         <AuthProvider>
@@ -83,25 +55,12 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/verify-email" element={<VerifyEmail />} />
-<<<<<<< Updated upstream
-                </Route>
-
-                {/* Onboarding Routes - LOCKED after completion */}
-                <Route path="/onboarding" element={<OnboardingGuard><OnboardingLayout /></OnboardingGuard>}>
-                    <Route path="education" element={<EducationLevelSelection />} />
-                    <Route path="career" element={<StudentInterestSelection />} />
-                </Route>
-
-                {/* Protected Dashboard Routes - Requires completed onboarding for students */}
-                <Route element={<DashboardGuard><SidebarProvider><DashboardLayout /></SidebarProvider></DashboardGuard>}>
-=======
                     <Route path="/courses" element={<BrowseCourses />} />
                     <Route path="/courses/:courseId" element={<CourseDetails />} />
                 </Route>
 
                 {/* Protected Routes with DashboardLayout (Sidebar) */}
-                <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><DashboardLayout /></ProtectedRoute>}>
->>>>>>> Stashed changes
+                <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><SidebarProvider><DashboardLayout /></SidebarProvider></ProtectedRoute>}>
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/courses" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><BrowseCourses /></ProtectedRoute>} />

@@ -650,6 +650,7 @@ async function main() {
             instructorId: agriInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/career_discover_path.jpg',
         },
         {
             title: 'Science vs Commerce vs Arts: Which Stream Fits You?',
@@ -664,6 +665,7 @@ async function main() {
             instructorId: healthInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/career_stream_selection.jpg',
         },
         {
             title: 'Diploma or Degree? Understanding Your Options',
@@ -678,6 +680,7 @@ async function main() {
             instructorId: urbanInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/career_diploma_degree.jpg',
         },
         {
             title: 'Aptitude Discovery: Find Your Hidden Talents',
@@ -692,6 +695,7 @@ async function main() {
             instructorId: agriInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/career_aptitude_discovery.jpg',
         },
         {
             title: 'Emerging Fields: Careers of Tomorrow',
@@ -706,6 +710,7 @@ async function main() {
             instructorId: healthInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/career_emerging_fields.jpg',
         },
         {
             title: 'Study Skills for Success: Learn How to Learn',
@@ -720,15 +725,13 @@ async function main() {
             instructorId: urbanInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
+            thumbnail: '/course-images/career_study_skills.jpg',
         },
     ];
 
     // ========================================================================
     // CREATE COURSES WITH ASSIGNMENTS
     // ========================================================================
-<<<<<<< Updated upstream
-    const allCourseData = [...agriCourses, ...healthCourses, ...urbanCourses, ...explorationCourses];
-=======
     console.log('\n📚 Creating Courses by Education Level...');
 
     const allCourseData = [
@@ -737,9 +740,8 @@ async function main() {
         ...diplomaCourses,
         ...undergraduateCourses,
         ...postgraduateCourses,
+        ...explorationCourses,
     ];
-
->>>>>>> Stashed changes
     const createdCourses: any[] = [];
 
     for (const courseData of allCourseData) {
@@ -758,14 +760,10 @@ async function main() {
                 isPublished: true,
                 hasProject: courseData.hasProject,
                 targetEducationLevel: courseData.targetEducationLevel,
-<<<<<<< Updated upstream
+                thumbnail: courseData.thumbnail,
                 tags: courseData.domain
                     ? [courseData.domain.toLowerCase(), courseData.category.toLowerCase()]
                     : [courseData.category.toLowerCase()],
-=======
-                thumbnail: courseData.thumbnail,
-                tags: [courseData.domain.toLowerCase(), courseData.category.toLowerCase()],
->>>>>>> Stashed changes
             },
         });
         createdCourses.push(course);
@@ -1035,18 +1033,8 @@ async function main() {
    Instructors: [email]@lms.com / instructor123
    Students:    student1@lms.com / student123
 
-<<<<<<< Updated upstream
-🌾 Domains:
-   • Agriculture Technology (10 courses)
-   • Healthcare Technology (10 courses)
-   • Urban Technology (10 courses)
-
-🧠 Recommendation Engine:
-   • Content-based filtering with cosine similarity
-   • Feature vectors: education, skills, domain, difficulty
-=======
 🎓 Education Levels:
-   • SECONDARY: 5 courses
+   • SECONDARY: 6 + 6 exploration courses
    • HIGHER_SECONDARY: 5 courses
    • DIPLOMA: 5 courses
    • UNDERGRADUATE: 5 courses
@@ -1056,7 +1044,7 @@ async function main() {
    • Agriculture Technology (9 courses)
    • Healthcare Technology (8 courses)
    • Urban Technology (8 courses)
->>>>>>> Stashed changes
+   • Exploration Courses (6 courses)
 `);
 }
 
