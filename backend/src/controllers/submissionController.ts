@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/prisma';
+import { createNotification } from '../modules/notification/notification.service';
+import { NotificationType } from '@prisma/client';
 
 // Submit assignment (Student)
 export const submitAssignment = async (req: Request, res: Response) => {
@@ -16,7 +18,8 @@ export const submitAssignment = async (req: Request, res: Response) => {
 
         // Check if assignment exists
         const assignment = await prisma.assignment.findUnique({
-            where: { id: assignmentId }
+            where: { id: assignmentId },
+            include: { course: true }
         });
 
         if (!assignment) {
@@ -73,6 +76,25 @@ export const submitAssignment = async (req: Request, res: Response) => {
                 status: 'SUBMITTED',
                 completedAt: new Date(),
             }
+        });
+
+        // Trigger notification for student
+        await createNotification({
+            userId: studentId,
+            title: 'Assignment Submitted',
+            message: `Your submission for ${assignment.title} has been received.`,
+            type: NotificationType.ASSIGNMENT,
+            link: `/student/course/${assignment.courseId}/progress`
+        });
+
+        // Trigger notification for instructor
+        const instructorId = assignment.course.instructorId;
+        await createNotification({
+            userId: instructorId,
+            title: 'New Assignment Submission',
+            message: `A student has submitted an assignment for ${assignment.course.title}.`,
+            type: NotificationType.ASSIGNMENT,
+            link: `/instructor/courses/${assignment.courseId}/submissions`
         });
 
         // Recalculate course progress

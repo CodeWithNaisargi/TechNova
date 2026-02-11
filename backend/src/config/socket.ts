@@ -84,6 +84,7 @@ export const initializeSocket = (httpServer: HTTPServer) => {
             console.log(`✅ User connected: ${userId}`);
             // Join user-specific room only for authenticated users
             socket.join(`user:${userId}`);
+            console.log(`✅ User connected and joined room: user:${userId}`);
         } else {
             console.log(`👤 Guest socket connected`);
         }

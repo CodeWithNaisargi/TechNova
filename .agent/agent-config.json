@@ -1,0 +1,27 @@
+{
+  "projectName": "SkillOrbit LMS",
+  "projectType": "fullstack",
+  "description": "Career-centric Learning Management System with AI-powered recommendations",
+  "version": "1.0.0",
+  "capabilities": {
+    "codeGeneration": true,
+    "codeReview": true,
+    "testing": true,
+    "documentation": true,
+    "debugging": true
+  },
+  "stack": {
+    "frontend": ["React", "TypeScript", "Vite", "TailwindCSS", "TanStack Query"],
+    "backend": ["Node.js", "Express", "TypeScript", "Prisma", "PostgreSQL"],
+    "tools": ["JWT", "Socket.io", "Multer", "Nodemailer"]
+  },
+  "domains": ["Agriculture Technology", "Healthcare Technology", "Urban Technology"],
+  "features": [
+    "Authentication & Authorization",
+    "Course Management",
+    "Assignment System",
+    "Recommendation Engine",
+    "Progress Tracking",
+    "Certificate Generation"
+  ]
+}

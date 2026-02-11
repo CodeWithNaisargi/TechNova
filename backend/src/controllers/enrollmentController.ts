@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../config/prisma';
+import { createNotification } from '../modules/notification/notification.service';
+import { NotificationType } from '@prisma/client';
 
 // @desc    Enroll in a course
 // @route   POST /api/enrollments
@@ -72,6 +74,15 @@ export const enrollCourse = async (req: Request, res: Response, next: NextFuncti
             });
 
             return { enrollment, assignmentsCreated: assignments.count };
+        });
+
+        // Trigger notification
+        await createNotification({
+            userId,
+            title: 'Successfully Enrolled!',
+            message: `You have successfully enrolled in ${course.title}. Start your learning journey!`,
+            type: NotificationType.ENROLLMENT,
+            link: `/learning/${course.id}`
         });
 
         res.status(201).json({

@@ -2,7 +2,8 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useSidebar } from '@/context/SidebarContext';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, BookOpen, Users, Settings, LogOut, Menu } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, Settings, LogOut, Menu, Brain } from 'lucide-react';
+import NotificationDropdown from '@/components/NotificationDropdown';
 import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 
@@ -25,6 +26,7 @@ const DashboardLayout = () => {
     const sidebarItems = [
         { label: 'Dashboard', href: user.role === 'INSTRUCTOR' ? '/instructor/dashboard' : user.role === 'ADMIN' ? '/admin/dashboard' : '/dashboard', icon: LayoutDashboard },
         { label: 'Courses', href: user.role === 'INSTRUCTOR' ? '/instructor/courses' : '/courses', icon: BookOpen },
+        ...(user.role === 'STUDENT' ? [{ label: 'Insights', href: '/insights', icon: Brain }] : []),
         ...(user.role === 'ADMIN' ? [{ label: 'Users', href: '/admin/users', icon: Users }] : []),
         { label: 'Settings', href: '/settings', icon: Settings },
     ];
@@ -32,7 +34,7 @@ const DashboardLayout = () => {
     return (
         <div className="min-h-screen flex bg-background overflow-x-hidden">
             {/* Sidebar - Responsive */}
-            <aside 
+            <aside
                 className={cn(
                     "fixed left-0 top-0 h-screen w-[260px] bg-background border-r border-border flex flex-col z-50 transition-transform duration-300 ease-in-out",
                     "md:translate-x-0 md:fixed",
@@ -44,7 +46,7 @@ const DashboardLayout = () => {
                 </div>
                 <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                     {sidebarItems.map((item) => {
-                        const isActive = location.pathname === item.href || 
+                        const isActive = location.pathname === item.href ||
                             (item.href !== '/' && location.pathname.startsWith(item.href));
                         return (
                             <Link
@@ -104,7 +106,21 @@ const DashboardLayout = () => {
                 >
                     <Menu className="h-5 w-5" />
                 </Button>
-                <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto w-full pt-16 md:pt-8">
+                {/* Header with NotificationBell */}
+                <header className="h-16 border-b border-border flex items-center justify-between px-4 sm:px-6 md:px-8 sticky top-0 bg-background/80 backdrop-blur-md z-40">
+                    <div className="flex items-center gap-4">
+                        {/* Empty div to balance space if needed, or put breadcrumbs here */}
+                    </div>
+                    <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+                        <NotificationDropdown />
+                        <div className="hidden sm:flex flex-col items-end">
+                            <span className="text-sm font-medium text-foreground">{user.name}</span>
+                            <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto w-full min-h-0">
                     <Outlet />
                 </main>
             </div>

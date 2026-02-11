@@ -1,6 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import NotificationDropdown from '@/components/NotificationDropdown';
 
 const MainLayout = () => {
     const { user, logout } = useAuth();
@@ -17,6 +18,7 @@ const MainLayout = () => {
                                 {user.role === 'STUDENT' && <Link to="/dashboard" className="text-sm font-medium hover:underline">Dashboard</Link>}
                                 {user.role === 'INSTRUCTOR' && <Link to="/instructor/dashboard" className="text-sm font-medium hover:underline">Instructor Panel</Link>}
                                 {user.role === 'ADMIN' && <Link to="/admin/dashboard" className="text-sm font-medium hover:underline">Admin Panel</Link>}
+                                <NotificationDropdown />
                                 <Button variant="ghost" onClick={logout}>Logout</Button>
                             </>
                         ) : (

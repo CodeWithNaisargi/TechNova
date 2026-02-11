@@ -18,6 +18,7 @@ import EducationLevelSelection from '@/pages/student/EducationLevelSelection';
 import CourseAssignments from '@/pages/student/CourseAssignments';
 import AssignmentDetails from '@/pages/student/AssignmentDetails';
 import CertificatePage from '@/pages/student/CertificatePage';
+import InsightsPage from '@/pages/student/InsightsPage';
 import Settings from '@/pages/student/Settings';
 import InstructorDashboard from '@/pages/instructor/Dashboard';
 import InstructorSubmissions from '@/pages/instructor/SubmissionReview';
@@ -90,18 +91,19 @@ function App() {
                     {/* Student */}
                     <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['STUDENT']}><StudentDashboard /></ProtectedRoute>} />
                     <Route path="/courses" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><BrowseCourses /></ProtectedRoute>} />
-                    <Route path="/courses/:id" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><CourseDetails /></ProtectedRoute>} />
+                    <Route path="/courses/:courseId" element={<ProtectedRoute allowedRoles={['STUDENT', 'INSTRUCTOR', 'ADMIN']}><CourseDetails /></ProtectedRoute>} />
                     <Route path="/learning/:courseId" element={<ProtectedRoute allowedRoles={['STUDENT']}><LearningPlayer /></ProtectedRoute>} />
                     <Route path="/courses/:courseId/assignments" element={<ProtectedRoute allowedRoles={['STUDENT']}><CourseAssignments /></ProtectedRoute>} />
                     <Route path="/courses/:courseId/assignments/:assignmentId" element={<ProtectedRoute allowedRoles={['STUDENT']}><AssignmentDetails /></ProtectedRoute>} />
                     <Route path="/assignments/:assignmentId" element={<ProtectedRoute allowedRoles={['STUDENT']}><AssignmentDetails /></ProtectedRoute>} />
                     <Route path="/certificates" element={<ProtectedRoute allowedRoles={['STUDENT']}><CertificatePage /></ProtectedRoute>} />
+                    <Route path="/insights" element={<ProtectedRoute allowedRoles={['STUDENT']}><InsightsPage /></ProtectedRoute>} />
 
                     {/* Instructor */}
                     <Route path="/instructor/dashboard" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><InstructorDashboard /></ProtectedRoute>} />
                     <Route path="/instructor/courses" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><CourseList /></ProtectedRoute>} />
                     <Route path="/instructor/courses/new" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><CourseBuilder /></ProtectedRoute>} />
-                    <Route path="/instructor/courses/:id/edit" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><CourseBuilder /></ProtectedRoute>} />
+                    <Route path="/instructor/courses/:courseId/edit" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><CourseBuilder /></ProtectedRoute>} />
                     <Route path="/instructor/assignments" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><InstructorAssignments /></ProtectedRoute>} />
                     <Route path="/instructor/submissions" element={<ProtectedRoute allowedRoles={['INSTRUCTOR', 'ADMIN']}><InstructorSubmissions /></ProtectedRoute>} />
 

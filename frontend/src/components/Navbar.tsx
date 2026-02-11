@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/services/api';
+import NotificationDropdown from './NotificationDropdown';
 
 const Navbar = () => {
     const { data: user } = useQuery({
@@ -33,6 +34,7 @@ const Navbar = () => {
                             {user.role === 'STUDENT' && <Link to="/dashboard" className="text-sm font-medium hover:underline">Dashboard</Link>}
                             {user.role === 'INSTRUCTOR' && <Link to="/instructor/dashboard" className="text-sm font-medium hover:underline">Instructor Panel</Link>}
                             {user.role === 'ADMIN' && <Link to="/admin/dashboard" className="text-sm font-medium hover:underline">Admin Panel</Link>}
+                            <NotificationDropdown />
                             <Button variant="ghost" onClick={handleLogout}>Logout</Button>
                         </>
                     ) : (

@@ -216,12 +216,14 @@ export async function getRecommendations(
 
                 // Generate reason
                 let reason = '';
-                if (course.domain) {
-                    reason = `Matches your interest in ${course.domain} domain`;
+                if (user?.interestedCareerPath?.domain && course.domain === user.interestedCareerPath.domain) {
+                    reason = `Perfect match for your ${course.domain.toLowerCase()} path`;
+                } else if (course.domain) {
+                    reason = `Explore the ${course.domain.toLowerCase()} domain`;
                 } else if (course.tags.length > 0) {
-                    reason = `Covers ${course.tags.slice(0, 2).join(', ')}`;
+                    reason = `Focuses on ${course.tags.slice(0, 2).join(', ')}`;
                 } else {
-                    reason = 'Based on your profile';
+                    reason = 'Based on your learning profile';
                 }
 
                 return {

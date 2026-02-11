@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '../config/prisma';
 import { inferSkillsFromCourseCompletion } from '../services/recommendationService';
+import { createNotification } from '../modules/notification/notification.service';
+import { NotificationType } from '@prisma/client';
 
 // @desc    Update lesson progress
 // @route   POST /api/progress
@@ -177,6 +179,15 @@ export const recalculateProgress = async (req: Request, res: Response, next: Nex
                         certificateId,
                         completionPercentage: percentage
                     }
+                });
+
+                // Trigger notification
+                await createNotification({
+                    userId,
+                    title: 'Course Completed!',
+                    message: `Congratulations! You have successfully completed ${course.title}. Your certificate is ready!`,
+                    type: NotificationType.COMPLETION,
+                    link: `/certificates`
                 });
 
                 // Infer skills from course completion

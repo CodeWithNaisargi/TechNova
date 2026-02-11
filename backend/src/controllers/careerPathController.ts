@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/prisma';
-import { CareerPath, CareerSkill, Skill } from '@prisma/client';
+import { createNotification } from '../modules/notification/notification.service';
+import { NotificationType } from '@prisma/client';
 
 /**
  * GET /api/career-paths
@@ -75,6 +76,7 @@ export const updateStudentInterest = async (req: Request, res: Response) => {
 
         // Build update data
         const updateData: { interestedCareerPathId?: string; careerFocusId?: string } = {};
+        let pathTitle = '';
 
         // If careerPathId provided, verify it exists
         if (careerPathId) {
@@ -89,6 +91,7 @@ export const updateStudentInterest = async (req: Request, res: Response) => {
                 });
             }
             updateData.interestedCareerPathId = careerPathId;
+            pathTitle = careerPath.title;
         }
 
         // careerFocusId is from config (no DB validation needed)
@@ -120,6 +123,15 @@ export const updateStudentInterest = async (req: Request, res: Response) => {
                     },
                 },
             },
+        });
+
+        // Trigger notification
+        await createNotification({
+            userId,
+            title: 'Career Path Updated!',
+            message: `You have successfully updated your career path${pathTitle ? ` to ${pathTitle}` : ''}. We'll recommend courses for you!`,
+            type: NotificationType.PATH,
+            link: '/dashboard'
         });
 
         return res.status(200).json({

@@ -28,6 +28,8 @@ import settingsRoutes from "./routes/settingsRoutes";
 import careerPathRoutes from "./routes/careerPathRoutes";
 import educationRoutes from "./routes/educationRoutes";
 import recommendationRoutes from "./routes/recommendationRoutes";
+import notificationRoutes from "./modules/notification/notification.routes";
+import insightsRoutes from "./routes/insightsRoutes";
 
 dotenv.config();
 
@@ -115,6 +117,8 @@ app.use("/api/certificates", certificateRoutes);
 app.use("/api/career-paths", careerPathRoutes);
 app.use("/api/education", educationRoutes);
 app.use("/api/recommendations", recommendationRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/insights", insightsRoutes);
 
 // -----------------------------------
 // Root route

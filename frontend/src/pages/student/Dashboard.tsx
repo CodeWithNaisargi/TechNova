@@ -8,10 +8,12 @@ import {
     CheckCircle,
     TrendingUp,
     Clock,
-    ArrowRight
+    ArrowRight,
+    Brain
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { useSocket } from "@/hooks/useSocket";
 import api from "@/services/api";
@@ -132,6 +134,13 @@ export default function Dashboard() {
             icon: Award,
             gradient: "from-purple-500 to-pink-500",
         },
+        {
+            title: "Career Insights",
+            value: "Check",
+            icon: Brain,
+            gradient: "from-green-500 to-emerald-500",
+            href: "/insights"
+        },
     ];
 
     return (
@@ -147,20 +156,21 @@ export default function Dashboard() {
                 </motion.div>
 
                 {/* KPI CARDS */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 md:mb-10">
-                    {kpiCards.map((card, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            <Card className="shadow-sm hover:shadow-md transition-shadow border border-border">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 md:mb-10">
+                    {kpiCards.map((card, index) => {
+                        const CardContentInner = (
+                            <Card className={cn(
+                                "shadow-sm hover:shadow-md transition-all border border-border h-full group",
+                                card.href && "cursor-pointer hover:border-primary/50"
+                            )}>
                                 <CardContent className="p-6">
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-muted-foreground text-sm mb-2">{card.title}</p>
-                                            <h3 className="text-3xl font-semibold text-foreground">{card.value}</h3>
+                                            <h3 className="text-3xl font-semibold text-foreground">
+                                                {card.value}
+                                                {card.href && <ArrowRight className="inline-block ml-2 w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />}
+                                            </h3>
                                         </div>
                                         <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-sm`}>
                                             <card.icon className="w-7 h-7 text-white" />
@@ -168,8 +178,25 @@ export default function Dashboard() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </motion.div>
-                    ))}
+                        );
+
+                        return (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                {card.href ? (
+                                    <Link to={card.href}>
+                                        {CardContentInner}
+                                    </Link>
+                                ) : (
+                                    CardContentInner
+                                )}
+                            </motion.div>
+                        );
+                    })}
                 </div>
 
                 {/* AI RECOMMENDATIONS */}

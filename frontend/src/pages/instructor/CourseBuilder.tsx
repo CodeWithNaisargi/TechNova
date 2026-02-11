@@ -13,11 +13,11 @@ import { AddSectionModal } from '@/components/instructor/modals/AddSectionModal'
 import { AddLessonModal } from '@/components/instructor/modals/AddLessonModal';
 
 const CourseBuilder = () => {
-    const { id } = useParams<{ id: string }>();
+    const { courseId } = useParams<{ courseId: string }>();
     const navigate = useNavigate();
     const { toast } = useToast();
     const queryClient = useQueryClient();
-    const isEdit = !!id;
+    const isEdit = !!courseId;
 
     // Modal state management
     const [sectionModalOpen, setSectionModalOpen] = useState(false);
@@ -51,9 +51,9 @@ const CourseBuilder = () => {
     });
 
     const { data: course, isLoading } = useQuery({
-        queryKey: ['course', id],
+        queryKey: ['course', courseId],
         queryFn: async () => {
-            const res = await api.get(`/courses/${id}`);
+            const res = await api.get(`/courses/${courseId}`);
             return res.data.data;
         },
         enabled: isEdit
@@ -77,7 +77,7 @@ const CourseBuilder = () => {
     const saveCourseMutation = useMutation({
         mutationFn: async (data: FormData) => {
             if (isEdit) {
-                return api.put(`/courses/${id}`, data, {
+                return api.put(`/courses/${courseId}`, data, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
             } else {
@@ -117,7 +117,7 @@ const CourseBuilder = () => {
     };
 
     const handleAddSection = () => {
-        if (!id) {
+        if (!courseId) {
             toast({
                 variant: 'destructive',
                 title: 'Error',
@@ -254,21 +254,21 @@ const CourseBuilder = () => {
             </form>
 
             {/* Add Section Modal */}
-            {id && (
+            {courseId && (
                 <AddSectionModal
                     open={sectionModalOpen}
                     onClose={() => setSectionModalOpen(false)}
-                    courseId={id}
+                    courseId={courseId}
                 />
             )}
 
             {/* Add Lesson Modal */}
-            {id && selectedSectionId && (
+            {courseId && selectedSectionId && (
                 <AddLessonModal
                     open={lessonModalOpen}
                     onClose={() => setLessonModalOpen(false)}
                     sectionId={selectedSectionId}
-                    courseId={id}
+                    courseId={courseId}
                     currentLessonCount={selectedSectionLessonCount}
                 />
             )}
