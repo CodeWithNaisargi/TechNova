@@ -13,6 +13,7 @@ const router = express.Router();
 // Protected routes
 router.post('/generate/:courseId', protect, generateCertificate);
 router.get('/my', protect, getMyCertificates);
+router.get('/my-certificates', protect, getMyCertificates);
 router.get('/download/:courseId', protect, downloadCertificate);
 router.get('/:certificateId', getCertificateById);
 

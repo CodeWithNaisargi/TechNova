@@ -1,21 +1,5 @@
 import prisma from '../config/prisma';
-import { EducationLevel, User, UserSkill, Skill, UserProject } from '@prisma/client';
-
-// Define missing types locally since Prisma Client is out of sync
-interface CareerPath {
-    id: string;
-    title: string;
-    description: string | null;
-    domain: string;
-    createdAt: Date;
-    skills: CareerSkill[];
-}
-
-interface CareerSkill {
-    careerId: string;
-    skillId: string;
-    skill: Skill;
-}
+import { PrismaClient, EducationLevel, User, UserSkill, Skill, UserProject, CareerPath, CareerSkill } from '@prisma/client';
 
 /**
  * ML Recommendation Service
@@ -94,11 +78,7 @@ export async function getStudentVector(userId: string): Promise<number[]> {
             userProjects: true,
             interestedCareerPath: true,
         },
-    } as any) as unknown as (User & {
-        userSkills: (UserSkill & { skill: Skill })[];
-        userProjects: UserProject[];
-        interestedCareerPath: CareerPath | null;
-    }) | null;
+    });
 
     if (!user) {
         throw new Error('User not found');
@@ -196,11 +176,7 @@ export async function getRecommendations(
     const user = await prisma.user.findUnique({
         where: { id: userId },
         select: { educationLevel: true, careerFocusId: true, interestedCareerPath: { select: { domain: true } } },
-    } as any) as unknown as {
-        educationLevel: EducationLevel | null;
-        careerFocusId: string | null;
-        interestedCareerPath: { domain: string } | null;
-    } | null;
+    });
 
     // Get student vector for similarity scoring
     const studentVector = await getStudentVector(userId);
@@ -286,12 +262,7 @@ export async function getNextFocusSkill(userId: string): Promise<{
             },
             userSkills: { include: { skill: true } },
         },
-    } as any) as unknown as (User & {
-        interestedCareerPath: (CareerPath & {
-            skills: (CareerSkill & { skill: Skill })[]
-        }) | null;
-        userSkills: (UserSkill & { skill: Skill })[];
-    }) | null;
+    });
 
     if (!user?.interestedCareerPath) {
         return null;

@@ -310,6 +310,7 @@ model Skill {
   careers     CareerSkill[]
   userSkills  UserSkill[]
   courseSkills CourseSkill[]
+  roleSkills  RoleSkill[]
 }
 
 model CareerSkill {
@@ -361,4 +362,48 @@ model UserProject {
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   completedAt DateTime @default(now())
   @@unique([userId, projectId])
+}
+
+// CAREER PATHWAYS DATA MODELS
+model Domain {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  icon        String?
+  mappings    EducationCareerMapping[]
+  roles       CareerRole[]
+}
+
+model EducationCareerMapping {
+  id            String         @id @default(uuid())
+  educationLevel EducationLevel
+  domainId      String
+  domain        Domain         @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  @@unique([educationLevel, domainId])
+}
+
+model CareerRole {
+  id                String         @id @default(uuid())
+  title             String
+  description       String?
+  difficultyLevel   String
+  salaryMin         Int?
+  salaryMax         Int?
+  demand            String?
+  estimatedDuration String?
+  minEducation      EducationLevel
+  domainId          String
+  domain            Domain         @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  roleSkills        RoleSkill[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model RoleSkill {
+  roleId     String
+  skillId    String
+  orderIndex Int?
+  role       CareerRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  skill      Skill      @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  @@id([roleId, skillId])
 }

@@ -1,0 +1,7 @@
+<svg width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#455a64"/>
+    <text x="50%" y="40%" font-family="Arial, sans-serif" font-size="80" text-anchor="middle" fill="#ffffff" dy=".3em">🏙️</text>
+    <text x="50%" y="65%" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" fill="#ffffff" font-weight="bold">
+        <tspan x="50%" dy="0">Smart Waste Management & Recycling</tspan>
+    </text>
+</svg>
