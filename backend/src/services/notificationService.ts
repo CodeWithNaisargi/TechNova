@@ -1,11 +1,12 @@
 import prisma from '../config/prisma';
 import { getSocketInstance } from '../config/socket';
+import { NotificationType } from '@prisma/client';
 
 interface CreateNotificationParams {
     userId: string;
     title: string;
     message: string;
-    type: 'ASSIGNMENT' | 'COURSE' | 'CERTIFICATE' | 'SYSTEM' | 'RECOMMENDATION';
+    type: NotificationType;
     link?: string;
 }
 

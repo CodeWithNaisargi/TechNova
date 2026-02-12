@@ -1,5 +1,21 @@
 import prisma from '../config/prisma';
-import { EducationLevel } from '@prisma/client';
+import { EducationLevel, User, UserSkill, Skill, UserProject } from '@prisma/client';
+
+// Define missing types locally since Prisma Client is out of sync
+interface CareerPath {
+    id: string;
+    title: string;
+    description: string | null;
+    domain: string;
+    createdAt: Date;
+    skills: CareerSkill[];
+}
+
+interface CareerSkill {
+    careerId: string;
+    skillId: string;
+    skill: Skill;
+}
 
 /**
  * ML Recommendation Service
@@ -78,7 +94,11 @@ export async function getStudentVector(userId: string): Promise<number[]> {
             userProjects: true,
             interestedCareerPath: true,
         },
-    });
+    } as any) as unknown as (User & {
+        userSkills: (UserSkill & { skill: Skill })[];
+        userProjects: UserProject[];
+        interestedCareerPath: CareerPath | null;
+    }) | null;
 
     if (!user) {
         throw new Error('User not found');
@@ -92,7 +112,7 @@ export async function getStudentVector(userId: string): Promise<number[]> {
     // Skill scores (0-1 for each core skill)
     const skillScores = CORE_SKILLS.map(skillName => {
         const userSkill = user.userSkills.find(
-            us => us.skill.name.toLowerCase().includes(skillName.toLowerCase())
+            (us: UserSkill & { skill: Skill }) => us.skill.name.toLowerCase().includes(skillName.toLowerCase())
         );
         return userSkill ? userSkill.level / 100 : 0;
     });
@@ -176,7 +196,11 @@ export async function getRecommendations(
     const user = await prisma.user.findUnique({
         where: { id: userId },
         select: { educationLevel: true, careerFocusId: true, interestedCareerPath: { select: { domain: true } } },
-    });
+    } as any) as unknown as {
+        educationLevel: EducationLevel | null;
+        careerFocusId: string | null;
+        interestedCareerPath: { domain: string } | null;
+    } | null;
 
     // Get student vector for similarity scoring
     const studentVector = await getStudentVector(userId);
@@ -216,7 +240,7 @@ export async function getRecommendations(
 
                 // Generate reason
                 let reason = '';
-                if (user?.interestedCareerPath?.domain && course.domain === user.interestedCareerPath.domain) {
+                if (user?.interestedCareerPath?.domain && course.domain && course.domain === user.interestedCareerPath.domain) {
                     reason = `Perfect match for your ${course.domain.toLowerCase()} path`;
                 } else if (course.domain) {
                     reason = `Explore the ${course.domain.toLowerCase()} domain`;
@@ -262,7 +286,12 @@ export async function getNextFocusSkill(userId: string): Promise<{
             },
             userSkills: { include: { skill: true } },
         },
-    });
+    } as any) as unknown as (User & {
+        interestedCareerPath: (CareerPath & {
+            skills: (CareerSkill & { skill: Skill })[]
+        }) | null;
+        userSkills: (UserSkill & { skill: Skill })[];
+    }) | null;
 
     if (!user?.interestedCareerPath) {
         return null;
@@ -270,12 +299,12 @@ export async function getNextFocusSkill(userId: string): Promise<{
 
     // Find skills in career path that user doesn't have
     const userSkillNames = new Set(
-        user.userSkills.map(us => us.skill.name.toLowerCase())
+        user.userSkills.map((us: UserSkill & { skill: Skill }) => us.skill.name.toLowerCase())
     );
 
     const missingSkills = user.interestedCareerPath.skills
-        .map(cs => cs.skill)
-        .filter(skill => !userSkillNames.has(skill.name.toLowerCase()));
+        .map((cs: CareerSkill & { skill: Skill }) => cs.skill)
+        .filter((skill: Skill) => !userSkillNames.has(skill.name.toLowerCase()));
 
     if (missingSkills.length === 0) {
         return {
