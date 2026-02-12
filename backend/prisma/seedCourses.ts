@@ -249,7 +249,7 @@ async function main() {
             instructorId: agriInstructor3.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/agri_intro_smart_farming.svg',
+            thumbnail: '/course-images/agri_intro_smart_farming.jpg',
         },
         {
             title: 'Digital Health Basics',
@@ -264,7 +264,7 @@ async function main() {
             instructorId: healthInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/health_digital_basics.svg',
+            thumbnail: '/course-images/health_digital_basics.jpg',
         },
         {
             title: 'Smart Cities 101',
@@ -279,7 +279,7 @@ async function main() {
             instructorId: urbanInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/urban_smart_cities_101.svg',
+            thumbnail: '/course-images/urban_smart_cities_101.jpg',
         },
         {
             title: 'Organic Farming Awareness',
@@ -294,7 +294,7 @@ async function main() {
             instructorId: agriInstructor3.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/agri_organic_awareness.svg',
+            thumbnail: '/course-images/agri_organic_awareness.jpg',
         },
         {
             title: 'First Aid & Emergency Apps',
@@ -309,7 +309,7 @@ async function main() {
             instructorId: healthInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/health_first_aid_apps.svg',
+            thumbnail: '/course-images/health_first_aid_apps.jpg',
         },
     ];
 
@@ -328,7 +328,7 @@ async function main() {
             instructorId: agriInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-            thumbnail: '/course-images/agri_drones_mapping.svg',
+            thumbnail: '/course-images/agri_drones_mapping.jpg',
         },
         {
             title: 'Pharmacy Management Fundamentals',
@@ -343,7 +343,7 @@ async function main() {
             instructorId: healthInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-            thumbnail: '/course-images/health_pharmacy_mgmt.svg',
+            thumbnail: '/course-images/health_pharmacy_mgmt.jpg',
         },
         {
             title: 'Smart Waste Management & Recycling',
@@ -358,7 +358,7 @@ async function main() {
             instructorId: urbanInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-            thumbnail: '/course-images/urban_waste_mgmt.svg',
+            thumbnail: '/course-images/urban_waste_mgmt.jpg',
         },
         {
             title: 'Soil Health & Digital Testing',
@@ -373,7 +373,7 @@ async function main() {
             instructorId: agriInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-            thumbnail: '/course-images/agri_soil_digital.svg',
+            thumbnail: '/course-images/agri_soil_digital.jpg',
         },
         {
             title: 'Smart Parking Systems',
@@ -388,7 +388,7 @@ async function main() {
             instructorId: urbanInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.HIGHER_SECONDARY,
-            thumbnail: '/course-images/urban_smart_parking.svg',
+            thumbnail: '/course-images/urban_smart_parking.jpg',
         },
     ];
 
@@ -407,7 +407,7 @@ async function main() {
             instructorId: agriInstructor1.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.DIPLOMA,
-            thumbnail: '/course-images/agri_livestock_iot.svg',
+            thumbnail: '/course-images/agri_livestock_iot.jpg',
         },
         {
             title: 'Medical Equipment Maintenance',
@@ -422,7 +422,7 @@ async function main() {
             instructorId: healthInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.DIPLOMA,
-            thumbnail: '/course-images/health_equipment_maint.svg',
+            thumbnail: '/course-images/health_equipment_maint.jpg',
         },
         {
             title: 'Traffic Sensor Installation & Maintenance',
@@ -437,7 +437,7 @@ async function main() {
             instructorId: urbanInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.DIPLOMA,
-            thumbnail: '/course-images/urban_traffic_sensors.svg',
+            thumbnail: '/course-images/urban_traffic_sensors.jpg',
         },
         {
             title: 'Greenhouse Climate Control Systems',
@@ -452,7 +452,7 @@ async function main() {
             instructorId: agriInstructor1.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.DIPLOMA,
-            thumbnail: '/course-images/agri_greenhouse_climate.svg',
+            thumbnail: '/course-images/agri_greenhouse_climate.jpg',
         },
         {
             title: 'Water Quality Monitoring Technician',
@@ -467,7 +467,7 @@ async function main() {
             instructorId: urbanInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.DIPLOMA,
-            thumbnail: '/course-images/urban_water_quality.svg',
+            thumbnail: '/course-images/urban_water_quality.jpg',
         },
     ];
 
@@ -486,7 +486,7 @@ async function main() {
             instructorId: agriInstructor1.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.UNDERGRADUATE,
-            thumbnail: '/course-images/agri_precision_iot.svg',
+            thumbnail: '/course-images/agri_precision_iot.jpg',
         },
         {
             title: 'Electronic Health Records (EHR) Management',
@@ -501,7 +501,7 @@ async function main() {
             instructorId: healthInstructor1.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.UNDERGRADUATE,
-            thumbnail: '/course-images/health_ehr_mgmt.svg',
+            thumbnail: '/course-images/health_ehr_mgmt.jpg',
         },
         {
             title: 'Smart Traffic Management Systems',
@@ -516,7 +516,7 @@ async function main() {
             instructorId: urbanInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.UNDERGRADUATE,
-            thumbnail: '/course-images/urban_traffic_mgmt.svg',
+            thumbnail: '/course-images/urban_traffic_mgmt.jpg',
         },
         {
             title: 'Healthcare Data Analytics & Visualization',
@@ -531,7 +531,7 @@ async function main() {
             instructorId: healthInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.UNDERGRADUATE,
-            thumbnail: '/course-images/health_data_analytics.svg',
+            thumbnail: '/course-images/health_data_analytics.jpg',
         },
         {
             title: 'Urban Air Quality Monitoring',
@@ -546,7 +546,7 @@ async function main() {
             instructorId: urbanInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.UNDERGRADUATE,
-            thumbnail: '/course-images/urban_air_quality.svg',
+            thumbnail: '/course-images/urban_air_quality.jpg',
         },
     ];
 
@@ -565,7 +565,7 @@ async function main() {
             instructorId: agriInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.POSTGRADUATE,
-            thumbnail: '/course-images/agri_blockchain_supply.svg',
+            thumbnail: '/course-images/agri_blockchain_supply.jpg',
         },
         {
             title: 'AI-Powered Medical Image Analysis',
@@ -580,7 +580,7 @@ async function main() {
             instructorId: healthInstructor3.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.POSTGRADUATE,
-            thumbnail: '/course-images/health_ai_imaging.svg',
+            thumbnail: '/course-images/health_ai_imaging.jpg',
         },
         {
             title: 'Smart City Platform Architecture',
@@ -595,7 +595,7 @@ async function main() {
             instructorId: urbanInstructor1.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.POSTGRADUATE,
-            thumbnail: '/course-images/urban_smart_platform.svg',
+            thumbnail: '/course-images/urban_smart_platform.jpg',
         },
         {
             title: 'Remote Sensing for Agricultural Policy',
@@ -610,7 +610,7 @@ async function main() {
             instructorId: agriInstructor2.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.POSTGRADUATE,
-            thumbnail: '/course-images/agri_remote_sensing.svg',
+            thumbnail: '/course-images/agri_remote_sensing.jpg',
         },
         {
             title: 'Hospital Information Systems Architecture',
@@ -625,7 +625,7 @@ async function main() {
             instructorId: healthInstructor1.id,
             hasProject: true,
             targetEducationLevel: EducationLevel.POSTGRADUATE,
-            thumbnail: '/course-images/health_his_architecture.svg',
+            thumbnail: '/course-images/health_his_architecture.jpg',
         },
     ];
 
@@ -650,7 +650,7 @@ async function main() {
             instructorId: agriInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/career_discover_path.svg',
+            thumbnail: '/course-images/career_discover_path.jpg',
         },
         {
             title: 'Science vs Commerce vs Arts: Which Stream Fits You?',
@@ -665,7 +665,7 @@ async function main() {
             instructorId: healthInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/career_streams.svg',
+            thumbnail: '/course-images/career_streams.jpg',
         },
         {
             title: 'Diploma or Degree? Understanding Your Options',
@@ -680,7 +680,7 @@ async function main() {
             instructorId: urbanInstructor1.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/career_degree_diploma.svg',
+            thumbnail: '/course-images/career_degree_diploma.jpg',
         },
         {
             title: 'Aptitude Discovery: Find Your Hidden Talents',
@@ -695,7 +695,7 @@ async function main() {
             instructorId: agriInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/career_aptitude.svg',
+            thumbnail: '/course-images/career_aptitude.jpg',
         },
         {
             title: 'Emerging Fields: Careers of Tomorrow',
@@ -710,7 +710,7 @@ async function main() {
             instructorId: healthInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/career_emerging.svg',
+            thumbnail: '/course-images/career_emerging.jpg',
         },
         {
             title: 'Study Skills for Success: Learn How to Learn',
@@ -725,7 +725,7 @@ async function main() {
             instructorId: urbanInstructor2.id,
             hasProject: false,
             targetEducationLevel: EducationLevel.SECONDARY,
-            thumbnail: '/course-images/career_study_skills.svg',
+            thumbnail: '/course-images/career_study_skills.jpg',
         },
     ];
 

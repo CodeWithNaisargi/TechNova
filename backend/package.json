@@ -7,8 +7,11 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "seed": "ts-node prisma/seed.ts",
+    "seed": "tsx prisma/seedCourses.ts",
     "prisma:migrate": "prisma migrate deploy"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seedCourses.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.10.2",

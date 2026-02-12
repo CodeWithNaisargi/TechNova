@@ -10,7 +10,7 @@ interface User {
   role: "ADMIN" | "INSTRUCTOR" | "STUDENT"
   avatar?: string
   interestedCareerPathId?: string | null
-  interestedCareerPath?: { id: string; title: string } | null
+  interestedCareerPath?: { id: string; title: string; domain: string } | null
   careerFocusId?: string | null
   educationLevel?: string | null
   onboardingCompleted?: boolean

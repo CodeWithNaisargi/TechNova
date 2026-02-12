@@ -190,6 +190,11 @@ export async function getRecommendations(
         courseFilter.targetEducationLevel = user.educationLevel;
     }
 
+    // STRICT DOMAIN FILTER (If user has selected a domain)
+    if (user?.interestedCareerPath?.domain) {
+        courseFilter.domain = user.interestedCareerPath.domain;
+    }
+
     // Get courses matching the strict education level filter
     const courses = await prisma.course.findMany({
         where: courseFilter,

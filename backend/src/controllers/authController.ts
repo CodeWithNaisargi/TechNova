@@ -275,6 +275,7 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
           select: {
             id: true,
             title: true,
+            domain: true,
           }
         },
       },

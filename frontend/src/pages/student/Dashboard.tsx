@@ -64,9 +64,11 @@ export default function Dashboard() {
     const { data: popularCourses = [] } = useQuery({
         queryKey: ["popular-courses", user?.educationLevel],
         queryFn: async () => {
-            const params = new URLSearchParams();
             if (user?.educationLevel) {
                 params.append('educationLevel', user.educationLevel);
+            }
+            if (user?.interestedCareerPath?.domain) {
+                params.append('domain', user.interestedCareerPath.domain);
             }
             const res = await api.get(`/courses/popular?${params.toString()}`);
             return res.data?.data || [];
