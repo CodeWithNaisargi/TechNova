@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface SidebarContextType {
     isOpen: boolean;
@@ -21,17 +21,17 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     // Update sidebar state on window resize (only when crossing breakpoint)
     useEffect(() => {
         let previousWidth = window.innerWidth;
-        
+
         const handleResize = () => {
             const currentWidth = window.innerWidth;
             const wasDesktop = previousWidth >= 768;
             const isDesktop = currentWidth >= 768;
-            
+
             // Only update state if crossing the breakpoint (desktop <-> mobile)
             if (wasDesktop !== isDesktop) {
                 setIsOpen(isDesktop);
             }
-            
+
             previousWidth = currentWidth;
         };
 
@@ -42,7 +42,7 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     const toggle = () => {
         setIsOpen(prev => !prev);
     };
-    
+
     const close = () => setIsOpen(false);
     const open = () => setIsOpen(true);
 

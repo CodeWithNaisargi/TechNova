@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Badge } from "@/components/ui/badge";
+
 import { Star, Clock, BarChart, Globe } from "lucide-react";
 
 interface CourseHeroProps {

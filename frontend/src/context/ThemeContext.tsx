@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Theme = 'LIGHT' | 'DARK' | 'SYSTEM';
 
@@ -34,7 +34,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const setTheme = (newTheme: Theme) => {
         setThemeState(newTheme);
         localStorage.setItem('theme', newTheme);
-        
+
         // Update effective theme immediately
         if (newTheme === 'SYSTEM') {
             const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

@@ -31,9 +31,10 @@ export function slugify(text: string): string {
         .toString()
         .toLowerCase()
         .trim()
-        .replace(/\s+/g, '_')
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '_');
+        .replace(/[^\w\s-]/g, '') // Remove all non-word chars (except spacing and hyphens)
+        .replace(/\s+/g, '_')     // Replace spaces with _
+        .replace(/__+/g, '_')     // Replace multiple _ with single _
+        .replace(/--+/g, '-');    // Replace multiple - with single -
 }
 
 const DOMAIN_KEYWORDS: Record<CourseDomain, string[]> = {

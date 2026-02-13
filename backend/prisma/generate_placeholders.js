@@ -197,9 +197,10 @@ function slugify(text) {
         .toString()
         .toLowerCase()
         .trim()
-        .replace(/\s+/g, '_')
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '_');
+        .replace(/[^\w\s-]/g, '') // Remove all non-word chars (except spacing and hyphens)
+        .replace(/\s+/g, '_')     // Replace spaces with _
+        .replace(/__+/g, '_')     // Replace multiple _ with single _
+        .replace(/--+/g, '-');    // Replace multiple - with single -
 }
 
 function getColors(domain) {
@@ -215,7 +216,7 @@ function generateSVG(title, domain, level) {
     const { bg, text, accent } = getColors(domain);
     // Determine font size based on title length
     const fontSize = title.length > 30 ? 48 : 64;
-    
+
     return `<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -259,11 +260,11 @@ for (const domain in TITLES) {
             // If I save as .svg, the link will be broken unless I change the code.
             // Strategy: I will generate SVGs but I MUST update courseGenerator.ts to point to .svg OR I need to convert them.
             // Updating courseGenerator.ts is safer.
-            
+
             const filename = `${domain.toLowerCase()}_${slug}.svg`;
             const filepath = path.join(OUTPUT_DIR, filename);
             const svgContent = generateSVG(title, domain, level);
-            
+
             fs.writeFileSync(filepath, svgContent);
             console.log(`Generated: ${filename}`);
             count++;

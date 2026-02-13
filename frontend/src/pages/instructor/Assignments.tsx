@@ -11,7 +11,7 @@ import { useSocket } from '@/hooks/useSocket';
 
 export default function InstructorAssignments() {
     // Fetch instructor's courses
-    const { data: courses = [], isLoading: coursesLoading, refetch: refetchCourses } = useQuery({
+    const { isLoading: coursesLoading } = useQuery({
         queryKey: ['instructor-courses'],
         queryFn: async () => {
             const res = await api.get('/instructor/courses');

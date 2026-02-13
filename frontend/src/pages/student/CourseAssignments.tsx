@@ -125,7 +125,6 @@ const CourseAssignments = () => {
                                     <AssignmentCard
                                         assignment={assignment}
                                         submission={submission}
-                                        courseId={courseId!}
                                     />
                                 </motion.div>
                             );

@@ -64,6 +64,7 @@ export default function Dashboard() {
     const { data: popularCourses = [] } = useQuery({
         queryKey: ["popular-courses", user?.educationLevel],
         queryFn: async () => {
+            const params = new URLSearchParams();
             if (user?.educationLevel) {
                 params.append('educationLevel', user.educationLevel);
             }

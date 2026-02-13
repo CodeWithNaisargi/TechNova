@@ -24,10 +24,9 @@ interface AssignmentCardProps {
         grade?: number;
         feedback?: string;
     };
-    courseId: string;
 }
 
-const AssignmentCard = ({ assignment, progress, submission, courseId }: AssignmentCardProps) => {
+const AssignmentCard = ({ assignment, progress, submission }: AssignmentCardProps) => {
     const getStatusBadge = () => {
         if (submission) {
             switch (submission.status) {
