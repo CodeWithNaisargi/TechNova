@@ -15,5 +15,6 @@ router.use((0, roles_1.authorize)(client_1.Role.STUDENT, client_1.Role.ADMIN));
 router.get('/enrollments', studentController_1.getMyEnrollments);
 router.post('/enroll', studentController_1.enrollCourse);
 router.get('/learning/:courseId', studentController_1.getCourseLearning);
+router.get('/course/:courseId/progress', studentController_1.getCourseProgress);
 router.get('/dashboard/stats', studentController_1.getStudentStats);
 exports.default = router;

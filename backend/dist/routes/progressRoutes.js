@@ -9,4 +9,5 @@ const auth_1 = require("../middleware/auth");
 const router = express_1.default.Router();
 router.post('/', auth_1.protect, progressController_1.updateProgress);
 router.get('/:courseId', auth_1.protect, progressController_1.getCourseProgress);
+router.post('/recalculate/:courseId', auth_1.protect, progressController_1.recalculateProgress);
 exports.default = router;

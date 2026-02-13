@@ -3,51 +3,60 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadMultiple = exports.uploadAvatar = exports.uploadAttachment = exports.uploadThumbnail = exports.upload = void 0;
+exports.uploadMultiple = exports.uploadSubmission = exports.uploadAvatar = exports.uploadAttachment = exports.uploadThumbnail = exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
-// Ensure uploads directory exists
-const uploadsDir = path_1.default.join(process.cwd(), 'uploads');
-if (!fs_1.default.existsSync(uploadsDir)) {
-    fs_1.default.mkdirSync(uploadsDir, { recursive: true });
+// ROOT uploads folder → backend/uploads
+const rootUploadsDir = path_1.default.join(process.cwd(), "uploads");
+// Ensure root uploads folder exists
+if (!fs_1.default.existsSync(rootUploadsDir)) {
+    fs_1.default.mkdirSync(rootUploadsDir, { recursive: true });
+}
+// Helper: ensure subfolder exists
+function ensureDir(folder) {
+    if (!fs_1.default.existsSync(folder)) {
+        fs_1.default.mkdirSync(folder, { recursive: true });
+    }
 }
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        let uploadPath = uploadsDir;
-        if (file.fieldname === 'thumbnail') {
-            uploadPath = path_1.default.join(uploadsDir, 'thumbnails');
+        let folder = rootUploadsDir;
+        // Route uploads to specific folders
+        if (file.fieldname === "thumbnail") {
+            folder = path_1.default.join(rootUploadsDir, "thumbnails");
         }
-        else if (file.fieldname === 'attachment') {
-            uploadPath = path_1.default.join(uploadsDir, 'attachments');
+        else if (file.fieldname === "attachment") {
+            folder = path_1.default.join(rootUploadsDir, "attachments");
         }
-        else if (file.fieldname === 'avatar') {
-            uploadPath = path_1.default.join(uploadsDir, 'avatars');
+        else if (file.fieldname === "avatar") {
+            folder = path_1.default.join(rootUploadsDir, "avatars");
         }
-        if (!fs_1.default.existsSync(uploadPath)) {
-            fs_1.default.mkdirSync(uploadPath, { recursive: true });
+        else if (file.fieldname === "submission") {
+            folder = path_1.default.join(rootUploadsDir, "submissions");
         }
-        cb(null, uploadPath);
+        ensureDir(folder);
+        cb(null, folder);
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path_1.default.extname(file.originalname));
+        const unique = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${path_1.default.extname(file.originalname)}`;
+        cb(null, unique);
     }
 });
+// Allow images + pdf + doc/docx
 const fileFilter = (req, file, cb) => {
-    // Allow images
-    if (file.mimetype.startsWith('image/')) {
-        cb(null, true);
-    }
-    // Allow PDFs and documents
-    else if (file.mimetype === 'application/pdf' ||
-        file.mimetype === 'application/msword' ||
-        file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        cb(null, true);
-    }
-    else {
-        cb(new Error('Invalid file type. Only images, PDFs, and documents are allowed.'));
-    }
+    // Allow all images
+    if (file.mimetype.startsWith("image/"))
+        return cb(null, true);
+    // Allow documents
+    const allowed = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+    if (allowed.includes(file.mimetype))
+        return cb(null, true);
+    return cb(new Error("Invalid file type — only images, PDFs, and docs allowed"));
 };
 exports.upload = (0, multer_1.default)({
     storage,
@@ -56,9 +65,10 @@ exports.upload = (0, multer_1.default)({
         fileSize: 10 * 1024 * 1024 // 10MB
     }
 });
-// Single file uploads
-exports.uploadThumbnail = exports.upload.single('thumbnail');
-exports.uploadAttachment = exports.upload.single('attachment');
-exports.uploadAvatar = exports.upload.single('avatar');
-// Multiple file upload
-exports.uploadMultiple = exports.upload.array('attachments', 10);
+// SINGLE UPLOADS
+exports.uploadThumbnail = exports.upload.single("thumbnail");
+exports.uploadAttachment = exports.upload.single("attachment");
+exports.uploadAvatar = exports.upload.single("avatar");
+exports.uploadSubmission = exports.upload.single("submission");
+// MULTIPLE UPLOADS
+exports.uploadMultiple = exports.upload.array("attachments", 10);

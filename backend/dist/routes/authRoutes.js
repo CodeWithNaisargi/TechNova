@@ -12,4 +12,6 @@ router.post('/login', authController_1.login);
 router.post('/logout', authController_1.logout);
 router.post('/refresh-token', authController_1.refreshToken);
 router.get('/me', auth_1.protect, authController_1.getMe);
+router.get('/verify-email', authController_1.verifyEmail);
+router.post('/resend-verification', authController_1.resendVerification);
 exports.default = router;

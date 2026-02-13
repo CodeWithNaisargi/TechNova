@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentStats = exports.getCourseLearning = exports.enrollCourse = exports.getMyEnrollments = void 0;
+exports.getCourseProgress = exports.getStudentStats = exports.getCourseLearning = exports.enrollCourse = exports.getMyEnrollments = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 // Get enrolled courses
 const getMyEnrollments = async (req, res, next) => {
@@ -200,3 +200,72 @@ const getStudentStats = async (req, res, next) => {
     }
 };
 exports.getStudentStats = getStudentStats;
+// Get course progress with assignment list
+const getCourseProgress = async (req, res, next) => {
+    try {
+        const { courseId } = req.params;
+        const userId = req.user.id;
+        // Check enrollment
+        const enrollment = await prisma_1.default.enrollment.findUnique({
+            where: {
+                userId_courseId: {
+                    userId,
+                    courseId
+                }
+            }
+        });
+        if (!enrollment) {
+            return res.status(403).json({ success: false, message: 'Not enrolled in this course' });
+        }
+        // Get all assignments for this course
+        const assignments = await prisma_1.default.assignment.findMany({
+            where: { courseId },
+            orderBy: { dueDate: 'asc' }
+        });
+        // Get all submissions by this student for this course's assignments
+        const assignmentIds = assignments.map(a => a.id);
+        const submissions = await prisma_1.default.submission.findMany({
+            where: {
+                studentId: userId,
+                assignmentId: { in: assignmentIds }
+            },
+            select: {
+                assignmentId: true,
+                status: true
+            }
+        });
+        // Create a map of submission status by assignment
+        const submissionMap = new Map(submissions.map(s => [s.assignmentId, s.status]));
+        // Calculate progress - only APPROVED submissions count as completed
+        const totalAssignments = assignments.length;
+        const completedAssignments = submissions.filter(s => s.status === 'APPROVED').length;
+        const progressPercentage = totalAssignments > 0
+            ? Math.round((completedAssignments / totalAssignments) * 100)
+            : 0;
+        // Map assignments with completion and submission status
+        const assignmentsWithStatus = assignments.map(assignment => {
+            const submissionStatus = submissionMap.get(assignment.id) || null;
+            return {
+                id: assignment.id,
+                title: assignment.title,
+                description: assignment.description,
+                dueDate: assignment.dueDate,
+                isCompleted: submissionStatus === 'APPROVED',
+                submissionStatus: submissionStatus // null, 'PENDING', 'APPROVED', 'REJECTED'
+            };
+        });
+        res.json({
+            success: true,
+            data: {
+                totalAssignments,
+                completedAssignments,
+                progressPercentage,
+                assignments: assignmentsWithStatus
+            }
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.getCourseProgress = getCourseProgress;

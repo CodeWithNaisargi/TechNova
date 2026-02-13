@@ -11,7 +11,9 @@ const client_1 = require("@prisma/client");
 const upload_1 = require("../middleware/upload");
 const router = express_1.default.Router();
 router.use(auth_1.protect);
-router.use((0, roles_1.authorize)(client_1.Role.INSTRUCTOR, client_1.Role.ADMIN));
+// Allow students to upload files for assignment submissions
+router.use((0, roles_1.authorize)(client_1.Role.STUDENT, client_1.Role.INSTRUCTOR, client_1.Role.ADMIN));
 router.post('/', upload_1.uploadAttachment, attachmentController_1.addAttachment);
+router.post('/upload', upload_1.uploadAttachment, attachmentController_1.uploadFile); // Simple upload for students
 router.delete('/:id', attachmentController_1.deleteAttachment);
 exports.default = router;

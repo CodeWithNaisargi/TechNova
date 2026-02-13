@@ -9,22 +9,22 @@ const auth_1 = require("../middleware/auth");
 const roles_1 = require("../middleware/roles");
 const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
-// All routes require authentication and admin role
+// Protect all admin routes + role check
 router.use(auth_1.protect);
 router.use((0, roles_1.authorize)(client_1.Role.ADMIN));
-// Users
-router.get('/users', adminController_1.getAllUsers);
-router.put('/users/:id/role', adminController_1.updateUserRole);
-router.patch('/users/:id/block', adminController_1.toggleBlockUser);
-// Courses
-router.get('/courses', adminController_1.getAllCourses);
-router.patch('/courses/:id/approve', adminController_1.toggleApproveCourse);
-// Enrollments
-router.get('/enrollments', adminController_1.getAllEnrollments);
-router.post('/enrollments/force', adminController_1.forceEnroll);
-router.delete('/enrollments/:id', adminController_1.cancelEnrollment);
-// Analytics
-router.get('/analytics', adminController_1.getAdminAnalytics);
-// Reports
-router.get('/reports/:type', adminController_1.exportReport);
+// Platform statistics
+router.get("/stats", adminController_1.getPlatformStats);
+// Course management
+router.get("/courses", adminController_1.getAllCourses);
+router.patch("/courses/:id/price", adminController_1.updateCoursePrice);
+router.patch("/courses/:id/publish", adminController_1.toggleCoursePublish);
+// User management
+router.get("/users", adminController_1.getAllUsers);
+router.get("/users/:id", adminController_1.getUserById);
+router.post("/users", adminController_1.createUser);
+router.put("/users/:id", adminController_1.updateUser);
+router.delete("/users/:id", adminController_1.deleteUser);
+// Assignment management
+router.get("/assignments", adminController_1.getAllAssignments);
+router.delete("/assignments/:id", adminController_1.deleteAssignment);
 exports.default = router;

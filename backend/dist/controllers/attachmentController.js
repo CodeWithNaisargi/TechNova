@@ -3,10 +3,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAttachment = exports.addAttachment = void 0;
+exports.deleteAttachment = exports.addAttachment = exports.uploadFile = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 const client_1 = require("@prisma/client");
 const path_1 = __importDefault(require("path"));
+// Simple file upload (for assignment submissions)
+const uploadFile = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No file uploaded' });
+        }
+        const fileUrl = `/uploads/attachments/${req.file.filename}`;
+        res.status(201).json({
+            success: true,
+            data: {
+                url: fileUrl,
+                name: req.file.originalname,
+                type: req.file.mimetype,
+                size: req.file.size
+            }
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.uploadFile = uploadFile;
 // Add attachment to lesson
 const addAttachment = async (req, res, next) => {
     try {

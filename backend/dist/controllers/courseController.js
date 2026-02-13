@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addLesson = exports.addSection = exports.deleteCourse = exports.updateCourse = exports.getCourseById = exports.getCourses = exports.createCourse = void 0;
+exports.addLesson = exports.addSection = exports.deleteCourse = exports.updateCourse = exports.getCourseById = exports.getCategories = exports.getNewCourses = exports.getPopularCourses = exports.getCourses = exports.createCourse = void 0;
 const prisma_1 = __importDefault(require("../config/prisma"));
 const client_1 = require("@prisma/client");
 // @desc    Create a new course
@@ -11,7 +11,7 @@ const client_1 = require("@prisma/client");
 // @access  Private/Instructor
 const createCourse = async (req, res, next) => {
     try {
-        const { title, description, category, price, tags } = req.body;
+        const { title, description, category, price, tags, difficulty, duration, prerequisites, learningOutcomes } = req.body;
         const thumbnail = req.file ? `/uploads/thumbnails/${req.file.filename}` : req.body.thumbnail;
         const course = await prisma_1.default.course.create({
             data: {
@@ -21,6 +21,10 @@ const createCourse = async (req, res, next) => {
                 price: parseFloat(price || 0),
                 tags: tags ? (Array.isArray(tags) ? tags : tags.split(',').map((t) => t.trim())) : [],
                 thumbnail,
+                difficulty: difficulty || 'BEGINNER',
+                duration,
+                prerequisites: prerequisites ? (Array.isArray(prerequisites) ? prerequisites : []) : [],
+                learningOutcomes: learningOutcomes ? (Array.isArray(learningOutcomes) ? learningOutcomes : []) : [],
                 instructorId: req.user.id,
             },
         });
@@ -34,22 +38,44 @@ exports.createCourse = createCourse;
 // @desc    Get all courses (Public - with filters)
 // @route   GET /api/courses
 // @access  Public
+// Filters: search, category, difficulty, educationLevel (STRICT), domain
 const getCourses = async (req, res, next) => {
     try {
-        const { search, category } = req.query;
+        const { search, category, difficulty, educationLevel, domain } = req.query;
         const where = { isPublished: true };
+        // Text search
         if (search) {
             where.OR = [
                 { title: { contains: search, mode: 'insensitive' } },
                 { description: { contains: search, mode: 'insensitive' } },
             ];
         }
+        // Category filter
         if (category) {
             where.category = category;
         }
+        // Difficulty filter (optional refinement)
+        if (difficulty) {
+            where.difficulty = difficulty;
+        }
+        // STRICT Education Level Filter
+        // Course.targetEducationLevel MUST EQUAL user.educationLevel
+        // This ensures 10th students NEVER see UG/PG courses
+        if (educationLevel) {
+            where.targetEducationLevel = educationLevel;
+        }
+        // Domain filter (from career focus)
+        if (domain) {
+            where.domain = domain;
+        }
         const courses = await prisma_1.default.course.findMany({
             where,
-            include: { instructor: { select: { name: true, avatar: true } } },
+            include: {
+                instructor: { select: { name: true, avatar: true } },
+                _count: {
+                    select: { enrollments: true, reviews: true }
+                }
+            },
         });
         res.json({ success: true, data: courses });
     }
@@ -58,6 +84,91 @@ const getCourses = async (req, res, next) => {
     }
 };
 exports.getCourses = getCourses;
+// @desc    Get popular courses
+// @route   GET /api/courses/popular
+// @access  Public
+const getPopularCourses = async (req, res, next) => {
+    try {
+        const { educationLevel, domain } = req.query;
+        const where = { isPublished: true };
+        // STRICT Education Level Filter
+        if (educationLevel) {
+            where.targetEducationLevel = educationLevel;
+        }
+        // Domain filter
+        if (domain) {
+            where.domain = domain;
+        }
+        const courses = await prisma_1.default.course.findMany({
+            where,
+            include: {
+                instructor: { select: { name: true, avatar: true } },
+                _count: {
+                    select: { enrollments: true, reviews: true }
+                }
+            },
+            orderBy: {
+                enrollments: {
+                    _count: 'desc'
+                }
+            },
+            take: 8
+        });
+        res.json({ success: true, data: courses });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.getPopularCourses = getPopularCourses;
+// @desc    Get new/recent courses
+// @route   GET /api/courses/new
+// @access  Public
+const getNewCourses = async (req, res, next) => {
+    try {
+        const courses = await prisma_1.default.course.findMany({
+            where: { isPublished: true },
+            include: {
+                instructor: { select: { name: true, avatar: true } },
+                _count: {
+                    select: { enrollments: true, reviews: true }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            take: 8
+        });
+        res.json({ success: true, data: courses });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.getNewCourses = getNewCourses;
+// @desc    Get all categories
+// @route   GET /api/courses/categories
+// @access  Public
+const getCategories = async (req, res, next) => {
+    try {
+        const categories = await prisma_1.default.course.groupBy({
+            by: ['category'],
+            where: { isPublished: true },
+            _count: {
+                category: true
+            }
+        });
+        const formattedCategories = categories.map(cat => ({
+            name: cat.category,
+            count: cat._count.category
+        }));
+        res.json({ success: true, data: formattedCategories });
+    }
+    catch (error) {
+        next(error);
+    }
+};
+exports.getCategories = getCategories;
 // @desc    Get course by ID (Public)
 // @route   GET /api/courses/:id
 // @access  Public
@@ -77,6 +188,9 @@ const getCourseById = async (req, res, next) => {
                 },
                 reviews: {
                     include: { user: { select: { name: true, avatar: true } } }
+                },
+                _count: {
+                    select: { enrollments: true, assignments: true }
                 }
             },
         });
@@ -153,11 +267,18 @@ const addSection = async (req, res, next) => {
         if (course.instructorId !== req.user.id && req.user.role !== client_1.Role.ADMIN) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
-        const { title, order } = req.body;
+        const { title, description, order } = req.body;
+        // Get the highest order number if order not provided
+        const maxOrder = await prisma_1.default.section.findFirst({
+            where: { courseId: req.params.id },
+            orderBy: { order: 'desc' },
+            select: { order: true }
+        });
         const section = await prisma_1.default.section.create({
             data: {
                 title,
-                order: order || 0,
+                description: description || null,
+                order: order || (maxOrder ? maxOrder.order + 1 : 1),
                 courseId: req.params.id
             }
         });
@@ -183,20 +304,55 @@ const addLesson = async (req, res, next) => {
         if (section.course.instructorId !== req.user.id && req.user.role !== client_1.Role.ADMIN) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
-        const { title, description, videoUrl, isFree, order } = req.body;
-        const lesson = await prisma_1.default.lesson.create({
-            data: {
-                title,
-                description,
-                videoUrl: videoUrl || '',
-                isFree: isFree || false,
-                order: order || 0,
-                sectionId: req.params.id
-            }
+        // Handle both JSON and FormData
+        let { title, description, videoUrl, isFree, order, duration } = req.body;
+        // Trim values first
+        title = title?.trim();
+        description = description?.trim();
+        videoUrl = videoUrl?.trim();
+        // Validate required fields AFTER trimming
+        if (!title || title.length === 0) {
+            console.error('Validation failed: Title is missing or empty');
+            return res.status(400).json({
+                success: false,
+                message: 'Lesson title is required'
+            });
+        }
+        if (!videoUrl || videoUrl.length === 0) {
+            console.error('Validation failed: Video URL is missing or empty');
+            return res.status(400).json({
+                success: false,
+                message: 'Video URL is required'
+            });
+        }
+        // Get the highest order number if order not provided
+        const maxOrder = await prisma_1.default.lesson.findFirst({
+            where: { sectionId: req.params.id },
+            orderBy: { order: 'desc' },
+            select: { order: true }
         });
+        // Convert string values from FormData to proper types
+        const lessonData = {
+            title,
+            description: description || null,
+            videoUrl,
+            isFree: isFree === 'true' || isFree === true || isFree === 'on',
+            order: order ? parseInt(order) : (maxOrder ? maxOrder.order + 1 : 1),
+            sectionId: req.params.id
+        };
+        // Add duration if provided
+        if (duration && duration !== '') {
+            lessonData.duration = parseFloat(duration);
+        }
+        console.log('Creating lesson with data:', lessonData);
+        const lesson = await prisma_1.default.lesson.create({
+            data: lessonData
+        });
+        console.log('Lesson created successfully:', lesson.id);
         res.status(201).json({ success: true, data: lesson });
     }
     catch (error) {
+        console.error('Error creating lesson:', error);
         next(error);
     }
 };
