@@ -285,7 +285,7 @@ export function generateCoursesForLevelAndDomain(
             isPublished: true,
             hasProject: level !== 'SECONDARY',
             targetEducationLevel: level,
-            thumbnail: `/course-images/${domain.toLowerCase()}_${slug}.jpg`,
+            thumbnail: `/course-images/${domain.toLowerCase()}_${slug}.svg`,
             thumbnailPrompt: `Create a professional 16:9 e-learning course banner for:
 Course Title: '${title}'
 Domain: ${domain}
